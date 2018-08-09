@@ -8,6 +8,7 @@
 - `[pretty-format]` Support serializing `DocumentFragment` ([#6705](https://github.com/facebook/jest/pull/6705))
 - `[jest-validate]` Add `recursive` and `recursiveBlacklist` options for deep config checks ([#6802](https://github.com/facebook/jest/pull/6802))
 - `[jest-cli]` Check watch plugins for key conflicts ([#6697](https://github.com/facebook/jest/pull/6697))
+- `[jest-config]` Allow `detectOpenHandles` in config ([#6747](https://github.com/facebook/jest/pull/6747))
 
 ### Fixes
 

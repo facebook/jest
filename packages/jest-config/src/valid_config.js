@@ -39,6 +39,7 @@ export default ({
       statements: 100,
     },
   },
+  detectOpenHandles: false,
   displayName: 'project-name',
   errorOnDeprecated: false,
   expand: false,
