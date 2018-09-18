@@ -94,6 +94,7 @@ jest.mock('graceful-fs', () => ({
     error.code = 'ENOENT';
     throw error;
   }),
+  realpath: jest.fn(path => path),
   writeFileSync: jest.fn((path, data, options) => {
     expect(options).toBe(require('v8').serialize ? undefined : 'utf8');
     mockFs[path] = data;
@@ -211,8 +212,6 @@ describe('HasteMap', () => {
 
   it('creates valid cache file paths', () => {
     jest.resetModuleRegistry();
-    HasteMap = require('../');
-
     expect(
       HasteMap.getCacheFilePath('/', '@scoped/package', 'random-value'),
     ).toMatch(/^\/-scoped-package-(.*)$/);
@@ -228,7 +227,6 @@ describe('HasteMap', () => {
 
   it('creates different cache file paths for different dependency extractor cache keys', () => {
     jest.resetModuleRegistry();
-    const HasteMap = require('../');
     const dependencyExtractor = require('./dependencyExtractor');
     const config = {
       ...defaultConfig,
@@ -243,7 +241,6 @@ describe('HasteMap', () => {
 
   it('creates different cache file paths for different hasteImplModulePath cache keys', () => {
     jest.resetModuleRegistry();
-    const HasteMap = require('../');
     const hasteImpl = require('./haste_impl');
     hasteImpl.setCacheKey('foo');
     const hasteMap1 = new HasteMap(defaultConfig);

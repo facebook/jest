@@ -44,6 +44,7 @@ export type HasteImpl = {
 };
 
 export type FileData = Map<Config.Path, FileMetaData>;
+export type LinkData = Map<Config.Path, LinkMetaData>;
 
 export type FileMetaData = [
   /* id */ string,
@@ -52,6 +53,11 @@ export type FileMetaData = [
   /* visited */ 0 | 1,
   /* dependencies */ Array<string>,
   /* sha1 */ string | null | undefined
+];
+
+export type LinkMetaData = [
+  /* target */ string | undefined,
+  /* mtime */ number
 ];
 
 export type MockData = Map<string, Config.Path>;
@@ -66,6 +72,8 @@ export type InternalHasteMap = {
   clocks: WatchmanClocks;
   duplicates: DuplicatesIndex;
   files: FileData;
+  links: LinkData;
+  roots: Config.Path[];
   map: ModuleMapData;
   mocks: MockData;
 };

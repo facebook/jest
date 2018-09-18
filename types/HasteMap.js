@@ -19,6 +19,7 @@ export type ModuleMap = _ModuleMap;
 export type SerializableModuleMap = _SerializableModuleMap;
 
 export type FileData = Map<Path, FileMetaData>;
+export type LinkData = Map<Path, Map<Path, LinkMetaData>>;
 export type MockData = Map<string, Path>;
 export type ModuleMapData = Map<string, ModuleMapItem>;
 export type WatchmanClocks = Map<Path, string>;
@@ -31,6 +32,7 @@ export type InternalHasteMap = {|
   clocks: WatchmanClocks,
   duplicates: DuplicatesIndex,
   files: FileData,
+  links: LinkData,
   map: ModuleMapData,
   mocks: MockData,
 |};
@@ -56,6 +58,8 @@ export type FileMetaData = [
   /* dependencies */ Array<string>,
   /* sha1 */ ?string,
 ];
+
+export type LinkMetaData = [/* target */ ?string, /* mtime */ number];
 
 type ModuleMapItem = {[platform: string]: ModuleMetaData, __proto__: null};
 export type ModuleMetaData = [Path, /* type */ number];

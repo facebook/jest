@@ -1,0 +1,363 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`watchman watch does not add directory filters to query when watching a ROOT 1`] = `
+Array [
+  Array [
+    "watch-project",
+    "/root-mock/fruits",
+  ],
+  Array [
+    "watch-project",
+    "/root-mock/vegetables",
+  ],
+  Array [
+    "watch-project",
+    "/root-mock",
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "allof",
+        Array [
+          "anyof",
+          Array [
+            "dirname",
+            "fruits",
+          ],
+        ],
+        Array [
+          "allof",
+          Array [
+            "type",
+            "l",
+          ],
+          Array [
+            "anyof",
+            Array [
+              "match",
+              "**/node_modules/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+            Array [
+              "match",
+              "**/node_modules/@*/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "allof",
+        Array [
+          "anyof",
+          Array [
+            "dirname",
+            "vegetables",
+          ],
+        ],
+        Array [
+          "allof",
+          Array [
+            "type",
+            "l",
+          ],
+          Array [
+            "anyof",
+            Array [
+              "match",
+              "**/node_modules/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+            Array [
+              "match",
+              "**/node_modules/@*/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "allof",
+        Array [
+          "type",
+          "l",
+        ],
+        Array [
+          "anyof",
+          Array [
+            "match",
+            "**/node_modules/*",
+            "wholename",
+            Object {
+              "includedotfiles": true,
+            },
+          ],
+          Array [
+            "match",
+            "**/node_modules/@*/*",
+            "wholename",
+            Object {
+              "includedotfiles": true,
+            },
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "anyof",
+        Array [
+          "type",
+          "l",
+        ],
+        Array [
+          "allof",
+          Array [
+            "type",
+            "f",
+          ],
+          Array [
+            "anyof",
+            Array [
+              "suffix",
+              "js",
+            ],
+            Array [
+              "suffix",
+              "json",
+            ],
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+]
+`;
+
+exports[`watchman watch returns a list of all files when there are no clocks 1`] = `
+Array [
+  Array [
+    "watch-project",
+    "/root-mock/fruits",
+  ],
+  Array [
+    "watch-project",
+    "/root-mock/vegetables",
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "allof",
+        Array [
+          "anyof",
+          Array [
+            "dirname",
+            "fruits",
+          ],
+        ],
+        Array [
+          "allof",
+          Array [
+            "type",
+            "l",
+          ],
+          Array [
+            "anyof",
+            Array [
+              "match",
+              "**/node_modules/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+            Array [
+              "match",
+              "**/node_modules/@*/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "allof",
+        Array [
+          "anyof",
+          Array [
+            "dirname",
+            "vegetables",
+          ],
+        ],
+        Array [
+          "allof",
+          Array [
+            "type",
+            "l",
+          ],
+          Array [
+            "anyof",
+            Array [
+              "match",
+              "**/node_modules/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+            Array [
+              "match",
+              "**/node_modules/@*/*",
+              "wholename",
+              Object {
+                "includedotfiles": true,
+              },
+            ],
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+  Array [
+    "query",
+    "/root-mock",
+    Object {
+      "expression": Array [
+        "allof",
+        Array [
+          "anyof",
+          Array [
+            "dirname",
+            "fruits",
+          ],
+          Array [
+            "dirname",
+            "vegetables",
+          ],
+        ],
+        Array [
+          "anyof",
+          Array [
+            "type",
+            "l",
+          ],
+          Array [
+            "allof",
+            Array [
+              "type",
+              "f",
+            ],
+            Array [
+              "anyof",
+              Array [
+                "suffix",
+                "js",
+              ],
+              Array [
+                "suffix",
+                "json",
+              ],
+            ],
+          ],
+        ],
+      ],
+      "fields": Array [
+        "name",
+        "exists",
+        "mtime_ms",
+        "size",
+        "type",
+      ],
+      "since": undefined,
+    },
+  ],
+]
+`;

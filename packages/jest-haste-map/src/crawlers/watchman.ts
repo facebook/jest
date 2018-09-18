@@ -5,18 +5,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import fs from 'fs';
 import path from 'path';
+import {sync as realpath} from 'realpath-native';
 import watchman from 'fb-watchman';
 import {Config} from '@jest/types';
 import * as fastPath from '../lib/fast_path';
 import normalizePathSep from '../lib/normalizePathSep';
 import H from '../constants';
-import {InternalHasteMap, CrawlerOptions, FileMetaData} from '../types';
-
-type WatchmanRoots = Map<string, Array<string>>;
+import {
+  InternalHasteMap,
+  CrawlerOptions,
+  FileMetaData,
+  LinkMetaData,
+} from '../types';
 
 const watchmanURL =
   'https://facebook.github.io/watchman/docs/troubleshooting.html';
+
+// Matches symlinks in "node_modules" directories.
+const nodeModulesExpression = [
+  'allof',
+  ['type', 'l'],
+  [
+    'anyof',
+    ...['**/node_modules/*', '**/node_modules/@*/*'].map(glob => [
+      'match',
+      glob,
+      'wholename',
+      {includedotfiles: true},
+    ]),
+  ],
+];
+
+const NODE_MODULES = path.sep + 'node_modules' + path.sep;
 
 function WatchmanError(error: Error): Error {
   error.message =
@@ -28,14 +50,7 @@ function WatchmanError(error: Error): Error {
 export = async function watchmanCrawl(
   options: CrawlerOptions,
 ): Promise<InternalHasteMap> {
-  const fields = ['name', 'exists', 'mtime_ms', 'size'];
-  const {data, extensions, ignore, rootDir, roots} = options;
-  const defaultWatchExpression = [
-    'allof',
-    ['type', 'f'],
-    ['anyof', ...extensions.map(extension => ['suffix', extension])],
-  ];
-  const clocks = data.clocks;
+  const {data, extensions, ignore, rootDir} = options;
   const client = new watchman.Client();
 
   let clientError;
@@ -49,182 +64,275 @@ export = async function watchmanCrawl(
       ),
     );
 
+  type WatchmanFile = {
+    name: string;
+    exists: boolean;
+    mtime_ms: number;
+    size: number;
+    type: string;
+    'content.sha1hex'?: string;
+  };
+
+  const fields = ['name', 'exists', 'mtime_ms', 'size', 'type'];
   if (options.computeSha1) {
     const {capabilities} = await cmd('list-capabilities');
-
-    if (capabilities.indexOf('field-content.sha1hex') !== -1) {
+    if (capabilities.includes('field-content.sha1hex')) {
       fields.push('content.sha1hex');
     }
   }
 
-  async function getWatchmanRoots(
-    roots: Array<Config.Path>,
-  ): Promise<WatchmanRoots> {
-    const watchmanRoots = new Map();
-    await Promise.all(
-      roots.map(async root => {
-        const response = await cmd('watch-project', root);
-        const existing = watchmanRoots.get(response.watch);
-        // A root can only be filtered if it was never seen with a
-        // relative_path before.
-        const canBeFiltered = !existing || existing.length > 0;
+  // Clone the clockspec cache to avoid mutations during the watch phase.
+  const clocks = new Map(data.clocks);
 
-        if (canBeFiltered) {
-          if (response.relative_path) {
-            watchmanRoots.set(
-              response.watch,
-              (existing || []).concat(response.relative_path),
-            );
-          } else {
-            // Make the filter directories an empty array to signal that this
-            // root was already seen and needs to be watched for all files or
-            // directories.
-            watchmanRoots.set(response.watch, []);
-          }
+  /**
+   * Fetch an array of files that match the given expression and are contained
+   * by the given `watchRoot` (with directory filters applied).
+   *
+   * When the `watchRoot` has a cached Watchman clockspec, only changed files
+   * are returned. The cloned clockspec cache is updated on every query.
+   *
+   * The given `watchRoot` must be absolute.
+   */
+  const queryRequest = async (
+    watchRoot: Config.Path,
+    dirs: Array<string>,
+    expression: Array<any>,
+  ) => {
+    if (dirs.length) {
+      expression = [
+        'allof',
+        ['anyof', ...dirs.map(dir => ['dirname', dir])],
+        expression,
+      ];
+    }
+
+    const relativeRoot = fastPath.relative(rootDir, watchRoot) || '.';
+    const response = await cmd('query', watchRoot, {
+      expression,
+      fields,
+      // Use the cached clockspec since `queryRequest` is called twice per root.
+      since: data.clocks.get(relativeRoot),
+    });
+
+    if ('warning' in response) {
+      console.warn('watchman warning:', response.warning);
+    }
+
+    clocks.set(relativeRoot, response.clock);
+    return response;
+  };
+
+  // The cached array of project roots.
+  const roots: Config.Path[] = [];
+  const isValidRoot = (root: Config.Path) =>
+    !root.includes(NODE_MODULES) &&
+    !roots.includes(root) &&
+    !roots.find(root => root.startsWith(root + path.sep));
+
+  // Ensure every configured root is valid.
+  options.roots
+    .map(root => realpath(root))
+    .sort((a, b) => a.length - b.length)
+    .forEach(root => {
+      if (isValidRoot(root)) {
+        roots.push(root);
+      }
+    });
+
+  // Ensure every linked root is searched if valid.
+  data.roots.forEach(root => {
+    root = path.resolve(rootDir, root);
+    if (isValidRoot(root)) {
+      try {
+        if (fs.statSync(root).isDirectory()) {
+          roots.push(root);
+        }
+      } catch (e) {}
+    }
+  });
+
+  // Track which directories share a "watch root" (a common ancestor identified
+  // by Watchman). Use an empty array to denote a project root that is its own
+  // watch root. These arrays are used as "directory filters" in the 2nd phase.
+  const watched = new Map<Config.Path, string[]>();
+
+  /**
+   * Look for linked dependencies in every "node_modules" directory within the
+   * given root. Repeat for every linked dependency found that resolves to a
+   * directory which exists outside of all known project roots.
+   */
+  const findDependencyLinks = async (root: Config.Path) => {
+    const response = await cmd('watch-project', root);
+    const watchRoot = normalizePathSep(response.watch);
+
+    let dirs = watched.get(watchRoot);
+    if (!dirs) {
+      watched.set(watchRoot, (dirs = []));
+    } else if (!dirs.length) {
+      return; // Ensure no directory filters are used.
+    }
+
+    const dir = normalizePathSep(response.relative_path || '');
+    if (dir) {
+      if (dirs.includes(dir)) {
+        return; // Avoid crawling the same directory twice.
+      }
+      dirs.push(dir);
+    } else {
+      // Ensure no directory filters are used.
+      dirs.length = 0;
+    }
+
+    // Search every "node_modules" directory in the entire tree.
+    // It should be faster for Watchman to do this in one fell swoop.
+    const queryResponse = await queryRequest(
+      watchRoot,
+      dir ? [dir] : [],
+      nodeModulesExpression,
+    );
+
+    await Promise.all(
+      queryResponse.files.map(async (link: WatchmanFile) => {
+        const name = normalizePathSep(link.name);
+        const linkPath = path.join(watchRoot, name);
+
+        if (!link.exists || ignore(linkPath)) {
+          data.links.delete(linkPath);
+          return;
+        }
+
+        let target;
+        try {
+          target = realpath(linkPath);
+        } catch (e) {
+          return; // Skip broken symlinks.
+        }
+
+        const metaData = data.links.get(linkPath);
+        const mtime = testModified(metaData, link.mtime_ms);
+        if (mtime !== 0) {
+          // See ../constants.ts
+          data.links.set(linkPath, [target, mtime]);
+        }
+
+        if (fs.statSync(target).isDirectory() && isValidRoot(target)) {
+          roots.push(target);
+          await findDependencyLinks(target);
         }
       }),
     );
-    return watchmanRoots;
-  }
+  };
 
-  async function queryWatchmanForDirs(rootProjectDirMappings: WatchmanRoots) {
-    const files = new Map();
+  try {
+    await Promise.all(roots.map(findDependencyLinks));
+
+    const crawlExpression = [
+      'anyof',
+      ['type', 'l'],
+      [
+        'allof',
+        ['type', 'f'],
+        ['anyof', ...extensions.map(extension => ['suffix', extension])],
+      ],
+    ];
+
     let isFresh = false;
-    await Promise.all(
-      Array.from(rootProjectDirMappings).map(
-        async ([root, directoryFilters]) => {
-          const expression = Array.from(defaultWatchExpression);
-          const glob = [];
-
-          if (directoryFilters.length > 0) {
-            expression.push([
-              'anyof',
-              ...directoryFilters.map(dir => ['dirname', dir]),
-            ]);
-
-            for (const directory of directoryFilters) {
-              for (const extension of extensions) {
-                glob.push(`${directory}/**/*.${extension}`);
-              }
-            }
-          } else {
-            for (const extension of extensions) {
-              glob.push(`**/*.${extension}`);
-            }
-          }
-
-          const relativeRoot = fastPath.relative(rootDir, root);
-          const query = clocks.has(relativeRoot)
-            ? // Use the `since` generator if we have a clock available
-              {expression, fields, since: clocks.get(relativeRoot)}
-            : // Otherwise use the `glob` filter
-              {expression, fields, glob};
-
-          const response = await cmd('query', root, query);
-
-          if ('warning' in response) {
-            console.warn('watchman warning: ', response.warning);
-          }
-
-          isFresh = isFresh || response.is_fresh_instance;
-          files.set(root, response);
-        },
-      ),
+    const watchRoots = Array.from(watched.keys());
+    const crawled = await Promise.all(
+      watchRoots.map(async watchRoot => {
+        const queryResponse = await queryRequest(
+          watchRoot,
+          watched.get(watchRoot)!,
+          crawlExpression,
+        );
+        if (!isFresh) {
+          isFresh = queryResponse.is_fresh_instance;
+        }
+        return queryResponse.files;
+      }),
     );
 
-    return {
-      files,
-      isFresh,
-    };
-  }
-
-  let files = data.files;
-  let watchmanFiles: Map<string, any>;
-  try {
-    const watchmanRoots = await getWatchmanRoots(roots);
-    const watchmanFileResults = await queryWatchmanForDirs(watchmanRoots);
-
-    // Reset the file map if watchman was restarted and sends us a list of
-    // files.
-    if (watchmanFileResults.isFresh) {
-      files = new Map();
+    // Reset the file map if Watchman refreshed.
+    if (isFresh) {
+      data.files = new Map();
+      data.links = new Map();
     }
 
-    watchmanFiles = watchmanFileResults.files;
+    // Update the file map and symlink map.
+    crawled.forEach((files: WatchmanFile[], i) => {
+      const watchRoot = watchRoots[i];
+      for (const file of files) {
+        const name = normalizePathSep(file.name);
+        const filePath = path.join(watchRoot, name);
+
+        const cacheKey = fastPath.relative(rootDir, filePath);
+        const cache: Map<string, any> =
+          file.type === 'l' ? data.links : data.files;
+
+        if (!file.exists || ignore(filePath)) {
+          cache.delete(cacheKey);
+          continue;
+        }
+
+        let sha1hex = file['content.sha1hex'] || null;
+        if (sha1hex && sha1hex.length !== 40) {
+          sha1hex = null;
+        }
+
+        const prevData = cache.get(cacheKey);
+        const mtime = testModified(prevData, file.mtime_ms);
+        if (mtime !== 0) {
+          if (file.type === 'l') {
+            // See ../constants.ts
+            cache.set(cacheKey, [undefined, mtime]);
+            continue;
+          }
+
+          let nextData: FileMetaData;
+          if (sha1hex && prevData && prevData[H.SHA1] === sha1hex) {
+            nextData = [...prevData] as any;
+            nextData[1] = mtime;
+          } else {
+            // See ../constants.ts
+            nextData = ['', mtime, file.size, 0, [], sha1hex];
+          }
+
+          const virtualPaths = options.mapper ? options.mapper(filePath) : null;
+          if (!virtualPaths) {
+            data.files.set(cacheKey, nextData);
+            continue;
+          }
+
+          for (const virtualPath of virtualPaths) {
+            if (ignore(virtualPath)) continue;
+            data.files.set(fastPath.relative(rootDir, virtualPath), nextData);
+          }
+        }
+      }
+    });
   } finally {
     client.end();
   }
-
   if (clientError) {
     throw clientError;
   }
 
-  // TODO: remove non-null
-  for (const [watchRoot, response] of watchmanFiles!) {
-    const fsRoot = normalizePathSep(watchRoot);
-    const relativeFsRoot = fastPath.relative(rootDir, fsRoot);
-    clocks.set(relativeFsRoot, response.clock);
-
-    for (const fileData of response.files) {
-      const filePath = fsRoot + path.sep + normalizePathSep(fileData.name);
-      const relativeFilePath = fastPath.relative(rootDir, filePath);
-
-      if (!fileData.exists) {
-        files.delete(relativeFilePath);
-      } else if (!ignore(filePath)) {
-        const mtime =
-          typeof fileData.mtime_ms === 'number'
-            ? fileData.mtime_ms
-            : fileData.mtime_ms.toNumber();
-        const size = fileData.size;
-
-        let sha1hex = fileData['content.sha1hex'];
-        if (typeof sha1hex !== 'string' || sha1hex.length !== 40) {
-          sha1hex = null;
-        }
-
-        const existingFileData = data.files.get(relativeFilePath);
-        let nextData: FileMetaData;
-
-        if (existingFileData && existingFileData[H.MTIME] === mtime) {
-          nextData = existingFileData;
-        } else if (
-          existingFileData &&
-          sha1hex &&
-          existingFileData[H.SHA1] === sha1hex
-        ) {
-          nextData = [
-            existingFileData[0],
-            mtime,
-            existingFileData[2],
-            existingFileData[3],
-            existingFileData[4],
-            existingFileData[5],
-          ];
-        } else {
-          // See ../constants.ts
-          nextData = ['', mtime, size, 0, [], sha1hex];
-        }
-
-        const mappings = options.mapper ? options.mapper(filePath) : null;
-
-        if (mappings) {
-          for (const absoluteVirtualFilePath of mappings) {
-            if (!ignore(absoluteVirtualFilePath)) {
-              const relativeVirtualFilePath = fastPath.relative(
-                rootDir,
-                absoluteVirtualFilePath,
-              );
-              files.set(relativeVirtualFilePath, nextData);
-            }
-          }
-        } else {
-          files.set(relativeFilePath, nextData);
-        }
-      }
-    }
-  }
-
-  data.files = files;
+  data.roots = roots.map(root => fastPath.relative(rootDir, root));
+  data.clocks = clocks;
   return data;
 };
+
+/**
+ * Check if the file data has been modified since last cached.
+ *
+ * Returns the 2nd argument if modified, else zero.
+ */
+function testModified(
+  metaData: FileMetaData | LinkMetaData | undefined,
+  mtime: number | {toNumber(): number},
+) {
+  if (typeof mtime !== 'number') {
+    mtime = mtime.toNumber();
+  }
+  return !metaData || metaData[H.MTIME] !== mtime ? mtime : 0;
+}

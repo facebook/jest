@@ -123,6 +123,8 @@ describe('watchman watch', () => {
       data: {
         clocks: new Map(),
         files: new Map(),
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       ignore: pearMatcher,
@@ -134,34 +136,11 @@ describe('watchman watch', () => {
 
       expect(client.on).toBeCalled();
       expect(client.on).toBeCalledWith('error', expect.any(Function));
-
-      // Call 0 and 1 are for ['watch-project']
-      expect(calls[0][0][0]).toEqual('watch-project');
-      expect(calls[1][0][0]).toEqual('watch-project');
-
-      // Call 2 is the query
-      const query = calls[2][0];
-      expect(query[0]).toEqual('query');
-
-      expect(query[2].expression).toEqual([
-        'allof',
-        ['type', 'f'],
-        ['anyof', ['suffix', 'js'], ['suffix', 'json']],
-        ['anyof', ['dirname', 'fruits'], ['dirname', 'vegetables']],
-      ]);
-
-      expect(query[2].fields).toEqual(['name', 'exists', 'mtime_ms', 'size']);
-
-      expect(query[2].glob).toEqual([
-        'fruits/**/*.js',
-        'fruits/**/*.json',
-        'vegetables/**/*.js',
-        'vegetables/**/*.json',
-      ]);
+      expect(calls.map(call => call[0])).toMatchSnapshot();
 
       expect(data.clocks).toEqual(
         createMap({
-          '': 'c:fake-clock:1',
+          '.': 'c:fake-clock:1',
         }),
       );
 
@@ -199,6 +178,8 @@ describe('watchman watch', () => {
       data: {
         clocks: new Map(),
         files: new Map(),
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json', 'zip'],
       ignore: pearMatcher,
@@ -250,13 +231,15 @@ describe('watchman watch', () => {
     };
 
     const clocks = createMap({
-      '': 'c:fake-clock:1',
+      '.': 'c:fake-clock:1',
     });
 
     return watchmanCrawl({
       data: {
         clocks,
         files: mockFiles,
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       ignore: pearMatcher,
@@ -268,7 +251,7 @@ describe('watchman watch', () => {
 
       expect(data.clocks).toEqual(
         createMap({
-          '': 'c:fake-clock:2',
+          '.': 'c:fake-clock:2',
         }),
       );
 
@@ -328,13 +311,15 @@ describe('watchman watch', () => {
     mockFiles.set(TOMATO_RELATIVE, mockTomatoMetadata);
 
     const clocks = createMap({
-      '': 'c:fake-clock:1',
+      '.': 'c:fake-clock:1',
     });
 
     return watchmanCrawl({
       data: {
         clocks,
         files: mockFiles,
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       ignore: pearMatcher,
@@ -346,7 +331,7 @@ describe('watchman watch', () => {
 
       expect(data.clocks).toEqual(
         createMap({
-          '': 'c:fake-clock:3',
+          '.': 'c:fake-clock:3',
         }),
       );
 
@@ -422,6 +407,8 @@ describe('watchman watch', () => {
       data: {
         clocks,
         files: mockFiles,
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       ignore: pearMatcher,
@@ -478,6 +465,8 @@ describe('watchman watch', () => {
       data: {
         clocks: new Map(),
         files: new Map(),
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       ignore: pearMatcher,
@@ -489,29 +478,11 @@ describe('watchman watch', () => {
 
       expect(client.on).toBeCalled();
       expect(client.on).toBeCalledWith('error', expect.any(Function));
-
-      // First 3 calls are for ['watch-project']
-      expect(calls[0][0][0]).toEqual('watch-project');
-      expect(calls[1][0][0]).toEqual('watch-project');
-      expect(calls[2][0][0]).toEqual('watch-project');
-
-      // Call 4 is the query
-      const query = calls[3][0];
-      expect(query[0]).toEqual('query');
-
-      expect(query[2].expression).toEqual([
-        'allof',
-        ['type', 'f'],
-        ['anyof', ['suffix', 'js'], ['suffix', 'json']],
-      ]);
-
-      expect(query[2].fields).toEqual(['name', 'exists', 'mtime_ms', 'size']);
-
-      expect(query[2].glob).toEqual(['**/*.js', '**/*.json']);
+      expect(calls.map(call => call[0])).toMatchSnapshot();
 
       expect(data.clocks).toEqual(
         createMap({
-          '': 'c:fake-clock:1',
+          '.': 'c:fake-clock:1',
         }),
       );
 
@@ -548,6 +519,8 @@ describe('watchman watch', () => {
       data: {
         clocks: new Map(),
         files: new Map(),
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       rootDir: ROOT_MOCK,
@@ -588,6 +561,8 @@ describe('watchman watch', () => {
       data: {
         clocks: new Map(),
         files: new Map(),
+        links: new Map(),
+        roots: [],
       },
       extensions: ['js', 'json'],
       rootDir: ROOT_MOCK,
