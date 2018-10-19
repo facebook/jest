@@ -79,6 +79,7 @@ export const makeTest = (
     asyncError,
     duration: null,
     errors: [],
+    expired: false,
     fn,
     invocations: 0,
     mode: _mode,

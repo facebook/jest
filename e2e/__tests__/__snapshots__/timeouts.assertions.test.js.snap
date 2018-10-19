@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`exceeds the timeout synchronously 1`] = `
+"FAIL __tests__/a-banana.js
+  ✕ banana
+
+  ● banana
+
+    Exceeded timeout of 20ms for a test.
+    Use jest.setTimeout(newTimeout) to increase the timeout value, if this is a long-running test.
+
+      at packages/jest-circus/build/utils.js:264:15
+
+"
+`;
+
+exports[`exceeds the timeout synchronously 2`] = `
+"Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+"
+`;
+
+exports[`exceeds the timeout, without reporting expect.assertions 1`] = `
+"FAIL __tests__/a-banana.js
+  ✕ banana
+
+  ● banana
+
+    thrown: \\"Exceeded timeout of 20ms for a test.
+    Use jest.setTimeout(newTimeout) to increase the timeout value, if this is a long-running test.\\"
+
+      2 |       jest.setTimeout(20);
+      3 | 
+    > 4 |       test('banana', () => {
+        |       ^
+      5 |         expect.assertions(2);
+      6 |         return new Promise(resolve => {
+      7 |           setTimeout(resolve, 100);
+
+      at __tests__/a-banana.js:4:7
+
+"
+`;
+
+exports[`exceeds the timeout, without reporting expect.assertions 2`] = `
+"Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+"
+`;

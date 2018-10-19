@@ -130,6 +130,10 @@ const handler: EventHandler = (event, state): void => {
       event.test.errors.push([error, asyncError]);
       break;
     }
+    case 'test_fn_timeout': {
+      event.test.expired = true;
+      break;
+    }
     case 'test_retry': {
       event.test.errors = [];
       break;

@@ -92,6 +92,10 @@ export type Event =
       test: TestEntry,
     |}
   | {|
+      name: 'test_fn_timeout',
+      test: TestEntry,
+    |}
+  | {|
       name: 'test_retry',
       test: TestEntry,
     |}
@@ -113,7 +117,7 @@ export type Event =
       // test failure is defined by presence of errors in `test.errors`,
       // `test_done` indicates that the test and all its hooks were run,
       // and nothing else will change it's state in the future. (except third
-      // party extentions/plugins)
+      // party extensions/plugins)
       name: 'test_done',
       test: TestEntry,
     |}
@@ -201,6 +205,7 @@ type TestError = Exception | Array<[?Exception, Exception]>; // the error from t
 export type TestEntry = {|
   asyncError: Exception, // Used if the test failure contains no usable stack trace
   errors: TestError,
+  expired: ?boolean,
   fn: ?TestFn,
   invocations: number,
   mode: TestMode,

@@ -233,6 +233,8 @@ const eventHandler = (event: Event) => {
 };
 
 const _addExpectedAssertionErrors = (test: TestEntry) => {
+  if (test.expired) return;
+
   const failures = extractExpectedAssertionsErrors();
   const errors = failures.map(failure => failure.error);
   test.errors = test.errors.concat(errors);
