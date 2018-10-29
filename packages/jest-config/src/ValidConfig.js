@@ -29,6 +29,7 @@ export default ({
   collectCoverageOnlyFrom: {
     '<rootDir>/this-directory-is-covered/Covered.js': true,
   },
+  compileAsyncToGenerator: false,
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: [NODE_MODULES_REGEXP],
   coverageReporters: ['json', 'text', 'lcov', 'clover'],
@@ -74,6 +75,7 @@ export default ({
   preset: 'react-native',
   prettierPath: '<rootDir>/node_modules/prettier',
   projects: ['project-a', 'project-b/'],
+  promises: 'real',
   reporters: [
     'default',
     'custom-reporter-1',

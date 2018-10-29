@@ -10,6 +10,7 @@
   "dependencies": {
     "babel-core": "^6.0.0",
     "babel-plugin-istanbul": "^4.1.6",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "chalk": "^2.0.1",
     "convert-source-map": "^1.4.0",
     "exit": "^0.1.2",

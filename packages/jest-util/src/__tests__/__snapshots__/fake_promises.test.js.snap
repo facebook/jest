@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FakePromises runAllPromises warns if promise rejection is not handled 1`] = `
+"UnhandledPromiseRejectionWarning: Unhandled promise rejection.
+"
+`;
+
+exports[`FakePromises useFakePromises warns if compileAsyncToGenerator config option is set to false 1`] = `
+"Fake promises are being used with the \`compileAsyncToGenerator\` option being set to \`false\`. Any promises implicitly created with the \`async\`-\`await\` syntax may not be mocked.
+"
+`;

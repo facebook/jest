@@ -44,6 +44,9 @@ module.exports = {
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: null,
 
+  // Compiles all usage of \`async\`-\`await\` syntax to syntax that uses explicit Promises. To be used for projects that make use of fake promises.
+  // compileAsyncToGenerator: false,
+
   // The directory where Jest should output its coverage files
   // coverageDirectory: null,
 
@@ -108,6 +111,9 @@ module.exports = {
 
   // Run tests from one or more projects
   // projects: null,
+
+  // Setting this value to fake allows the use of fake promises for mocking the Promise class.
+  // promises: \\"real\\",
 
   // Use this configuration option to add custom reporters to Jest
   // reporters: undefined,

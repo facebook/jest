@@ -462,6 +462,9 @@ class Runtime {
       if (this._environment.fakeTimers) {
         this._environment.fakeTimers.clearAllTimers();
       }
+      if (this._environment.fakePromises) {
+        this._environment.fakePromises.clearAllPromises();
+      }
     }
   }
 
@@ -888,6 +891,14 @@ class Runtime {
       this.restoreAllMocks();
       return jestObject;
     };
+    const useFakePromises = () => {
+      this._environment.fakePromises.useFakePromises();
+      return jestObject;
+    };
+    const useRealPromises = () => {
+      this._environment.fakePromises.useRealPromises();
+      return jestObject;
+    };
     const useFakeTimers = () => {
       this._environment.fakeTimers.useFakeTimers();
       return jestObject;
@@ -925,6 +936,7 @@ class Runtime {
       autoMockOff: disableAutomock,
       autoMockOn: enableAutomock,
       clearAllMocks,
+      clearAllPromises: () => this._environment.fakePromises.clearAllPromises(),
       clearAllTimers: () => this._environment.fakeTimers.clearAllTimers(),
       deepUnmock,
       disableAutomock,
@@ -945,6 +957,7 @@ class Runtime {
       restoreAllMocks,
       retryTimes,
       runAllImmediates: () => this._environment.fakeTimers.runAllImmediates(),
+      runAllPromises: () => this._environment.fakePromises.runAllPromises(),
       runAllTicks: () => this._environment.fakeTimers.runAllTicks(),
       runAllTimers: () => this._environment.fakeTimers.runAllTimers(),
       runOnlyPendingTimers: () =>
@@ -956,7 +969,9 @@ class Runtime {
       setTimeout,
       spyOn,
       unmock,
+      useFakePromises,
       useFakeTimers,
+      useRealPromises,
       useRealTimers,
     };
     return jestObject;

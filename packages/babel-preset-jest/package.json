@@ -9,7 +9,8 @@
   "main": "index.js",
   "dependencies": {
     "babel-plugin-jest-hoist": "^23.2.0",
-    "babel-plugin-syntax-object-rest-spread": "^6.13.0"
+    "babel-plugin-syntax-object-rest-spread": "^6.13.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1"
   },
   "engines": {
     "node": ">= 6"

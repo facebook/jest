@@ -467,6 +467,12 @@ The projects feature can also be used to run multiple configurations or multiple
 
 _Note: When using multi project runner, it's recommended to add a `displayName` for each project. This will show the `displayName` of a project next to its tests._
 
+### `promises` [string]
+
+Default: `real`
+
+Setting this value to `fake` allows the use of fake promises to replace the `Promise` class introduced in ecma-script2015 specification. Fake promises are useful for synchronizing promises, or for use with Jest's fake timers feature.
+
 ### `reporters` [array<moduleName | [moduleName, options]>]
 
 Default: `undefined`

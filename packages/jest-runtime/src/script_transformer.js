@@ -21,6 +21,7 @@ import vm from 'vm';
 import {createDirectory} from 'jest-util';
 import fs from 'graceful-fs';
 import {transform as babelTransform} from 'babel-core';
+import babelPluginTransformAsyncToGenerator from 'babel-plugin-transform-async-to-generator';
 import babelPluginIstanbul from 'babel-plugin-istanbul';
 import convertSourceMap from 'convert-source-map';
 import HasteMap from 'jest-haste-map';
@@ -168,6 +169,14 @@ export default class ScriptTransformer {
     return transform;
   }
 
+  _compileAsyncToGenerator(filename: Path, content: string): string {
+    return babelTransform(content, {
+      babelrc: false,
+      filename,
+      plugins: [babelPluginTransformAsyncToGenerator],
+    }).code;
+  }
+
   _instrumentFile(filename: Path, content: string): string {
     return babelTransform(content, {
       auxiliaryCommentBefore: ' istanbul ignore next ',
@@ -258,10 +267,14 @@ export default class ScriptTransformer {
       }
     }
 
-    if (!transformWillInstrument && instrument) {
-      code = this._instrumentFile(filename, transformed.code);
+    if (this._config.compileAsyncToGenerator) {
+      code = this._compileAsyncToGenerator(filename, transformed.code);
     } else {
       code = transformed.code;
+    }
+
+    if (!transformWillInstrument && instrument) {
+      code = this._instrumentFile(filename, code);
     }
 
     if (transformed.map) {

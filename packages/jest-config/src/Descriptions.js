@@ -18,6 +18,8 @@ export default ({
     'Indicates whether the coverage information should be collected while executing the test',
   collectCoverageFrom:
     'An array of glob patterns indicating a set of files for which coverage information should be collected',
+  compileAsyncToGenerator:
+    'Compiles all usage of `async`-`await` syntax to syntax that uses explicit Promises. To be used for projects that make use of fake promises.',
   coverageDirectory:
     'The directory where Jest should output its coverage files',
   coveragePathIgnorePatterns:
@@ -48,6 +50,8 @@ export default ({
     'An enum that specifies notification mode. Requires { notify: true }',
   preset: "A preset that is used as a base for Jest's configuration",
   projects: 'Run tests from one or more projects',
+  promises:
+    'Setting this value to fake allows the use of fake promises for mocking the Promise class.',
   reporters: 'Use this configuration option to add custom reporters to Jest',
   resetMocks: 'Automatically reset mock state between every test',
   resetModules: 'Reset the module registry before running each individual test',

@@ -129,6 +129,10 @@ A glob pattern relative to <rootDir> matching the files that coverage info needs
 
 Forces test results output highlighting even if stdout is not a TTY.
 
+### `--compileAsyncToGenerator`
+
+Compiles all usage of `async`-`await` syntax to syntax that uses explicit Promises. To be used for projects that make use of fake promises.
+
 ### `--config=<path>`
 
 Alias: `-c`. The path to a Jest config file specifying how to find and execute tests. If no `rootDir` is set in the config, the directory containing the config file is assumed to be the rootDir for the project. This can also be a JSON-encoded value which Jest will use as configuration.
@@ -180,6 +184,10 @@ Prints the test results in JSON. This mode will send all other test output and u
 ### `--outputFile=<filename>`
 
 Write test results to a file when the `--json` option is also specified.
+
+### `--promises=('real' | 'fake')`
+
+Setting this value to fake allows the use of fake promises for mocking the Promise class.
 
 ### `--lastCommit`
 
@@ -271,6 +279,10 @@ A regexp pattern string that is matched against all tests paths before executing
 ### `--testRunner=<path>`
 
 Lets you specify a custom test runner.
+
+### `--timers=('real' | 'fake')`
+
+Setting this value to fake allows the use of fake timers for functions such as setTimeout.
 
 ### `--updateSnapshot`
 

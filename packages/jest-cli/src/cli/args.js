@@ -173,6 +173,14 @@ export const options = {
     description: 'Alias for `--color`.',
     type: 'boolean',
   },
+  compileAsyncToGenerator: {
+    default: undefined,
+    description:
+      'Compiles all usage of `async`-`await` syntax to syntax that uses ' +
+      'explicit Promises. To be used for projects that make use of fake ' +
+      'promises.',
+    type: 'boolean',
+  },
   config: {
     alias: 'c',
     description:
@@ -434,6 +442,12 @@ export const options = {
       'A list of projects that use Jest to run all tests of all ' +
       'projects in a single instance of Jest.',
     type: 'array',
+  },
+  promises: {
+    description:
+      'Setting this value to fake allows the use of fake promises ' +
+      'for mocking the Promise class.',
+    type: 'string',
   },
   reporters: {
     description: 'A list of custom reporters for the test suite.',

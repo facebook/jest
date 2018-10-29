@@ -393,6 +393,36 @@ Returns the `jest` object for chaining.
 
 Restores all mocks back to their original value. Equivalent to calling [`.mockRestore()`](MockFunctionAPI.md#mockfnmockrestore) on every mocked function. Beware that `jest.restoreAllMocks()` only works when mock was created with `jest.spyOn`; other mocks will require you to manually restore them.
 
+## Mock Promises
+
+### `jest.useFakePromises()`
+
+Instructs Jest to use fake versions of the standard Promise API (`Promise.resolve`, `Promise.reject`, `Promise.all`, `Promise.race`, `[Promise].then`, `[Promise].catch`, and `[Promise].finally`).
+
+Returns the `jest` object for chaining.
+
+_Note: when using this feature the `compileAsyncToGenerator` jest option should be set to `true`. Otherwise, implicit promises created using the [`async-await` syntax](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function) will not be mocked._
+
+### `jest.useRealPromises()`
+
+Instructs Jest to use the real versions of the standard Promise API.
+
+Returns the `jest` object for chaining.
+
+### `jest.runAllPromises()`
+
+Exhausts all promises queued via the [`Promise` API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+
+Fake promises should be in use (by calling `jest.useFakePromises`) before calling this method.
+
+This is useful for synchronously executing scheduled promises. For running ticks, promises, and timers in the same order they would run in the Node.js environment, you should call [`jest.runAllTimers()`](#jestrunalltimers).
+
+### `jest.clearAllPromises()`
+
+Clears all queued promises.
+
+This means, if any promises have been scheduled (but have not yet executed), they will be cleared and will never have the opportunity to execute in the future.
+
 ## Mock timers
 
 ### `jest.useFakeTimers()`

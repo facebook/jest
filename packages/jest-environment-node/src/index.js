@@ -13,7 +13,7 @@ import type {Global} from 'types/Global';
 import type {ModuleMocker} from 'jest-mock';
 
 import vm from 'vm';
-import {FakeTimers, installCommonGlobals} from 'jest-util';
+import {FakePromises, FakeTimers, installCommonGlobals} from 'jest-util';
 import mock from 'jest-mock';
 
 type Timer = {|
@@ -24,6 +24,7 @@ type Timer = {|
 
 class NodeEnvironment {
   context: ?vm$Context;
+  fakePromises: ?FakePromises;
   fakeTimers: ?FakeTimers<Timer>;
   global: ?Global;
   moduleMocker: ?ModuleMocker;
@@ -65,8 +66,14 @@ class NodeEnvironment {
       refToId: timerRefToId,
     };
 
+    this.fakePromises = new FakePromises({
+      config,
+      global,
+    });
+
     this.fakeTimers = new FakeTimers({
       config,
+      fakePromises: this.fakePromises,
       global,
       moduleMocker: this.moduleMocker,
       timerConfig,
@@ -78,10 +85,14 @@ class NodeEnvironment {
   }
 
   teardown(): Promise<void> {
+    if (this.fakePromises) {
+      this.fakePromises.dispose();
+    }
     if (this.fakeTimers) {
       this.fakeTimers.dispose();
     }
     this.context = null;
+    this.fakePromises = null;
     this.fakeTimers = null;
     return Promise.resolve();
   }

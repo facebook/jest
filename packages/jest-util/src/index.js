@@ -13,6 +13,7 @@ import BufferedConsole from './buffered_console';
 import clearLine from './clear_line';
 import Console from './Console';
 import ErrorWithStack from './error_with_stack';
+import FakePromises from './fake_promises';
 import FakeTimers from './fake_timers';
 import formatTestResults from './format_test_results';
 import getFailedSnapshotTests from './get_failed_snapshot_tests';
@@ -39,6 +40,7 @@ module.exports = {
   BufferedConsole,
   Console,
   ErrorWithStack,
+  FakePromises,
   FakeTimers,
   NullConsole,
   clearLine,

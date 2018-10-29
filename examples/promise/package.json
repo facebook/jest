@@ -1,0 +1,15 @@
+{
+  "private": true,
+  "version": "0.0.0",
+  "name": "example-promise",
+  "devDependencies": {
+    "babel-preset-env": "*",
+    "jest": "*"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "compileAsyncToGenerator": true
+  }
+}

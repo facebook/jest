@@ -112,6 +112,8 @@
 - `[jest-each]` Prevent done callback being supplied to describe ([#6843](https://github.com/facebook/jest/pull/6843))
 - `[jest-config]` Better error message for a case when a preset module was found, but no `jest-preset.js` or `jest-preset.json` at the root ([#6863](https://github.com/facebook/jest/pull/6863))
 - `[jest-haste-map]` Catch crawler error when unsuccessfully reading directories ([#6761](https://github.com/facebook/jest/pull/6761))
+- `[jest-util]` Introduce FakePromises to fix micro-task run-order issues when using FakeTimers ([#6876](https://github.com/facebook/jest/pull/6876))
+- `[jest-cli]` Introduce command-line options for using fake promises and compiling `async`-`await` syntax to generators ([#6876](https://github.com/facebook/jest/pull/6876))
 
 ### Chore & Maintenance
 
@@ -121,6 +123,7 @@
 - `[docs]` Correct `failure-change` notification mode ([#6878](https://github.com/facebook/jest/pull/6878))
 - `[scripts]` Don’t remove node_modules from subdirectories of presets in e2e tests ([#6948](https://github.com/facebook/jest/pull/6948))
 - `[diff-sequences]` Double-check number of differences in tests ([#6953](https://github.com/facebook/jest/pull/6953))
+- `[docs]` Add documentation for promise mocks, and clarify how micro-tasks behave when using timer mocks. Also, document cli options for fake timers and fake promises ([#6876](https://github.com/facebook/jest/pull/6876))
 
 ## 23.5.0
 
