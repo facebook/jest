@@ -51,6 +51,16 @@ describe('.rejects', () => {
     await jestExpect(fn()).rejects.toThrow('some error');
   });
 
+  it('should reject and match non-error class', async () => {
+    class Exception {
+      constructor(message: string) {}
+    }
+    const p = new Promise(() => {
+      throw new Exception('some-info');
+    });
+    await expect(p).rejects.toThrow(Exception);
+  });
+
   [4, [1], {a: 1}, 'a', true, null, undefined, () => {}].forEach(value => {
     it(`fails non-promise value ${stringify(value)} synchronously`, () => {
       let error;

@@ -20,7 +20,6 @@ import {
   printWithType,
 } from 'jest-matcher-utils';
 import {equals} from './jasmine_utils';
-import {isError} from './utils';
 
 export const createMatcher = (matcherName: string, fromPromise?: boolean) => (
   actual: Function,
@@ -28,8 +27,7 @@ export const createMatcher = (matcherName: string, fromPromise?: boolean) => (
 ) => {
   const value = expected;
   let error;
-
-  if (fromPromise && isError(actual)) {
+  if (fromPromise) {
     error = actual;
   } else {
     if (typeof actual !== 'function') {
