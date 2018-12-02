@@ -14,6 +14,10 @@ import type {ScrollOptions} from 'types/Watch';
 import chalk from 'chalk';
 import ansiEscapes from 'ansi-escapes';
 import Prompt from './lib/Prompt';
+import {
+  printPatternCaret,
+  printRestoredPatternCaret,
+} from './lib/patternModeHelpers';
 
 const usage = (entity: string) =>
   `\n${chalk.bold('Pattern Mode Usage')}\n` +
@@ -23,6 +27,15 @@ const usage = (entity: string) =>
   `\n`;
 
 const usageRows = usage('').split('\n').length;
+
+const isValid = (pattern: string) => {
+  try {
+    const regex = new RegExp(pattern, 'i');
+    return Boolean(regex);
+  } catch (e) {
+    return false;
+  }
+};
 
 export default class PatternPrompt {
   _pipe: stream$Writable | tty$WriteStream;
@@ -50,7 +63,22 @@ export default class PatternPrompt {
     this._pipe.write(usage(this._entityName));
     this._pipe.write(ansiEscapes.cursorShow);
 
-    this._prompt.enter(this._onChange.bind(this), onSuccess, onCancel);
+    const _onSuccess = this._validation(onSuccess);
+
+    this._prompt.enter(this._onChange.bind(this), _onSuccess, onCancel);
+  }
+
+  _validation(onSuccess: Function) {
+    return (pattern: string) => {
+      const valid = isValid(pattern);
+      console.log('\n' + chalk.red('Please provide valid RegExp'));
+      if (valid) {
+        onSuccess(pattern);
+      } else {
+        printPatternCaret('', this._pipe);
+        printRestoredPatternCaret(pattern, this._currentUsageRows, this._pipe);
+      }
+    };
   }
 
   _onChange(pattern: string, options: ScrollOptions) {
