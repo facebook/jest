@@ -89,6 +89,7 @@
 - `[jest-haste-map]` Remove legacy condition for duplicate module detection ([#7333](https://github.com/facebook/jest/pull/7333))
 - `[jest-haste-map]` Fix `require` detection with trailing commas and ignore `import typeof` modules ([#7385](https://github.com/facebook/jest/pull/7385))
 - `[jest-cli]` Fix to set prettierPath via config file ([#7412](https://github.com/facebook/jest/pull/7412))
+- `[jest-cli]` Do not mention obsolete snapshots when a test fails ([#7520](https://github.com/facebook/jest/pull/7520))
 - `[jest-cli]` Support dashed args ([#7497](https://github.com/facebook/jest/pull/7497))
 - `[jest-cli]` Fix to run in band tests if watch mode enable when runInBand arg used ([#7518](https://github.com/facebook/jest/pull/7518))
 

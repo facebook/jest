@@ -7,7 +7,7 @@
  * @flow
  */
 
-import type {AggregatedResult, SnapshotSummary} from 'types/TestResult';
+import type {AggregatedResult} from 'types/TestResult';
 import type {GlobalConfig} from 'types/Config';
 import type {Context} from 'types/Context';
 import type {ReporterOnStartOptions} from 'types/Reporters';
@@ -93,10 +93,7 @@ export default class SummaryReporter extends BaseReporter {
       }
 
       this._printSummary(aggregatedResults, this._globalConfig);
-      this._printSnapshotSummary(
-        aggregatedResults.snapshot,
-        this._globalConfig,
-      );
+      this._printSnapshotSummary(aggregatedResults, this._globalConfig);
 
       if (numTotalTestSuites) {
         let message = getSummary(aggregatedResults, {
@@ -116,9 +113,10 @@ export default class SummaryReporter extends BaseReporter {
   }
 
   _printSnapshotSummary(
-    snapshots: SnapshotSummary,
+    aggregatedResults: AggregatedResult,
     globalConfig: GlobalConfig,
   ) {
+    const snapshots = aggregatedResults.snapshot;
     if (
       snapshots.added ||
       snapshots.filesRemoved ||
@@ -154,7 +152,21 @@ export default class SummaryReporter extends BaseReporter {
         globalConfig,
         updateCommand,
       );
-      snapshotSummary.forEach(this.log);
+
+      const anyTestFailures = !(
+        aggregatedResults.numFailedTests === 0 &&
+        aggregatedResults.numRuntimeErrorTestSuites === 0
+      );
+
+      //don't mention any obsolete snapshots when test fails
+      snapshotSummary.forEach(status => {
+        //if status contains the word obsolete and the test have failed do
+        //nothing otherwise log status.
+        if (status.includes('obsolete') && anyTestFailures) {
+          return;
+        }
+        this.log(status);
+      });
 
       this.log(''); // print empty line
     }
