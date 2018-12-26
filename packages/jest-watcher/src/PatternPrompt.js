@@ -31,7 +31,7 @@ const usageRows = usage('').split('\n').length;
 const isValid = (pattern: string) => {
   try {
     const regex = new RegExp(pattern, 'i');
-    return Boolean(regex);
+    return !!regex;
   } catch (e) {
     return false;
   }
@@ -71,10 +71,12 @@ export default class PatternPrompt {
   _validation(onSuccess: Function) {
     return (pattern: string) => {
       const valid = isValid(pattern);
-      console.log('\n' + chalk.red('Please provide valid RegExp'));
       if (valid) {
         onSuccess(pattern);
       } else {
+        this._pipe.write(
+          '\n' + chalk.red('Please provide valid RegExp') + '\n',
+        );
         printPatternCaret('', this._pipe);
         printRestoredPatternCaret(pattern, this._currentUsageRows, this._pipe);
       }
