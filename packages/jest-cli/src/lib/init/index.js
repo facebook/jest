@@ -29,10 +29,6 @@ export default async (rootDir: string = process.cwd()) => {
   const projectPackageJsonPath: string = path.join(rootDir, PACKAGE_JSON);
   const jestConfigPath: string = path.join(rootDir, JEST_CONFIG);
 
-  if (!fs.existsSync(projectPackageJsonPath)) {
-    throw new NotFoundPackageJsonError(rootDir);
-  }
-
   const questions = defaultQuestions.slice(0);
   let hasJestProperty: boolean = false;
   let hasJestConfig: boolean = false;
@@ -42,7 +38,10 @@ export default async (rootDir: string = process.cwd()) => {
     projectPackageJson = JSON.parse(
       fs.readFileSync(projectPackageJsonPath, 'utf-8'),
     );
-  } catch (error) {
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      throw new NotFoundPackageJsonError(rootDir);
+    }
     throw new MalformedPackageJsonError(projectPackageJsonPath);
   }
 

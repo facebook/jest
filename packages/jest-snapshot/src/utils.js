@@ -99,14 +99,16 @@ export const getSnapshotData = (
   let snapshotContents = '';
   let dirty = false;
 
-  if (fs.existsSync(snapshotPath)) {
-    try {
-      snapshotContents = fs.readFileSync(snapshotPath, 'utf8');
-      // eslint-disable-next-line no-new-func
-      const populate = new Function('exports', snapshotContents);
-      // $FlowFixMe
-      populate(data);
-    } catch (e) {}
+  try {
+    snapshotContents = fs.readFileSync(snapshotPath, 'utf8');
+    // eslint-disable-next-line no-new-func
+    const populate = new Function('exports', snapshotContents);
+    // $FlowFixMe
+    populate(data);
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
+      throw err;
+    }
   }
 
   const validationResult = validateSnapshotVersion(snapshotContents);

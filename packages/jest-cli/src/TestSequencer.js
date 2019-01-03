@@ -40,13 +40,15 @@ export default class TestSequencer {
     const {context} = test;
     if (!this._cache.has(context) && context.config.cache) {
       const cachePath = this._getCachePath(context);
-      if (fs.existsSync(cachePath)) {
-        try {
-          this._cache.set(
-            context,
-            JSON.parse(fs.readFileSync(cachePath, 'utf8')),
-          );
-        } catch (e) {}
+      try {
+        this._cache.set(
+          context,
+          JSON.parse(fs.readFileSync(cachePath, 'utf8')),
+        );
+      } catch (err) {
+        if (err.code !== 'ENOENT') {
+          throw err;
+        }
       }
     }
 

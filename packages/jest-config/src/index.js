@@ -16,11 +16,9 @@ import type {
 } from 'types/Config';
 
 import chalk from 'chalk';
-import fs from 'fs';
 import path from 'path';
 import {isJSONString, replaceRootDirInPath} from './utils';
 import normalize from './normalize';
-import resolveConfigPath from './resolveConfigPath';
 import readConfigFileAndSetRootDir from './readConfigFileAndSetRootDir';
 
 export {getTestEnvironment, isJSONString} from './utils';
@@ -78,12 +76,14 @@ export function readConfig(
     // A string passed to `--config`, which is either a direct path to the config
     // or a path to directory containing `package.json` or `jest.config.js`
   } else if (!skipArgvConfigOption && typeof argv.config == 'string') {
-    configPath = resolveConfigPath(argv.config, process.cwd());
-    rawOptions = readConfigFileAndSetRootDir(configPath);
+    const result = readConfigFileAndSetRootDir(process.cwd(), argv.config);
+    configPath = result.configFile;
+    rawOptions = result.rawOptions;
   } else {
     // Otherwise just try to find config in the current rootDir.
-    configPath = resolveConfigPath(packageRootOrConfig, process.cwd());
-    rawOptions = readConfigFileAndSetRootDir(configPath);
+    const result = readConfigFileAndSetRootDir(process.cwd(), packageRootOrConfig);
+    configPath = result.configFile;
+    rawOptions = result.rawOptions;
   }
 
   const {options, hasDeprecationWarnings} = normalize(rawOptions, argv);
@@ -283,20 +283,17 @@ export function readConfigs(
 
   if (projects.length > 1) {
     const parsedConfigs = projects
-      .filter(root => {
-        // Ignore globbed files that cannot be `require`d.
-        if (
-          fs.existsSync(root) &&
-          !fs.lstatSync(root).isDirectory() &&
-          !root.endsWith('.js') &&
-          !root.endsWith('.json')
-        ) {
-          return false;
+      .reduce((result, root) => {
+        if (!result.configPaths.has(configPath)) {
+          result.configPaths.add(configPath);
+          result.configs.push(readConfig(argv, root, true, configPath));
         }
-
-        return true;
-      })
-      .map(root => readConfig(argv, root, true, configPath));
+        return result;
+      }, {configPaths: new Set(), configs: []})
+        .configs
+        .filter(({ configPath }) =>
+           configPath.endsWith('.js') || configPath.endsWith('.json')
+        );
 
     ensureNoDuplicateConfigs(parsedConfigs, projects, configPath);
     configs = parsedConfigs.map(({projectConfig}) => projectConfig);

@@ -121,7 +121,7 @@ test('sorts based on failures, timing information and file size', () => {
 
 test('writes the cache based on results without existing cache', () => {
   fs.readFileSync = jest.fn(() => {
-    throw new Error('File does not exist.');
+    throw Object.assign(new Error('File does not exist.'), { code: 'ENOENT' });
   });
 
   const testPaths = ['/test-a.js', '/test-b.js', '/test-c.js'];
