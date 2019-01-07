@@ -78,9 +78,13 @@ function findNative(
   roots: Array<string>,
   extensions: Array<string>,
   ignore: IgnoreMatcher,
+  preserveSymlinks: boolean,
   callback: Callback,
 ): void {
   const args = [].concat(roots);
+  if (preserveSymlinks) {
+    args.unshift('-L');
+  }
   args.push('-type', 'f');
   if (extensions.length) {
     args.push('(');
@@ -137,6 +141,7 @@ export default function nodeCrawl(
     extensions,
     forceNodeFilesystemAPI,
     ignore,
+    preserveSymlinks,
     rootDir,
     roots,
   } = options;
@@ -163,7 +168,7 @@ export default function nodeCrawl(
     if (forceNodeFilesystemAPI || process.platform === 'win32') {
       find(roots, extensions, ignore, callback);
     } else {
-      findNative(roots, extensions, ignore, callback);
+      findNative(roots, extensions, ignore, preserveSymlinks, callback);
     }
   });
 }

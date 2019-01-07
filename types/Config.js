@@ -273,6 +273,7 @@ export type ProjectConfig = {|
   modulePathIgnorePatterns: Array<string>,
   modulePaths: Array<string>,
   name: string,
+  preserveSymlinks: boolean,
   prettierPath: string,
   resetMocks: boolean,
   resetModules: boolean,

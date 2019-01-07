@@ -60,6 +60,7 @@ type Options = {
   mocksPattern?: string,
   name: string,
   platforms: Array<string>,
+  preserveSymlinks: boolean,
   providesModuleNodeModules?: Array<string>,
   resetCache?: boolean,
   retainAllFiles: boolean,
@@ -84,6 +85,7 @@ type InternalOptions = {
   mocksPattern: ?RegExp,
   name: string,
   platforms: Array<string>,
+  preserveSymlinks: boolean,
   resetCache: ?boolean,
   retainAllFiles: boolean,
   rootDir: string,
@@ -244,12 +246,16 @@ class HasteMap extends EventEmitter {
         : null,
       name: options.name,
       platforms: options.platforms,
+      preserveSymlinks: options.preserveSymlinks,
       resetCache: options.resetCache,
       retainAllFiles: options.retainAllFiles,
       rootDir: options.rootDir,
       roots: Array.from(new Set(options.roots)),
       throwOnModuleCollision: !!options.throwOnModuleCollision,
-      useWatchman: options.useWatchman == null ? true : options.useWatchman,
+      // Watchman can not handle symlinks: https://github.com/facebook/watchman/issues/105
+      useWatchman: options.preserveSymlinks == true
+        ? false
+        : options.useWatchman == null ? true : options.useWatchman,
       watch: !!options.watch,
     };
     this._console = options.console || global.console;
@@ -703,6 +709,7 @@ class HasteMap extends EventEmitter {
           forceNodeFilesystemAPI: options.forceNodeFilesystemAPI,
           ignore,
           mapper: options.mapper,
+          preserveSymlinks: options.preserveSymlinks,
           rootDir: options.rootDir,
           roots: options.roots,
         }).catch(e => {
@@ -724,6 +731,7 @@ class HasteMap extends EventEmitter {
         extensions: options.extensions,
         forceNodeFilesystemAPI: options.forceNodeFilesystemAPI,
         ignore,
+        preserveSymlinks: options.preserveSymlinks,
         rootDir: options.rootDir,
         roots: options.roots,
       }).catch(retry);

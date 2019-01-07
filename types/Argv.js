@@ -60,6 +60,7 @@ export type Argv = {|
   notifyMode: string,
   onlyChanged: boolean,
   outputFile: string,
+  preserveSymlinks: boolean,
   preset: ?string,
   projects: Array<string>,
   prettierPath: ?string,

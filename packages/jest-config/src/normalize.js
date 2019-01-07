@@ -674,6 +674,7 @@ export default function normalize(options: InitialOptions, argv: Argv) {
       case 'onlyChanged':
       case 'outputFile':
       case 'passWithNoTests':
+      case 'preserveSymlinks':
       case 'replname':
       case 'reporters':
       case 'resetMocks':

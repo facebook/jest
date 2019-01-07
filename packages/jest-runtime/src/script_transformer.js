@@ -55,6 +55,8 @@ const projectCaches: WeakMap<ProjectConfig, ProjectCache> = new WeakMap();
 // To reset the cache for specific changesets (rather than package version).
 const CACHE_VERSION = '1';
 
+const preserveSymlinks = true;
+
 export default class ScriptTransformer {
   static EVAL_RESULT_VARIABLE: string;
   _cache: ProjectCache;
@@ -205,7 +207,7 @@ export default class ScriptTransformer {
   }
 
   transformSource(filepath: Path, content: string, instrument: boolean) {
-    const filename = this._getRealPath(filepath);
+    const filename = preserveSymlinks ? filepath : this._getRealPath(filepath);
     const transform = this._getTransformer(filename);
     const cacheFilePath = this._getFileCachePath(filename, content, instrument);
     let sourceMapPath = cacheFilePath + '.map';

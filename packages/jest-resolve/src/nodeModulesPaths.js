@@ -16,6 +16,7 @@ import {sync as realpath} from 'realpath-native';
 type NodeModulesPathsOptions = {|
   moduleDirectory?: Array<string>,
   paths?: ?Array<Path>,
+  preserveSymlinks?: boolean,
 |};
 
 export default function nodeModulesPaths(
@@ -42,7 +43,11 @@ export default function nodeModulesPaths(
   // traverses parents of the physical path, not the symlinked path
   let physicalBasedir;
   try {
-    physicalBasedir = realpath(basedirAbs);
+    if (!options.preserveSymlinks) {
+      physicalBasedir = realpath(basedirAbs);
+    } else {
+      physicalBasedir = basedirAbs;
+    }
   } catch (err) {
     // realpath can throw, e.g. on mapped drives
     physicalBasedir = basedirAbs;

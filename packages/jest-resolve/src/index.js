@@ -29,6 +29,7 @@ type ResolverConfig = {|
   moduleNameMapper: ?Array<ModuleNameMapperConfig>,
   modulePaths: Array<Path>,
   platforms?: Array<string>,
+  preserveSymlinks?: boolean,
   resolver: ?Path,
   rootDir: ?Path,
 |};
@@ -39,6 +40,7 @@ type FindNodeModuleConfig = {|
   extensions?: Array<string>,
   moduleDirectory?: Array<string>,
   paths?: Array<Path>,
+  preserveSymlinks?: boolean,
   resolver?: ?Path,
   rootDir?: ?Path,
 |};
@@ -81,6 +83,7 @@ export default class Resolver {
       moduleNameMapper: options.moduleNameMapper,
       modulePaths: options.modulePaths,
       platforms: options.platforms,
+      preserveSymlinks: options.preserveSymlinks,
       resolver: options.resolver,
       rootDir: options.rootDir,
     };
@@ -109,6 +112,7 @@ export default class Resolver {
         extensions: options.extensions,
         moduleDirectory: options.moduleDirectory,
         paths: paths ? (nodePaths || []).concat(paths) : nodePaths,
+        preserveSymlinks: options.preserveSymlinks,
         rootDir: options.rootDir,
       });
     } catch (e) {}
@@ -164,6 +168,7 @@ export default class Resolver {
         extensions,
         moduleDirectory,
         paths,
+        preserveSymlinks: this._options.preserveSymlinks,
         resolver: this._options.resolver,
         rootDir: this._options.rootDir,
       });
@@ -383,6 +388,7 @@ export default class Resolver {
               extensions,
               moduleDirectory,
               paths,
+              preserveSymlinks: this._options.preserveSymlinks,
               resolver,
               rootDir: this._options.rootDir,
             });
