@@ -39,7 +39,7 @@ class WorkerPool extends BaseWorkerPool implements WorkerPoolInterface {
 
   createWorker(workerOptions: WorkerOptions): WorkerInterface {
     let Worker;
-    if (this._options.enableWorkerThreads && canUseWorkerThreads()) {
+    if (canUseWorkerThreads()) {
       Worker = require('./workers/NodeThreadsWorker').default;
     } else {
       Worker = require('./workers/ChildProcessWorker').default;
