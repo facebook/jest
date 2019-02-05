@@ -67,7 +67,7 @@ const createTransformer = (options: any): Transformer => {
       configString: string,
       {config, instrument, rootDir}: {config: ProjectConfig} & CacheKeyOptions,
     ): string {
-      const babelOptions = loadBabelConfig(config.cwd, filename);
+      const babelOptions = loadBabelConfig(config.rootDir, filename);
       const configPath = [
         babelOptions.config || '',
         babelOptions.babelrc || '',
@@ -100,7 +100,9 @@ const createTransformer = (options: any): Transformer => {
       config: ProjectConfig,
       transformOptions?: TransformOptions,
     ): string | TransformedSource {
-      const babelOptions = {...loadBabelConfig(config.cwd, filename).options};
+      const babelOptions = {
+        ...loadBabelConfig(config.rootDir, filename).options,
+      };
 
       if (transformOptions && transformOptions.instrument) {
         babelOptions.auxiliaryCommentBefore = ' istanbul ignore next ';

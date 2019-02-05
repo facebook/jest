@@ -1,5 +1,3 @@
-// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
-
 module.exports = {
   plugins: [
     ['@babel/plugin-transform-modules-commonjs', {allowTopLevelThis: true}],

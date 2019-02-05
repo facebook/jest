@@ -15,6 +15,9 @@ module.exports = {
       globalSetup: '<rootDir>/setup.js',
       rootDir: path.resolve(__dirname, './project-1'),
       testMatch: ['<rootDir>/**/*.test.js'],
+      transform: {
+        '\\.js$': require.resolve('./transform'),
+      },
       transformIgnorePatterns: ['/node_modules/', '/packages/'],
     },
     {
@@ -22,6 +25,9 @@ module.exports = {
       globalSetup: '<rootDir>/setup.js',
       rootDir: path.resolve(__dirname, './project-2'),
       testMatch: ['<rootDir>/**/*.test.js'],
+      transform: {
+        '\\.js$': require.resolve('./transform'),
+      },
       transformIgnorePatterns: ['/node_modules/', '/packages/'],
     },
   ],

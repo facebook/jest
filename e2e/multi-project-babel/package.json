@@ -1,0 +1,15 @@
+{
+  "jest": {
+    "projects": [
+      {
+        "rootDir": "<rootDir>/prj-1"
+      },
+      {
+        "rootDir": "<rootDir>/prj-2"
+      },
+      "<rootDir>/prj-3",
+      "<rootDir>/prj-4",
+      "<rootDir>/prj-5"
+    ]
+  }
+}
