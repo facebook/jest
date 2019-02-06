@@ -7,6 +7,7 @@
  * @flow
  */
 
+import addInstanceOfAlias from './addInstanceOfAlias';
 import BufferedConsole from './BufferedConsole';
 import clearLine from './clearLine';
 import CustomConsole from './CustomConsole';
@@ -32,6 +33,7 @@ module.exports = {
   ErrorWithStack,
   FakeTimers,
   NullConsole,
+  addInstanceOfAlias,
   clearLine,
   convertDescriptorToString,
   createDirectory,

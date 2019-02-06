@@ -11,6 +11,7 @@ import type {ConfigGlobals} from 'types/Config';
 import type {Global} from 'types/Global';
 
 import fs from 'fs';
+import addInstanceOfAlias from './addInstanceOfAlias';
 import createProcessObject from './createProcessObject';
 import deepCyclicCopy from './deepCyclicCopy';
 
@@ -65,6 +66,8 @@ export default function(globalObject: Global, globals: ConfigGlobals) {
   globalObject.Buffer = global.Buffer;
   globalObject.setImmediate = global.setImmediate;
   globalObject.clearImmediate = global.clearImmediate;
+
+  addInstanceOfAlias(globalObject.Error, Error);
 
   return Object.assign(globalObject, deepCyclicCopy(globals));
 }
