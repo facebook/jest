@@ -9,7 +9,6 @@
 import crypto from 'crypto';
 import path from 'path';
 import {escapeStrForRegex} from 'jest-regex-util';
-import normalize from '../normalize';
 import Defaults from '../Defaults';
 
 import {DEFAULT_JS_PATTERN} from '../constants';
@@ -17,6 +16,8 @@ import {DEFAULT_JS_PATTERN} from '../constants';
 const DEFAULT_CSS_PATTERN = '^.+\\.(css)$';
 
 jest.mock('jest-resolve').mock('path', () => jest.requireActual('path').posix);
+
+let normalize;
 
 let root;
 let expectedPathFooBar;
@@ -39,6 +40,7 @@ function joinForPattern() {
 }
 
 beforeEach(() => {
+  normalize = require('../normalize').default;
   root = path.resolve('/');
   expectedPathFooBar = path.join(root, 'root', 'path', 'foo', 'bar', 'baz');
   expectedPathFooQux = path.join(root, 'root', 'path', 'foo', 'qux', 'quux');
@@ -924,6 +926,39 @@ describe('moduleDirectories', () => {
       '/root/node_modules',
     ]);
   });
+
+  describe('win32', () => {
+    beforeEach(() => {
+      jest.resetModules();
+      jest.mock('path', () => jest.requireActual('path').win32);
+
+      normalize = require('../normalize').default;
+      require('jest-resolve').findNodeModule = findNodeModule;
+    });
+
+    afterEach(() => {
+      jest.resetModules();
+      jest.mock('path', () => jest.requireActual('path').posix);
+
+      normalize = require('../normalize').default;
+    });
+
+    it('correctly handles globs', () => {
+      const {options} = normalize(
+        {
+          rootDir: '/root',
+          testMatch: [
+            '<rootDir>/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js',
+          ],
+        },
+        {},
+      );
+
+      expect(options.testMatch).toEqual([
+        '/root/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js',
+      ]);
+    });
+  });
 });
 
 describe('preset', () => {
@@ -1375,40 +1410,36 @@ describe('testPathPattern', () => {
 
       describe('win32', () => {
         beforeEach(() => {
+          jest.resetModules();
           jest.mock('path', () => jest.requireActual('path').win32);
+          normalize = require('../normalize').default;
           require('jest-resolve').findNodeModule = findNodeModule;
         });
 
         afterEach(() => {
           jest.resetModules();
+          jest.mock('path', () => jest.requireActual('path').posix);
+          normalize = require('../normalize').default;
+          require('jest-resolve').findNodeModule = findNodeModule;
         });
 
         it('preserves any use of "\\"', () => {
           const argv = {[opt.property]: ['a\\b', 'c\\\\d']};
-          const {options} = require('../normalize').default(
-            initialOptions,
-            argv,
-          );
+          const {options} = normalize(initialOptions, argv);
 
           expect(options.testPathPattern).toBe('a\\b|c\\\\d');
         });
 
         it('replaces POSIX path separators', () => {
           const argv = {[opt.property]: ['a/b']};
-          const {options} = require('../normalize').default(
-            initialOptions,
-            argv,
-          );
+          const {options} = normalize(initialOptions, argv);
 
           expect(options.testPathPattern).toBe('a\\\\b');
         });
 
         it('replaces POSIX paths in multiple args', () => {
           const argv = {[opt.property]: ['a/b', 'c/d']};
-          const {options} = require('../normalize').default(
-            initialOptions,
-            argv,
-          );
+          const {options} = normalize(initialOptions, argv);
 
           expect(options.testPathPattern).toBe('a\\\\b|c\\\\d');
         });

@@ -13,6 +13,7 @@ import path from 'path';
 import {ValidationError} from 'jest-validate';
 import Resolver from 'jest-resolve';
 import chalk from 'chalk';
+import slash from 'slash';
 
 type ResolveOptions = {|
   rootDir: string,
@@ -66,9 +67,11 @@ export const replaceRootDirInPath = (
     return filePath;
   }
 
-  return path.resolve(
-    rootDir,
-    path.normalize('./' + filePath.substr('<rootDir>'.length)),
+  return slash(
+    path.resolve(
+      rootDir,
+      path.normalize('./' + filePath.substr('<rootDir>'.length)),
+    ),
   );
 };
 

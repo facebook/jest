@@ -4,6 +4,8 @@
 
 ### Fixes
 
+- `[jest-config]` fix: normalize path separator for rootDir replacement ([#7814](https://github.com/facebook/jest/pull/7814))
+
 ### Chore & Maintenance
 
 - `[*]`: Setup building, linting and testing of TypeScript ([#7808](https://github.com/facebook/jest/pull/7808))
