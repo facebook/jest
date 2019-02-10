@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -87,13 +87,12 @@ const validate = (config: Object, options: ValidationOptions) => {
     options.recursiveBlacklist || [],
   );
 
-  const defaultedOptions: ValidationOptions = Object.assign(
-    {},
-    defaultConfig,
-    options,
-    {recursiveBlacklist: combinedBlacklist},
-    {title: Object.assign({}, defaultConfig.title, options.title)},
-  );
+  const defaultedOptions: ValidationOptions = Object.assign({
+    ...defaultConfig,
+    ...options,
+    recursiveBlacklist: combinedBlacklist,
+    title: options.title || defaultConfig.title,
+  });
 
   const {hasDeprecationWarnings: hdw} = _validate(
     config,

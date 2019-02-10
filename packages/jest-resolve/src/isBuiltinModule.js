@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,12 +15,16 @@ declare var process: {
   binding(type: string): {},
 };
 
-const BUILTIN_MODULES =
-  builtinModules ||
-  Object.keys(process.binding('natives')).filter(
-    (module: string) => !/^internal\//.test(module),
-  );
+const EXPERIMENTAL_MODULES = ['worker_threads'];
+
+const BUILTIN_MODULES = new Set(
+  builtinModules
+    ? builtinModules.concat(EXPERIMENTAL_MODULES)
+    : Object.keys(process.binding('natives'))
+        .filter((module: string) => !/^internal\//.test(module))
+        .concat(EXPERIMENTAL_MODULES),
+);
 
 export default function isBuiltinModule(module: string): boolean {
-  return BUILTIN_MODULES.indexOf(module) !== -1;
+  return BUILTIN_MODULES.has(module);
 }

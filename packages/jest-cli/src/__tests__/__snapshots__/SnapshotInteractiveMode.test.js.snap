@@ -16,7 +16,7 @@ exports[`SnapshotInteractiveMode skip 1 test, then quit 1`] = `
 `;
 
 exports[`SnapshotInteractiveMode skip 1 test, then quit 2`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>1 snapshot reviewed<bold></>, <bold><yellow>1 snapshot skipped</></>
@@ -43,7 +43,7 @@ exports[`SnapshotInteractiveMode skip 1 test, then restart 1`] = `
 `;
 
 exports[`SnapshotInteractiveMode skip 1 test, then restart 2`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>1 snapshot reviewed<bold></>, <bold><yellow>1 snapshot skipped</></>
@@ -100,7 +100,7 @@ exports[`SnapshotInteractiveMode skip 1 test, update 1 test, then finish and res
 `;
 
 exports[`SnapshotInteractiveMode skip 1 test, update 1 test, then finish and restart 3`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>2 snapshots reviewed<bold></>, <bold><green>1 snapshot updated</></>, <bold><yellow>1 snapshot skipped</></>
@@ -157,7 +157,7 @@ exports[`SnapshotInteractiveMode skip 2 tests, then finish and restart 2`] = `
 `;
 
 exports[`SnapshotInteractiveMode skip 2 tests, then finish and restart 3`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>2 snapshots reviewed<bold></>, <bold><yellow>2 snapshots skipped</></>
@@ -214,7 +214,7 @@ exports[`SnapshotInteractiveMode update 1 test, skip 1 test, then finish and res
 `;
 
 exports[`SnapshotInteractiveMode update 1 test, skip 1 test, then finish and restart 3`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>2 snapshots reviewed<bold></>, <bold><green>1 snapshot updated</></>, <bold><yellow>1 snapshot skipped</></>
@@ -256,7 +256,7 @@ exports[`SnapshotInteractiveMode update 1 test, then finish and return 1`] = `
 `;
 
 exports[`SnapshotInteractiveMode update 1 test, then finish and return 2`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>1 snapshot reviewed<bold></>, <bold><green>1 snapshot updated</></>
@@ -297,7 +297,7 @@ exports[`SnapshotInteractiveMode update 2 tests, then finish and return 2`] = `
 `;
 
 exports[`SnapshotInteractiveMode update 2 tests, then finish and return 3`] = `
-"[MOCK - eraseDown]
+"[MOCK - clear]
 
 <bold>Interactive Snapshot Result</>
  › <bold><dim>2 snapshots reviewed<bold></>, <bold><green>2 snapshots updated</></>

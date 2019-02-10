@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,7 @@
 
 export default ({
   automock: 'All imported modules in your tests should be mocked automatically',
-  bail: 'Stop running tests after the first failure',
+  bail: 'Stop running tests after `n` failures',
   browser: 'Respect "browser" field in package.json when resolving modules',
   cacheDirectory:
     'The directory where Jest should store its cached dependency information',

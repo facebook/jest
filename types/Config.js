@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -24,7 +24,7 @@ export type ConfigGlobals = Object;
 
 export type DefaultOptions = {|
   automock: boolean,
-  bail: boolean,
+  bail: number,
   browser: boolean,
   cache: boolean,
   cacheDirectory: Path,
@@ -46,8 +46,7 @@ export type DefaultOptions = {|
   globalSetup: ?string,
   globalTeardown: ?string,
   haste: HasteConfig,
-  detectLeaks: boolean,
-  detectOpenHandles: boolean,
+  maxConcurrency: number,
   moduleDirectories: Array<string>,
   moduleFileExtensions: Array<string>,
   moduleNameMapper: {[key: string]: string},
@@ -92,7 +91,7 @@ export type DefaultOptions = {|
 
 export type InitialOptions = {
   automock?: boolean,
-  bail?: boolean,
+  bail?: boolean | number,
   browser?: boolean,
   cache?: boolean,
   cacheDirectory?: Path,
@@ -111,6 +110,7 @@ export type InitialOptions = {
   detectOpenHandles?: boolean,
   displayName?: string,
   expand?: boolean,
+  extraGlobals?: Array<string>,
   filter?: Path,
   findRelatedTests?: boolean,
   forceCoverageMatch?: Array<Glob>,
@@ -125,6 +125,7 @@ export type InitialOptions = {
   lastCommit?: boolean,
   listTests?: boolean,
   mapCoverage?: boolean,
+  maxConcurrency?: number,
   moduleDirectories?: Array<string>,
   moduleFileExtensions?: Array<string>,
   moduleLoader?: Path,
@@ -190,7 +191,7 @@ export type InitialOptions = {
 export type SnapshotUpdateState = 'all' | 'new' | 'none';
 
 export type GlobalConfig = {|
-  bail: boolean,
+  bail: number,
   changedSince: string,
   changedFilesWithAncestor: boolean,
   collectCoverage: boolean,
@@ -204,6 +205,7 @@ export type GlobalConfig = {|
   detectOpenHandles: boolean,
   enabledTestsMap: ?{[key: string]: {[key: string]: boolean}},
   expand: boolean,
+  extraGlobals: Array<string>,
   filter: ?Path,
   findRelatedTests: boolean,
   forceExit: boolean,
@@ -213,6 +215,7 @@ export type GlobalConfig = {|
   lastCommit: boolean,
   logHeapUsage: boolean,
   listTests: boolean,
+  maxConcurrency: number,
   maxWorkers: number,
   noStackTrace: boolean,
   nonFlagArgs: Array<string>,
@@ -257,8 +260,11 @@ export type ProjectConfig = {|
   detectOpenHandles: boolean,
   displayName: ?string,
   errorOnDeprecated: boolean,
+  extraGlobals: Array<string>,
   filter: ?Path,
   forceCoverageMatch: Array<Glob>,
+  globalSetup: ?string,
+  globalTeardown: ?string,
   globals: ConfigGlobals,
   haste: HasteConfig,
   moduleDirectories: Array<string>,

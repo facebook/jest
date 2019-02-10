@@ -24,7 +24,7 @@ If you have an existing application you'll need to install a few packages to mak
 Run
 
 ```bash
-yarn add --dev jest babel-jest babel-preset-env babel-preset-react react-test-renderer
+yarn add --dev jest babel-jest @babel/preset-env @babel/preset-react react-test-renderer
 ```
 
 Your `package.json` should look something like this (where `<current-version>` is the actual latest version number for the package). Please add the scripts and jest configuration entries:
@@ -36,9 +36,9 @@ Your `package.json` should look something like this (where `<current-version>` i
     "react-dom": "<current-version>"
   },
   "devDependencies": {
+    "@babel/preset-env": "<current-version>",
+    "@babel/preset-react": "<current-version>",
     "babel-jest": "<current-version>",
-    "babel-preset-env": "<current-version>",
-    "babel-preset-react": "<current-version>",
     "jest": "<current-version>",
     "react-test-renderer": "<current-version>"
   },
@@ -47,11 +47,11 @@ Your `package.json` should look something like this (where `<current-version>` i
   }
 ```
 
-```json
-// .babelrc
-{
-  "presets": ["env", "react"]
-}
+```js
+// babel.config.js
+module.exports = {
+  presets: ['@babel/preset-env', '@babel/preset-react'],
+};
 ```
 
 **And you're good to go!**
@@ -309,23 +309,22 @@ If you need more advanced functionality, you can also build your own transformer
 // custom-transformer.js
 'use strict';
 
-const babel = require('babel-core');
+const {transform} = require('@babel/core');
 const jestPreset = require('babel-preset-jest');
 
 module.exports = {
   process(src, filename) {
-    if (babel.util.canCompile(filename)) {
-      return babel.transform(src, {
-        filename,
-        presets: [jestPreset],
-      });
-    }
-    return src;
+    const result = transform(src, {
+      filename,
+      presets: [jestPreset],
+    });
+
+    return result ? result.code : src;
   },
 };
 ```
 
-Don't forget to install the `babel-core` and `babel-preset-jest` packages for this example to work.
+Don't forget to install the `@babel/core` and `babel-preset-jest` packages for this example to work.
 
 To make this work with Jest you need to update your Jest configuration with this: `"transform": {"\\.js$": "path/to/custom-transformer.js"}`.
 

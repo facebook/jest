@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,7 +14,7 @@ import type {Path} from 'types/Config';
 import {sync as spawnSync} from 'execa';
 import fs from 'fs';
 import path from 'path';
-import mkdirp from 'mkdirp';
+import {createDirectory} from 'jest-util';
 import rimraf from 'rimraf';
 
 export const run = (cmd: string, cwd?: Path) => {
@@ -43,7 +43,7 @@ export const linkJestPackage = (packageName: string, cwd: Path) => {
   const packagesDir = path.resolve(__dirname, '../packages');
   const packagePath = path.resolve(packagesDir, packageName);
   const destination = path.resolve(cwd, 'node_modules/', packageName);
-  mkdirp.sync(destination);
+  createDirectory(destination);
   rimraf.sync(destination);
   fs.symlinkSync(packagePath, destination, 'dir');
 };
@@ -74,13 +74,13 @@ export const writeFiles = (
   directory: string,
   files: {[filename: string]: string},
 ) => {
-  mkdirp.sync(directory);
+  createDirectory(directory);
   Object.keys(files).forEach(fileOrPath => {
     const filePath = fileOrPath.split('/'); // ['tmp', 'a.js']
     const filename = filePath.pop(); // filepath becomes dirPath (no filename)
 
     if (filePath.length) {
-      mkdirp.sync(path.join.apply(path, [directory].concat(filePath)));
+      createDirectory(path.join.apply(path, [directory].concat(filePath)));
     }
     fs.writeFileSync(
       path.resolve.apply(path, [directory].concat(filePath, [filename])),
@@ -128,7 +128,7 @@ export const createEmptyPackage = (
     },
   };
 
-  mkdirp.sync(directory);
+  createDirectory(directory);
   packageJson || (packageJson = DEFAULT_PACKAGE_JSON);
   fs.writeFileSync(
     path.resolve(directory, 'package.json'),
@@ -137,9 +137,11 @@ export const createEmptyPackage = (
 };
 
 export const extractSummary = (stdout: string) => {
-  const match = stdout.match(
-    /Test Suites:.*\nTests.*\nSnapshots.*\nTime.*(\nRan all test suites)*.*\n*$/gm,
-  );
+  const match = stdout
+    .replace(/(?:\\[rn])+/g, '\n')
+    .match(
+      /Test Suites:.*\nTests.*\nSnapshots.*\nTime.*(\nRan all test suites)*.*\n*$/gm,
+    );
   if (!match) {
     throw new Error(
       `
@@ -152,12 +154,15 @@ export const extractSummary = (stdout: string) => {
 
   const summary = replaceTime(match[0]);
 
-  const rest = cleanupStackTrace(
+  const rest = stdout
+    .replace(match[0], '')
     // remove all timestamps
-    stdout.replace(match[0], '').replace(/\s*\(\d*\.?\d+m?s\)$/gm, ''),
-  );
+    .replace(/\s*\(\d*\.?\d+m?s\)$/gm, '');
 
-  return {rest, summary};
+  return {
+    rest: rest.trim(),
+    summary: summary.trim(),
+  };
 };
 
 const sortTests = (stdout: string) =>
@@ -209,14 +214,6 @@ export const extractSummaries = (
     })
     .map(({start, end}) => extractSortedSummary(stdout.slice(start, end)));
 };
-
-// different versions of Node print different stack traces. This function
-// unifies their output to make it possible to snapshot them.
-// TODO: Remove when we drop support for node 4
-export const cleanupStackTrace = (output: string) =>
-  output
-    .replace(/.*(?=packages)/g, '      at ')
-    .replace(/^.*at.*[\s][\(]?(\S*\:\d*\:\d*).*$/gm, '      at $1');
 
 export const normalizeIcons = (str: string) => {
   if (!str) {

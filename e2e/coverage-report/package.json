@@ -3,6 +3,7 @@
     "collectCoverageFrom": [
       "**/*.js",
       "!setup.js",
+      "!babel.config.js",
       "!**/node_modules/**",
       "!**/coverage/**"
     ],

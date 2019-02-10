@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -172,6 +172,7 @@ const getWhiteList = (list: ?Array<string>): ?RegExp => {
  * type FileMetaData = {
  *   id: ?string, // used to look up module metadata objects in `map`.
  *   mtime: number, // check for outdated files.
+ *   size: number, // size of the file in bytes.
  *   visited: boolean, // whether the file has been parsed or not.
  *   dependencies: Array<string>, // all relative dependencies of this file.
  *   sha1: ?string, // SHA-1 of the file, if requested via options.
@@ -190,8 +191,8 @@ const getWhiteList = (list: ?Array<string>): ?RegExp => {
  *
  * Note that the data structures described above are conceptual only. The actual
  * implementation uses arrays and constant keys for metadata storage. Instead of
- * `{id: 'flatMap', mtime: 3421, visited: true, dependencies: []}` the real
- * representation is similar to `['flatMap', 3421, 1, []]` to save storage space
+ * `{id: 'flatMap', mtime: 3421, size: 42, visited: true, dependencies: []}` the real
+ * representation is similar to `['flatMap', 3421, 42, 1, []]` to save storage space
  * and reduce parse and write time of a big JSON blob.
  *
  * The HasteMap is created as follows:
@@ -894,7 +895,14 @@ class HasteMap extends EventEmitter {
               stat,
               'since the file exists or changed, it should have stats',
             );
-            const fileMetadata = ['', stat.mtime.getTime(), 0, [], null];
+            const fileMetadata = [
+              '',
+              stat.mtime.getTime(),
+              stat.size,
+              0,
+              [],
+              null,
+            ];
             hasteMap.files.set(relativeFilePath, fileMetadata);
             const promise = this._processFile(
               hasteMap,

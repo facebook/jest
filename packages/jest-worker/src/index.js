@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,18 +9,38 @@
 
 'use strict';
 
-import mergeStream from 'merge-stream';
 import os from 'os';
-import path from 'path';
-
-import type {FarmOptions} from './types';
+import WorkerPool from './WorkerPool';
+import Farm from './Farm';
+import type {
+  WorkerPoolInterface,
+  WorkerPoolOptions,
+  FarmOptions,
+} from './types';
 import type {Readable} from 'stream';
 
-import {CHILD_MESSAGE_CALL, CHILD_MESSAGE_END} from './types';
-import Worker from './Worker';
+function getExposedMethods(
+  workerPath: string,
+  options: FarmOptions,
+): $ReadOnlyArray<string> {
+  let exposedMethods = options.exposedMethods;
 
-/* istanbul ignore next */
-const emptyMethod = () => {};
+  // If no methods list is given, try getting it by auto-requiring the module.
+  if (!exposedMethods) {
+    // $FlowFixMe: This has to be a dynamic require.
+    const module: Function | Object = require(workerPath);
+
+    exposedMethods = Object.keys(module).filter(
+      name => typeof module[name] === 'function',
+    );
+
+    if (typeof module === 'function') {
+      exposedMethods.push('default');
+    }
+  }
+
+  return exposedMethods;
+}
 
 /**
  * The Jest farm (publicly called "Worker") is a class that allows you to queue
@@ -29,7 +49,7 @@ const emptyMethod = () => {};
  * of the child processes, and bridged to the main process.
  *
  * Bridged methods are specified by using the "exposedMethods" property of the
- * options "object". This is an array of strings, where each of them corresponds
+ * "options" object. This is an array of strings, where each of them corresponds
  * to the exported name in the loaded module.
  *
  * You can also control the amount of workers by using the "numWorkers" property
@@ -43,72 +63,42 @@ const emptyMethod = () => {};
  *
  *   - Sticky method: if a "computeWorkerKey" method is provided within the
  *   config, the resulting string of this method will be used as a key.
- *   Everytime this key is returned, it is guaranteed that your job will be
+ *   Every time this key is returned, it is guaranteed that your job will be
  *   processed by the same worker. This is specially useful if your workers are
  *   caching results.
  */
-export default class {
-  _stdout: Readable;
-  _stderr: Readable;
+export default class JestWorker {
   _ending: boolean;
-  _cacheKeys: {[string]: Worker, __proto__: null};
+  _farm: Farm;
   _options: FarmOptions;
-  _workers: Array<Worker>;
-  _offset: number;
+  _workerPool: WorkerPoolInterface;
 
-  constructor(workerPath: string, options?: FarmOptions = {}) {
-    const numWorkers = options.numWorkers || Math.max(os.cpus().length - 1, 1);
-    const workers = new Array(numWorkers);
-    const stdout = mergeStream();
-    const stderr = mergeStream();
+  constructor(workerPath: string, options?: FarmOptions) {
+    this._options = {...options};
 
-    if (!path.isAbsolute(workerPath)) {
-      workerPath = require.resolve(workerPath);
-    }
-
-    const sharedWorkerOptions = {
-      forkOptions: options.forkOptions || {},
-      maxRetries: options.maxRetries || 3,
-      setupArgs: options.setupArgs || [],
-      workerPath,
+    const workerPoolOptions: WorkerPoolOptions = {
+      enableWorkerThreads: this._options.enableWorkerThreads || false,
+      forkOptions: this._options.forkOptions || {},
+      maxRetries: this._options.maxRetries || 3,
+      numWorkers: this._options.numWorkers || Math.max(os.cpus().length - 1, 1),
+      setupArgs: this._options.setupArgs || [],
     };
 
-    for (let i = 0; i < numWorkers; i++) {
-      const workerOptions = Object.assign({}, sharedWorkerOptions, {
-        workerId: i + 1,
-      });
-      const worker = new Worker(workerOptions);
-      const workerStdout = worker.getStdout();
-      const workerStderr = worker.getStderr();
+    this._workerPool = this._options.WorkerPool
+      ? new this._options.WorkerPool(workerPath, workerPoolOptions)
+      : new WorkerPool(workerPath, workerPoolOptions);
 
-      if (workerStdout) {
-        stdout.add(workerStdout);
-      }
+    this._farm = new Farm(
+      workerPoolOptions.numWorkers,
+      this._workerPool.send.bind(this._workerPool),
+      this._options.computeWorkerKey,
+    );
 
-      if (workerStderr) {
-        stderr.add(workerStderr);
-      }
+    this._bindExposedWorkerMethods(workerPath, this._options);
+  }
 
-      workers[i] = worker;
-    }
-
-    let exposedMethods = options.exposedMethods;
-
-    // If no methods list is given, try getting it by auto-requiring the module.
-    if (!exposedMethods) {
-      // $FlowFixMe: This has to be a dynamic require.
-      const child = require(workerPath);
-
-      exposedMethods = Object.keys(child).filter(
-        name => typeof child[name] === 'function',
-      );
-
-      if (typeof child === 'function') {
-        exposedMethods.push('default');
-      }
-    }
-
-    exposedMethods.forEach(name => {
+  _bindExposedWorkerMethods(workerPath: string, options: FarmOptions): void {
+    getExposedMethods(workerPath, options).forEach(name => {
       if (name.startsWith('_')) {
         return;
       }
@@ -118,95 +108,33 @@ export default class {
       }
 
       // $FlowFixMe: dynamic extension of the class instance is expected.
-      this[name] = this._makeCall.bind(this, name);
+      this[name] = this._callFunctionWithArgs.bind(this, name);
     });
-
-    this._stdout = stdout;
-    this._stderr = stderr;
-    this._ending = false;
-    this._cacheKeys = Object.create(null);
-    this._options = options;
-    this._workers = workers;
-    this._offset = 0;
   }
 
-  getStdout(): Readable {
-    return this._stdout;
+  _callFunctionWithArgs(method: string, ...args: Array<any>): Promise<any> {
+    if (this._ending) {
+      throw new Error('Farm is ended, no more calls can be done to it');
+    }
+
+    return this._farm.doWork(method, ...args);
   }
 
   getStderr(): Readable {
-    return this._stderr;
+    return this._workerPool.getStderr();
   }
 
-  end() {
+  getStdout(): Readable {
+    return this._workerPool.getStdout();
+  }
+
+  end(): void {
     if (this._ending) {
       throw new Error('Farm is ended, no more calls can be done to it');
     }
 
-    const workers = this._workers;
-
-    // We do not cache the request object here. If so, it would only be only
-    // processed by one of the workers, and we want them all to close.
-    for (let i = 0; i < workers.length; i++) {
-      workers[i].send([CHILD_MESSAGE_END, false], emptyMethod, emptyMethod);
-    }
+    this._workerPool.end();
 
     this._ending = true;
-  }
-
-  // eslint-disable-next-line no-unclear-flowtypes
-  _makeCall(method: string, ...args: Array<any>): Promise<any> {
-    if (this._ending) {
-      throw new Error('Farm is ended, no more calls can be done to it');
-    }
-
-    return new Promise((resolve, reject) => {
-      const {computeWorkerKey} = this._options;
-      const workers = this._workers;
-      const length = workers.length;
-      const cacheKeys = this._cacheKeys;
-      const request = [CHILD_MESSAGE_CALL, false, method, args];
-
-      let worker = null;
-      let hash = null;
-
-      if (computeWorkerKey) {
-        hash = computeWorkerKey.apply(this, [method].concat(args));
-        worker = hash == null ? null : cacheKeys[hash];
-      }
-
-      // Do not use a fat arrow since we need the "this" value, which points to
-      // the worker that executed the call.
-      const onProcessStart = worker => {
-        if (hash != null) {
-          cacheKeys[hash] = worker;
-        }
-      };
-
-      const onProcessEnd = (error, result) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
-        }
-      };
-
-      // If a worker is pre-selected, use it...
-      if (worker) {
-        worker.send(request, onProcessStart, onProcessEnd);
-        return;
-      }
-
-      // ... otherwise use all workers, so the first one available will pick it.
-      for (let i = 0; i < length; i++) {
-        workers[(i + this._offset) % length].send(
-          request,
-          onProcessStart,
-          onProcessEnd,
-        );
-      }
-
-      this._offset++;
-    });
   }
 }

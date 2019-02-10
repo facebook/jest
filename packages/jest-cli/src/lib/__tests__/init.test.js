@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,20 +12,18 @@ import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
 import init from '../init';
-import getCacheDirectory from '../../../../jest-config/build/getCacheDirectory';
 
 jest.mock('prompts');
-jest.mock('../../../../jest-config/build/getCacheDirectory');
-
-// mocked to get the same snapshot on every machine
-getCacheDirectory.mockReturnValue('/tmp/jest');
+jest.mock('../../../../jest-config/build/getCacheDirectory', () => () =>
+  '/tmp/jest',
+);
+jest.mock('path', () => ({...jest.requireActual('path'), sep: '/'}));
 
 const resolveFromFixture = relativePath =>
   path.resolve(__dirname, 'fixtures', relativePath);
 
 const writeFileSync = fs.writeFileSync;
 const consoleLog = console.log;
-const sep = path.sep;
 
 describe('init', () => {
   beforeEach(() => {
@@ -33,8 +31,6 @@ describe('init', () => {
     console.log = jest.fn();
     // $FlowFixMe mock
     fs.writeFileSync = jest.fn();
-    // $FlowFixMe mock
-    path.sep = '/';
   });
 
   afterEach(() => {
@@ -43,8 +39,6 @@ describe('init', () => {
     console.log = consoleLog;
     // $FlowFixMe mock
     fs.writeFileSync = writeFileSync;
-    // $FlowFixMe mock
-    path.sep = sep;
   });
 
   describe('project with package.json and no jest config', () => {
@@ -185,39 +179,6 @@ describe('init', () => {
       );
 
       expect(questionsNames).not.toContain('scripts');
-    });
-  });
-
-  describe('typescript project', () => {
-    it('should ask "typescript question" when has typescript in dependencies', async () => {
-      prompts.mockReturnValueOnce({});
-
-      await init(resolveFromFixture('typescript_in_dependencies'));
-
-      const typescriptQuestion = prompts.mock.calls[0][0][0];
-
-      expect(typescriptQuestion).toMatchSnapshot();
-    });
-
-    it('should ask "typescript question" when has typescript in devDependencies', async () => {
-      prompts.mockReturnValueOnce({});
-
-      await init(resolveFromFixture('typescript_in_dev_dependencies'));
-
-      const typescriptQuestion = prompts.mock.calls[0][0][0];
-
-      expect(typescriptQuestion).toMatchSnapshot();
-    });
-
-    it('should create configuration for {typescript: true}', async () => {
-      prompts.mockReturnValueOnce({typescript: true});
-
-      await init(resolveFromFixture('typescript_in_dev_dependencies'));
-
-      const writtenJestConfig = fs.writeFileSync.mock.calls[0][1];
-      const evaluatedConfig = eval(writtenJestConfig);
-
-      expect(evaluatedConfig).toMatchSnapshot();
     });
   });
 });

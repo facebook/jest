@@ -4,17 +4,11 @@
 
 ## Usage
 
-If you are already using `jest-cli`, just add `babel-jest` and it will automatically compile JavaScript code using babel.
+If you are already using `jest-cli`, just add `babel-jest` and it will automatically compile JavaScript code using Babel.
 
 ```bash
-yarn add --dev babel-jest babel-core
+yarn add --dev babel-jest @babel/core
 ```
-
-> Note: If you are using babel version 7 you have to install `babel-jest` with
->
-> ```bash
-> yarn add --dev babel-jest 'babel-core@^7.0.0-bridge' @babel/core
-> ```
 
 If you would like to write your own preprocessor, uninstall and delete babel-jest and set the [config.transform](https://jestjs.io/docs/configuration#transform-object-string-string) option to your preprocessor.
 

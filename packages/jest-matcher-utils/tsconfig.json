@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build"
+  },
+  "references": [
+    {"path": "../jest-diff"},
+    {"path": "../jest-get-type"},
+    {"path": "../pretty-format"}
+  ]
+}

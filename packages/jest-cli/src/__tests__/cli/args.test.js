@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,6 +10,7 @@
 
 import type {Argv} from 'types/Argv';
 import {check} from '../../cli/args';
+import {buildArgv} from '../../cli';
 
 describe('check', () => {
   it('returns true if the arguments are valid', () => {
@@ -57,5 +58,17 @@ describe('check', () => {
     expect(() => check(argv)).toThrow(
       'The --config option requires a JSON string literal, or a file path with a .js or .json extension',
     );
+  });
+});
+
+describe('buildArgv', () => {
+  it('should return only camelcased args ', () => {
+    const mockProcessArgv = jest
+      .spyOn(process.argv, 'slice')
+      .mockImplementation(() => ['--clear-mocks']);
+    const actual = buildArgv(null);
+    expect(actual).not.toHaveProperty('clear-mocks');
+    expect(actual).toHaveProperty('clearMocks', true);
+    mockProcessArgv.mockRestore();
   });
 });

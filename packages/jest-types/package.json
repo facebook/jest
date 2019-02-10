@@ -1,0 +1,15 @@
+{
+  "name": "@jest/types",
+  "version": "24.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-types"
+  },
+  "engines": {
+    "node": ">= 6"
+  },
+  "license": "MIT",
+  "main": "build/index.js",
+  "types": "build/index.d.ts"
+}

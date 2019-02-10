@@ -1,32 +1,37 @@
 {
   "name": "jest-circus",
-  "version": "23.6.0",
+  "version": "24.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-circus"
   },
   "license": "MIT",
   "main": "build/index.js",
   "dependencies": {
-    "babel-traverse": "^6.0.0",
+    "@babel/traverse": "^7.1.0",
     "chalk": "^2.0.1",
     "co": "^4.6.0",
-    "expect": "^23.6.0",
-    "is-generator-fn": "^1.0.0",
-    "jest-diff": "^23.6.0",
-    "jest-each": "^23.6.0",
-    "jest-matcher-utils": "^23.6.0",
-    "jest-message-util": "^23.4.0",
-    "jest-snapshot": "^23.6.0",
-    "jest-util": "^23.4.0",
-    "pretty-format": "^23.6.0",
-    "stack-utils": "^1.0.1"
+    "expect": "^24.1.0",
+    "is-generator-fn": "^2.0.0",
+    "jest-each": "^24.0.0",
+    "jest-matcher-utils": "^24.0.0",
+    "jest-message-util": "^24.0.0",
+    "jest-snapshot": "^24.1.0",
+    "jest-util": "^24.0.0",
+    "pretty-format": "^24.0.0",
+    "stack-utils": "^1.0.1",
+    "throat": "^4.0.0"
   },
   "devDependencies": {
+    "@types/babel__traverse": "^7.0.4",
+    "@types/stack-utils": "^1.0.1",
     "execa": "^1.0.0",
-    "jest-runtime": "^23.6.0"
+    "jest-diff": "^24.0.0",
+    "jest-runtime": "^24.1.0"
   },
   "engines": {
     "node": ">= 6"
-  }
+  },
+  "gitHead": "b16789230fd45056a7f2fa199bae06c7a1780deb"
 }

@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "name": "example-manual-mock",
   "devDependencies": {
-    "babel-preset-env": "*",
+    "@babel/core": "*",
+    "@babel/preset-env": "*",
+    "babel-jest": "*",
     "jest": "*"
   },
   "scripts": {

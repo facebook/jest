@@ -1,15 +1,16 @@
 {
   "jest": {
     "transform": {
-      "^.+\\.css$": "<rootDir>/CssPreprocessor.js",
-      "^.+\\.js$": "<rootDir>/JsPreprocessor.js",
-      "^.+\\.svg$": "<rootDir>/FilePreprocessor.js"
+      "^.+\\.css$": "<rootDir>/cssPreprocessor.js",
+      "^.+\\.js$": "<rootDir>/jsPreprocessor.js",
+      "^.+\\.svg$": "<rootDir>/filePreprocessor.js"
     },
     "testEnvironment": "node"
   },
   "dependencies": {
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-react": "^6.16.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "react": "*",
     "react-dom": "*",
     "react-test-renderer": "*"

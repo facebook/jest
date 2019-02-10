@@ -1,34 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`not throwing Error objects 1`] = `
-"FAIL __tests__/throw_number.test.js
+FAIL __tests__/throwNumber.test.js
   ● Test suite failed to run
 
-    Expected an Error, but \\"1\\" was thrown
-
-"
+    Expected an Error, but "1" was thrown
 `;
 
 exports[`not throwing Error objects 2`] = `
-"FAIL __tests__/throw_string.test.js
+FAIL __tests__/throwString.test.js
   ● Test suite failed to run
 
     banana
-
-"
 `;
 
 exports[`not throwing Error objects 3`] = `
-"FAIL __tests__/throw_object.test.js
+FAIL __tests__/throwObject.test.js
   ● Test suite failed to run
 
     Error: No message was provided
-
-"
 `;
 
 exports[`not throwing Error objects 4`] = `
-"FAIL __tests__/assertion_count.test.js
+FAIL __tests__/assertionCount.test.js
   .assertions()
     ✕ throws
     ✕ throws on redeclare of assertion count
@@ -50,7 +44,7 @@ exports[`not throwing Error objects 4`] = `
       15 | const redeclare = () => {
       16 |   expect.assertions(1);
 
-      at __tests__/assertion_count.test.js:13:17
+      at Object.toBeTruthy (__tests__/assertionCount.test.js:13:17)
 
   ● .assertions() › throws
 
@@ -66,7 +60,7 @@ exports[`not throwing Error objects 4`] = `
       14 | };
       15 | const redeclare = () => {
 
-      at __tests__/assertion_count.test.js:12:10
+      at Object.assertions (__tests__/assertionCount.test.js:12:10)
 
   ● .assertions() › throws on redeclare of assertion count
 
@@ -82,7 +76,7 @@ exports[`not throwing Error objects 4`] = `
       19 | };
       20 | 
 
-      at __tests__/assertion_count.test.js:17:17
+      at Object.toBeTruthy (__tests__/assertionCount.test.js:17:17)
 
   ● .assertions() › throws on assertion
 
@@ -98,7 +92,7 @@ exports[`not throwing Error objects 4`] = `
       24 | };
       25 | 
 
-      at __tests__/assertion_count.test.js:22:10
+      at Object.assertions (__tests__/assertionCount.test.js:22:10)
 
   ● .hasAssertions() › throws when there are not assertions
 
@@ -114,13 +108,11 @@ exports[`not throwing Error objects 4`] = `
       29 | 
       30 | describe('.assertions()', () => {
 
-      at __tests__/assertion_count.test.js:27:10
-
-"
+      at Object.hasAssertions (__tests__/assertionCount.test.js:27:10)
 `;
 
 exports[`not throwing Error objects 5`] = `
-"FAIL __tests__/during_tests.test.js
+FAIL __tests__/duringTests.test.js
   ✕ Promise thrown during test
   ✕ Boolean thrown during test
   ✕ undefined thrown during test
@@ -142,7 +134,7 @@ exports[`not throwing Error objects 5`] = `
       11 | });
       12 | 
 
-      at __tests__/during_tests.test.js:9:1
+      at Object.test (__tests__/duringTests.test.js:9:1)
 
   ● Boolean thrown during test
 
@@ -156,7 +148,7 @@ exports[`not throwing Error objects 5`] = `
       15 |   throw false;
       16 | });
 
-      at __tests__/during_tests.test.js:13:1
+      at Object.test (__tests__/duringTests.test.js:13:1)
 
   ● undefined thrown during test
 
@@ -170,15 +162,15 @@ exports[`not throwing Error objects 5`] = `
       20 |   throw undefined;
       21 | });
 
-      at __tests__/during_tests.test.js:18:1
+      at Object.test (__tests__/duringTests.test.js:18:1)
 
   ● Object thrown during test
 
     thrown: Object {
-      \\"notAnError\\": Array [
+      "notAnError": Array [
         Object {
-          \\"hello\\": true,
-          \\"tooDeep\\": [Object],
+          "hello": true,
+          "tooDeep": [Object],
         },
       ],
     }
@@ -187,95 +179,91 @@ exports[`not throwing Error objects 5`] = `
       22 | 
     > 23 | test('Object thrown during test', () => {
          | ^
-      24 |   // eslint-disable-next-line no-throw-literal
-      25 |   throw deepObject;
-      26 | });
+      24 |   throw deepObject;
+      25 | });
+      26 | 
 
-      at __tests__/during_tests.test.js:23:1
+      at Object.test (__tests__/duringTests.test.js:23:1)
 
   ● Error during test
 
     ReferenceError: doesNotExist is not defined
 
-      28 | test('Error during test', () => {
-      29 |   // eslint-disable-next-line no-undef
-    > 30 |   doesNotExist.alsoThisNot;
+      27 | test('Error during test', () => {
+      28 |   // eslint-disable-next-line no-undef
+    > 29 |   doesNotExist.alsoThisNot;
          |   ^
-      31 | });
-      32 | 
-      33 | test('done(Error)', done => {
+      30 | });
+      31 | 
+      32 | test('done(Error)', done => {
 
-      at __tests__/during_tests.test.js:30:3
+      at Object.doesNotExist (__tests__/duringTests.test.js:29:3)
 
   ● done(Error)
 
     this is an error
 
-      32 | 
-      33 | test('done(Error)', done => {
-    > 34 |   done(new Error('this is an error'));
+      31 | 
+      32 | test('done(Error)', done => {
+    > 33 |   done(new Error('this is an error'));
          |        ^
-      35 | });
-      36 | 
-      37 | test('done(non-error)', done => {
+      34 | });
+      35 | 
+      36 | test('done(non-error)', done => {
 
-      at __tests__/during_tests.test.js:34:8
+      at Object.<anonymous>.done (__tests__/duringTests.test.js:33:8)
 
   ● done(non-error)
 
     thrown: Object {
-      \\"notAnError\\": Array [
+      "notAnError": Array [
         Object {
-          \\"hello\\": true,
-          \\"tooDeep\\": [Object],
+          "hello": true,
+          "tooDeep": [Object],
         },
       ],
     }
 
-      36 | 
-      37 | test('done(non-error)', done => {
-    > 38 |   done(deepObject);
+      35 | 
+      36 | test('done(non-error)', done => {
+    > 37 |   done(deepObject);
          |   ^
-      39 | });
-      40 | 
-      41 | test('returned promise rejection', () => Promise.reject(deepObject));
+      38 | });
+      39 | 
+      40 | test('returned promise rejection', () => Promise.reject(deepObject));
 
-      at __tests__/during_tests.test.js:38:3
+      at Object.done (__tests__/duringTests.test.js:37:3)
 
   ● returned promise rejection
 
     thrown: Object {
-      \\"notAnError\\": Array [
+      "notAnError": Array [
         Object {
-          \\"hello\\": true,
-          \\"tooDeep\\": [Object],
+          "hello": true,
+          "tooDeep": [Object],
         },
       ],
     }
 
-      39 | });
-      40 | 
-    > 41 | test('returned promise rejection', () => Promise.reject(deepObject));
+      38 | });
+      39 | 
+    > 40 | test('returned promise rejection', () => Promise.reject(deepObject));
          | ^
-      42 | 
+      41 | 
 
-      at __tests__/during_tests.test.js:41:1
-
-"
+      at Object.test (__tests__/duringTests.test.js:40:1)
 `;
 
 exports[`works with assertions in separate files 1`] = `
-"FAIL __tests__/test_macro.test.js
+FAIL __tests__/testMacro.test.js
   ✕ use some imported macro to make assertion
 
   ● use some imported macro to make assertion
 
     expect(received).toEqual(expected)
 
-    Expected value to equal:
-      2
-    Received:
-      1
+    Expected: 2
+    Received: 1
 
       10 | 
       11 | module.exports = (one: any, two: any) => {
@@ -284,14 +272,12 @@ exports[`works with assertions in separate files 1`] = `
       13 | };
       14 | 
 
-      at macros.js:12:15
-      at __tests__/test_macro.test.js:14:3
-
-"
+      at toEqual (macros.js:12:15)
+      at Object.shouldEqual (__tests__/testMacro.test.js:14:3)
 `;
 
 exports[`works with async failures 1`] = `
-"FAIL __tests__/async_failures.test.js
+FAIL __tests__/asyncFailures.test.js
   ✕ resolve, but fail
   ✕ reject, but fail
   ✕ expect reject
@@ -302,19 +288,14 @@ exports[`works with async failures 1`] = `
 
     expect(received).toEqual(expected)
 
-    Expected value to equal:
-      {\\"baz\\": \\"bar\\"}
-    Received:
-      {\\"foo\\": \\"bar\\"}
-
     Difference:
 
     - Expected
     + Received
 
       Object {
-    -   \\"baz\\": \\"bar\\",
-    +   \\"foo\\": \\"bar\\",
+    -   "baz": "bar",
+    +   "foo": "bar",
       }
 
       10 | 
@@ -325,16 +306,11 @@ exports[`works with async failures 1`] = `
       14 | test('reject, but fail', () =>
       15 |   expect(Promise.reject({foo: 'bar'})).rejects.toEqual({baz: 'bar'}));
 
-      at __tests__/async_failures.test.js:12:50
+      at Object.toEqual (__tests__/asyncFailures.test.js:12:50)
 
   ● reject, but fail
 
     expect(received).toEqual(expected)
-
-    Expected value to equal:
-      {\\"baz\\": \\"bar\\"}
-    Received:
-      {\\"foo\\": \\"bar\\"}
 
     Difference:
 
@@ -342,8 +318,8 @@ exports[`works with async failures 1`] = `
     + Received
 
       Object {
-    -   \\"baz\\": \\"bar\\",
-    +   \\"foo\\": \\"bar\\",
+    -   "baz": "bar",
+    +   "foo": "bar",
       }
 
       13 | 
@@ -354,14 +330,14 @@ exports[`works with async failures 1`] = `
       17 | test('expect reject', () =>
       18 |   expect(Promise.resolve({foo: 'bar'})).rejects.toEqual({foo: 'bar'}));
 
-      at __tests__/async_failures.test.js:15:48
+      at Object.toEqual (__tests__/asyncFailures.test.js:15:48)
 
   ● expect reject
 
     expect(received).rejects.toEqual()
 
-    Expected received Promise to reject, instead it resolved to value
-      {\\"foo\\": \\"bar\\"}
+    Received promise resolved instead of rejected
+    Resolved to value: {"foo": "bar"}
 
       16 | 
       17 | test('expect reject', () =>
@@ -371,14 +347,14 @@ exports[`works with async failures 1`] = `
       20 | test('expect resolve', () =>
       21 |   expect(Promise.reject({foo: 'bar'})).resolves.toEqual({foo: 'bar'}));
 
-      at __tests__/async_failures.test.js:18:3
+      at Object.expect (__tests__/asyncFailures.test.js:18:3)
 
   ● expect resolve
 
     expect(received).resolves.toEqual()
 
-    Expected received Promise to resolve, instead it rejected to value
-      {\\"foo\\": \\"bar\\"}
+    Received promise rejected instead of resolved
+    Rejected to value: {"foo": "bar"}
 
       19 | 
       20 | test('expect resolve', () =>
@@ -388,7 +364,7 @@ exports[`works with async failures 1`] = `
       23 | test('timeout', done => {
       24 |   setTimeout(done, 50);
 
-      at __tests__/async_failures.test.js:21:3
+      at Object.expect (__tests__/asyncFailures.test.js:21:3)
 
   ● timeout
 
@@ -402,26 +378,24 @@ exports[`works with async failures 1`] = `
       25 | }, 5);
       26 | 
 
-      at __tests__/async_failures.test.js:23:1
-
-"
+      at Object.test (__tests__/asyncFailures.test.js:23:1)
 `;
 
 exports[`works with named snapshot failures 1`] = `
-"FAIL __tests__/snapshot_named.test.js
+FAIL __tests__/snapshotNamed.test.js
   ✕ failing named snapshot
 
   ● failing named snapshot
 
     expect(value).toMatchSnapshot()
 
-    Received value does not match stored snapshot \\"failing named snapshot: snapname 1\\".
+    Received value does not match stored snapshot "failing named snapshot: snapname 1".
 
     - Snapshot
     + Received
 
-    - \\"bar\\"
-    + \\"foo\\"
+    - "bar"
+    + "foo"
 
       10 | 
       11 | test('failing named snapshot', () => {
@@ -430,14 +404,14 @@ exports[`works with named snapshot failures 1`] = `
       13 | });
       14 | 
 
-      at __tests__/snapshot_named.test.js:12:17
+      at Object.toMatchSnapshot (__tests__/snapshotNamed.test.js:12:17)
 
  › 1 snapshot failed.
-"
+
 `;
 
 exports[`works with node assert 1`] = `
-"FAIL __tests__/node_assertion_error.test.js
+FAIL __tests__/assertionError.test.js
   ✕ assert
   ✕ assert with a message
   ✕ assert.ok
@@ -473,7 +447,7 @@ exports[`works with node assert 1`] = `
       17 | 
       18 | test('assert with a message', () => {
 
-      at __tests__/node_assertion_error.test.js:15:3
+      at Object.assert (__tests__/assertionError.test.js:15:3)
 
   ● assert with a message
 
@@ -495,7 +469,7 @@ exports[`works with node assert 1`] = `
       21 | 
       22 | test('assert.ok', () => {
 
-      at __tests__/node_assertion_error.test.js:19:3
+      at Object.assert (__tests__/assertionError.test.js:19:3)
 
   ● assert.ok
 
@@ -514,7 +488,7 @@ exports[`works with node assert 1`] = `
       25 | 
       26 | test('assert.ok with a message', () => {
 
-      at __tests__/node_assertion_error.test.js:23:10
+      at Object.ok (__tests__/assertionError.test.js:23:10)
 
   ● assert.ok with a message
 
@@ -536,7 +510,7 @@ exports[`works with node assert 1`] = `
       29 | 
       30 | test('assert.equal', () => {
 
-      at __tests__/node_assertion_error.test.js:27:10
+      at Object.ok (__tests__/assertionError.test.js:27:10)
 
   ● assert.equal
 
@@ -555,7 +529,7 @@ exports[`works with node assert 1`] = `
       33 | 
       34 | test('assert.notEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:31:10
+      at Object.equal (__tests__/assertionError.test.js:31:10)
 
   ● assert.notEqual
 
@@ -566,10 +540,6 @@ exports[`works with node assert 1`] = `
     Received:
       1
 
-    Difference:
-
-    Compared values have no visual difference.
-
       33 | 
       34 | test('assert.notEqual', () => {
     > 35 |   assert.notEqual(1, 1);
@@ -578,16 +548,16 @@ exports[`works with node assert 1`] = `
       37 | 
       38 | test('assert.deepEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:35:10
+      at Object.notEqual (__tests__/assertionError.test.js:35:10)
 
   ● assert.deepEqual
 
     assert.deepEqual(received, expected)
 
     Expected value to deeply equal to:
-      {\\"a\\": {\\"b\\": {\\"c\\": 6}}}
+      {"a": {"b": {"c": 6}}}
     Received:
-      {\\"a\\": {\\"b\\": {\\"c\\": 5}}}
+      {"a": {"b": {"c": 5}}}
 
     Difference:
 
@@ -595,10 +565,10 @@ exports[`works with node assert 1`] = `
     + Received
 
       Object {
-        \\"a\\": Object {
-          \\"b\\": Object {
-    -       \\"c\\": 6,
-    +       \\"c\\": 5,
+        "a": Object {
+          "b": Object {
+    -       "c": 6,
+    +       "c": 5,
           },
         },
       }
@@ -611,16 +581,16 @@ exports[`works with node assert 1`] = `
       41 | 
       42 | test('assert.deepEqual with a message', () => {
 
-      at __tests__/node_assertion_error.test.js:39:10
+      at Object.deepEqual (__tests__/assertionError.test.js:39:10)
 
   ● assert.deepEqual with a message
 
     assert.deepEqual(received, expected)
 
     Expected value to deeply equal to:
-      {\\"a\\": {\\"b\\": {\\"c\\": 7}}}
+      {"a": {"b": {"c": 7}}}
     Received:
-      {\\"a\\": {\\"b\\": {\\"c\\": 5}}}
+      {"a": {"b": {"c": 5}}}
 
     Message:
       this is a message
@@ -631,10 +601,10 @@ exports[`works with node assert 1`] = `
     + Received
 
       Object {
-        \\"a\\": Object {
-          \\"b\\": Object {
-    -       \\"c\\": 7,
-    +       \\"c\\": 5,
+        "a": Object {
+          "b": Object {
+    -       "c": 7,
+    +       "c": 5,
           },
         },
       }
@@ -647,16 +617,16 @@ exports[`works with node assert 1`] = `
       45 | 
       46 | test('assert.notDeepEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:43:10
+      at Object.deepEqual (__tests__/assertionError.test.js:43:10)
 
   ● assert.notDeepEqual
 
     assert.notDeepEqual(received, expected)
 
     Expected value not to deeply equal to:
-      {\\"a\\": 1}
+      {"a": 1}
     Received:
-      {\\"a\\": 1}
+      {"a": 1}
 
     Difference:
 
@@ -670,7 +640,7 @@ exports[`works with node assert 1`] = `
       49 | 
       50 | test('assert.strictEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:47:10
+      at Object.notDeepEqual (__tests__/assertionError.test.js:47:10)
 
   ● assert.strictEqual
 
@@ -689,7 +659,7 @@ exports[`works with node assert 1`] = `
       53 | 
       54 | test('assert.notStrictEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:51:10
+      at Object.strictEqual (__tests__/assertionError.test.js:51:10)
 
   ● assert.notStrictEqual
 
@@ -703,10 +673,6 @@ exports[`works with node assert 1`] = `
     Message:
       My custom error message
 
-    Difference:
-
-    Compared values have no visual difference.
-
       53 | 
       54 | test('assert.notStrictEqual', () => {
     > 55 |   assert.notStrictEqual(1, 1, 'My custom error message');
@@ -715,16 +681,16 @@ exports[`works with node assert 1`] = `
       57 | 
       58 | test('assert.deepStrictEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:55:10
+      at Object.notStrictEqual (__tests__/assertionError.test.js:55:10)
 
   ● assert.deepStrictEqual
 
     assert.deepStrictEqual(received, expected)
 
     Expected value to deeply and strictly equal to:
-      {\\"a\\": 2}
+      {"a": 2}
     Received:
-      {\\"a\\": 1}
+      {"a": 1}
 
     Difference:
 
@@ -732,8 +698,8 @@ exports[`works with node assert 1`] = `
     + Received
 
       Object {
-    -   \\"a\\": 2,
-    +   \\"a\\": 1,
+    -   "a": 2,
+    +   "a": 1,
       }
 
       57 | 
@@ -744,16 +710,16 @@ exports[`works with node assert 1`] = `
       61 | 
       62 | test('assert.notDeepStrictEqual', () => {
 
-      at __tests__/node_assertion_error.test.js:59:10
+      at Object.deepStrictEqual (__tests__/assertionError.test.js:59:10)
 
   ● assert.notDeepStrictEqual
 
     assert.notDeepStrictEqual(received, expected)
 
     Expected value not to deeply and strictly equal to:
-      {\\"a\\": 1}
+      {"a": 1}
     Received:
-      {\\"a\\": 1}
+      {"a": 1}
 
     Difference:
 
@@ -767,7 +733,7 @@ exports[`works with node assert 1`] = `
       65 | 
       66 | test('assert.ifError', () => {
 
-      at __tests__/node_assertion_error.test.js:63:10
+      at Object.notDeepStrictEqual (__tests__/assertionError.test.js:63:10)
 
   ● assert.ifError
 
@@ -790,7 +756,7 @@ exports[`works with node assert 1`] = `
       73 |   });
       74 | });
 
-      at __tests__/node_assertion_error.test.js:71:10
+      at Object.doesNotThrow (__tests__/assertionError.test.js:71:10)
 
   ● assert.throws
 
@@ -810,17 +776,17 @@ exports[`works with node assert 1`] = `
       79 | 
       80 | test('async', async () => {
 
-      at __tests__/node_assertion_error.test.js:77:10
+      at Object.throws (__tests__/assertionError.test.js:77:10)
 
   ● async
 
     assert.equal(received, expected) or assert(received) 
 
     Expected value to be equal to:
-      \\"hello\\"
+      "hello"
     Received:
-      \\"hello
-    goodbye\\"
+      "hello
+    goodbye"
 
     Message:
       hmmm
@@ -835,34 +801,33 @@ exports[`works with node assert 1`] = `
 
       79 | 
       80 | test('async', async () => {
-    > 81 |   assert.equal('hello\\\\ngoodbye', 'hello', 'hmmm');
+    > 81 |   assert.equal('hello\\ngoodbye', 'hello', 'hmmm');
          |          ^
       82 | });
       83 | 
 
-      at __tests__/node_assertion_error.test.js:81:10
-      at __tests__/node_assertion_error.test.js:12:191
-      at __tests__/node_assertion_error.test.js:12:437
-      at __tests__/node_assertion_error.test.js:12:99
-
-"
+      at Object.equal (__tests__/assertionError.test.js:81:10)
+      at asyncGeneratorStep (__tests__/assertionError.test.js:11:103)
+      at _next (__tests__/assertionError.test.js:13:194)
+      at __tests__/assertionError.test.js:13:364
+      at Object.<anonymous> (__tests__/assertionError.test.js:13:97)
 `;
 
 exports[`works with snapshot failures 1`] = `
-"FAIL __tests__/snapshot.test.js
+FAIL __tests__/snapshot.test.js
   ✕ failing snapshot
 
   ● failing snapshot
 
     expect(value).toMatchSnapshot()
 
-    Received value does not match stored snapshot \\"failing snapshot 1\\".
+    Received value does not match stored snapshot "failing snapshot 1".
 
     - Snapshot
     + Received
 
-    - \\"bar\\"
-    + \\"foo\\"
+    - "bar"
+    + "foo"
 
       10 | 
       11 | test('failing snapshot', () => {
@@ -871,8 +836,8 @@ exports[`works with snapshot failures 1`] = `
       13 | });
       14 | 
 
-      at __tests__/snapshot.test.js:12:17
+      at Object.toMatchSnapshot (__tests__/snapshot.test.js:12:17)
 
  › 1 snapshot failed.
-"
+
 `;

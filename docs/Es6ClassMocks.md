@@ -227,7 +227,7 @@ jest.mock('./sound-player', () => {
 });
 ```
 
-This will throw **_TypeError: \_soundPlayer2.default is not a constructor_**, unless the code is transpiled to ES5, e.g. by babel-preset-env. (ES5 doesn't have arrow functions nor classes, so both will be transpiled to plain functions.)
+This will throw **_TypeError: \_soundPlayer2.default is not a constructor_**, unless the code is transpiled to ES5, e.g. by `@babel/preset-env`. (ES5 doesn't have arrow functions nor classes, so both will be transpiled to plain functions.)
 
 ## Keeping track of usage (spying on the mock)
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,8 +12,8 @@ import type {ModuleMap} from 'types/HasteMap';
 import type {ResolveModuleConfig} from 'types/Resolve';
 import type {ErrorWithCode} from 'types/Errors';
 
-import fs from 'fs';
 import path from 'path';
+import {sync as realpath} from 'realpath-native';
 import nodeModulesPaths from './nodeModulesPaths';
 import isBuiltinModule from './isBuiltinModule';
 import defaultResolver from './defaultResolver';
@@ -53,7 +53,7 @@ const NATIVE_PLATFORM = 'native';
 
 // We might be inside a symlink.
 const cwd = process.cwd();
-const resolvedCwd = fs.realpathSync(cwd) || cwd;
+const resolvedCwd = realpath(cwd) || cwd;
 const nodePaths = process.env.NODE_PATH
   ? process.env.NODE_PATH.split(path.delimiter)
       .filter(Boolean)
@@ -103,6 +103,7 @@ class Resolver {
       return resolver(path, {
         basedir: options.basedir,
         browser: options.browser,
+        defaultResolver,
         extensions: options.extensions,
         moduleDirectory: options.moduleDirectory,
         paths: paths ? (nodePaths || []).concat(paths) : nodePaths,
@@ -122,6 +123,8 @@ class Resolver {
     const key = dirname + path.delimiter + moduleName;
     const defaultPlatform = this._options.defaultPlatform;
     const extensions = this._options.extensions.slice();
+    let module;
+
     if (this._supportsNativePlatform) {
       extensions.unshift(
         ...this._options.extensions.map(ext => '.' + NATIVE_PLATFORM + ext),
@@ -133,24 +136,24 @@ class Resolver {
       );
     }
 
-    // 0. If we have already resolved this module for this directory name,
-    //    return a value from the cache.
+    // 1. If we have already resolved this module for this directory name,
+    // return a value from the cache.
     if (this._moduleNameCache[key]) {
       return this._moduleNameCache[key];
     }
 
-    // 1. Check if the module is a haste module.
-    let module = this.getModule(moduleName);
+    // 2. Check if the module is a haste module.
+    module = this.getModule(moduleName);
     if (module) {
       return (this._moduleNameCache[key] = module);
     }
 
-    // 2. Check if the module is a node module and resolve it based on
-    //    the node module resolution algorithm.
-    // If skipNodeResolution is given we ignore all modules that look like
-    // node modules (ie. are not relative requires). This enables us to speed
-    // up resolution when we build a dependency graph because we don't have
-    // to look at modules that may not exist and aren't mocked.
+    // 3. Check if the module is a node module and resolve it based on
+    // the node module resolution algorithm. If skipNodeResolution is given we
+    // ignore all modules that look like node modules (ie. are not relative
+    // requires). This enables us to speed up resolution when we build a
+    // dependency graph because we don't have to look at modules that may not
+    // exist and aren't mocked.
     const skipResolution =
       options && options.skipNodeResolution && !moduleName.includes(path.sep);
 
@@ -173,7 +176,7 @@ class Resolver {
       }
     }
 
-    // 3. Resolve "haste packages" which are `package.json` files outside of
+    // 4. Resolve "haste packages" which are `package.json` files outside of
     // `node_modules` folders anywhere in the file system.
     const parts = moduleName.split('/');
     const hastePackage = this.getPackage(parts.shift());
@@ -206,9 +209,9 @@ class Resolver {
     );
     if (module) return module;
 
-    // (4.) Throw an error if the module could not be found. `resolve.sync`
-    //      only produces an error based on the dirname but we have the actual
-    //      current module name available.
+    // 5. Throw an error if the module could not be found. `resolve.sync` only
+    // produces an error based on the dirname but we have the actual current
+    // module name available.
     const relativePath = path.relative(dirname, from);
     const err = new Error(
       `Cannot find module '${moduleName}' from '${relativePath || '.'}'`,
@@ -249,7 +252,7 @@ class Resolver {
     if (mock) {
       return mock;
     } else {
-      const moduleName = this._resolveStubModuleName(from, name);
+      const moduleName = this.resolveStubModuleName(from, name);
       if (moduleName) {
         return this.getModule(moduleName) || moduleName;
       }
@@ -338,7 +341,7 @@ class Resolver {
     );
   }
 
-  _resolveStubModuleName(from: Path, moduleName: string): ?Path {
+  resolveStubModuleName(from: Path, moduleName: string): ?Path {
     const dirname = path.dirname(from);
     const paths = this._options.modulePaths;
     const extensions = this._options.extensions.slice();

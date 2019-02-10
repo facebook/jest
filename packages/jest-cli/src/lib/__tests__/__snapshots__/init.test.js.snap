@@ -26,8 +26,8 @@ module.exports = {
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
-  // Stop running tests after the first failure
-  // bail: false,
+  // Stop running tests after \`n\` failures
+  // bail: 0,
 
   // Respect \\"browser\\" field in package.json when resolving modules
   // browser: false,
@@ -91,6 +91,8 @@ module.exports = {
   //   \\"js\\",
   //   \\"json\\",
   //   \\"jsx\\",
+  //   \\"ts\\",
+  //   \\"tsx\\",
   //   \\"node\\"
   // ],
 
@@ -158,8 +160,8 @@ module.exports = {
 
   // The glob patterns Jest uses to detect test files
   // testMatch: [
-  //   \\"**/__tests__/**/*.js?(x)\\",
-  //   \\"**/?(*.)+(spec|test).js?(x)\\"
+  //   \\"**/__tests__/**/*.[jt]s?(x)\\",
+  //   \\"**/?(*.)+(spec|test).[tj]s?(x)\\"
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
@@ -213,43 +215,4 @@ exports[`init project with package.json and no jest config some questions answer
   }
 }
 "
-`;
-
-exports[`init typescript project should ask "typescript question" when has typescript in dependencies 1`] = `
-Object {
-  "initial": true,
-  "message": "Typescript detected, would you like to setup Jest for Typescript?",
-  "name": "typescript",
-  "type": "confirm",
-}
-`;
-
-exports[`init typescript project should ask "typescript question" when has typescript in devDependencies 1`] = `
-Object {
-  "initial": true,
-  "message": "Typescript detected, would you like to setup Jest for Typescript?",
-  "name": "typescript",
-  "type": "confirm",
-}
-`;
-
-exports[`init typescript project should create configuration for {typescript: true} 1`] = `
-Object {
-  "globals": Object {
-    "ts-jest": Object {
-      "tsConfigFile": "tsconfig.json",
-    },
-  },
-  "moduleFileExtensions": Array [
-    "ts",
-    "tsx",
-    "js",
-  ],
-  "testMatch": Array [
-    "**/__tests__/*.+(ts|tsx|js)",
-  ],
-  "transform": Object {
-    "^.+\\\\.(ts|tsx)$": "ts-jest",
-  },
-}
 `;

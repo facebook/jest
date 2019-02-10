@@ -1,0 +1,107 @@
+/* Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved. */
+
+/* 
+Jest's Color Scheme for Highlight JS
+(c) The Jest Core Team
+
+/cc orta.therox+jest@gmail.com
+*/
+
+body .hljs {
+  display: block;
+  overflow-x: auto;
+  padding: 0.5em;
+  background: #f6f6f6;
+  border-left: 2px solid #d0d4c7;
+  color: black;
+}
+
+/* Gray DOCTYPE selectors like WebKit */
+body .xml .hljs-meta {
+  color: #b3b3b3;
+}
+
+body .hljs-comment,
+body .hljs-quote {
+  color: #65737e;
+}
+
+body .hljs-tag,
+body .hljs-attribute,
+body .hljs-keyword,
+body .hljs-selector-tag,
+body .hljs-literal,
+body .hljs-name {
+  color: #297a29;
+}
+
+body .hljs-variable,
+body .hljs-template-variable {
+  color: #3f6e74;
+}
+
+body .hljs-code,
+body .hljs-string,
+body .hljs-meta-string {
+  color: #c21325;
+}
+
+body .hljs-regexp,
+body .hljs-link {
+  color: #0e0eff;
+}
+
+body .hljs-title,
+body .hljs-symbol,
+body .hljs-bullet,
+body .hljs-number {
+  color: #1373c2;
+}
+
+body .hljs-section,
+body .hljs-meta {
+  color: #643820;
+}
+
+body .hljs-class .hljs-title,
+body .hljs-type,
+body .hljs-built_in,
+body .hljs-builtin-name,
+body .hljs-params {
+  color: #6b2e85;
+}
+
+body .hljs-attr {
+  color: #82772c;
+}
+
+body .hljs-subst {
+  color: #000;
+}
+
+body .hljs-formula {
+  background-color: #eee;
+  font-style: italic;
+}
+
+body .hljs-addition {
+  background-color: #baeeba;
+}
+
+body .hljs-deletion {
+  background-color: #ffc8bd;
+}
+
+body .hljs-selector-id,
+body .hljs-selector-class {
+  color: #12a190;
+}
+
+body .hljs-doctag,
+body .hljs-strong {
+  font-weight: bold;
+}
+
+body .hljs-emphasis {
+  font-style: italic;
+}

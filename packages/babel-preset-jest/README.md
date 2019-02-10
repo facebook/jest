@@ -10,14 +10,12 @@ $ npm install --save-dev babel-preset-jest
 
 ## Usage
 
-### Via `.babelrc` (Recommended)
+### Via `babel.config.js` (Recommended)
 
-**.babelrc**
-
-```json
-{
-  "presets": ["jest"]
-}
+```js
+module.exports = {
+  presets: ['jest'],
+};
 ```
 
 ### Via CLI
@@ -29,7 +27,7 @@ $ babel script.js --presets jest
 ### Via Node API
 
 ```javascript
-require('babel-core').transform('code', {
+require('@babel/core').transform('code', {
   presets: ['jest'],
 });
 ```

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,15 +9,22 @@ import chalk from 'chalk';
 import {KEYS} from 'jest-watcher';
 import SnapshotInteractiveMode from '../SnapshotInteractiveMode';
 
-jest.mock('ansi-escapes', () => ({
-  clearScreen: '[MOCK - eraseDown]',
-  cursorRestorePosition: '[MOCK - cursorRestorePosition]',
-  cursorSavePosition: '[MOCK - cursorSavePosition]',
-  cursorScrollDown: '[MOCK - cursorScrollDown]',
-  cursorTo: (x, y) => `[MOCK - cursorTo(${x}, ${y})]`,
-  cursorUp: () => '[MOCK - cursorUp]',
-  eraseDown: '[MOCK - eraseDown]',
-}));
+jest
+  .mock('ansi-escapes', () => ({
+    cursorRestorePosition: '[MOCK - cursorRestorePosition]',
+    cursorSavePosition: '[MOCK - cursorSavePosition]',
+    cursorScrollDown: '[MOCK - cursorScrollDown]',
+    cursorTo: (x, y) => `[MOCK - cursorTo(${x}, ${y})]`,
+    cursorUp: () => '[MOCK - cursorUp]',
+    eraseDown: '[MOCK - eraseDown]',
+  }))
+  .mock('jest-util', () => {
+    const {specialChars, ...util} = jest.requireActual('jest-util');
+    return {
+      ...util,
+      specialChars: {...specialChars, CLEAR: '[MOCK - clear]'},
+    };
+  });
 
 jest.doMock('chalk', () =>
   Object.assign(new chalk.constructor({enabled: false}), {

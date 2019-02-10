@@ -24,62 +24,10 @@ jobs:
     steps:
       - checkout
       - restore-cache: *restore-cache
-      - run: yarn --no-progress
+      - run: yarn --no-progress --frozen-lockfile
       - save-cache: *save-cache
+      - run: echo server.max_workers=1 >> .flowconfig
       - run: yarn lint --format junit -o reports/junit/js-lint-results.xml && yarn typecheck && yarn lint-es5-build --format junit -o reports/junit/js-es5-lint-results.xml  && yarn lint:md:ci && yarn check-copyright-headers
-      - store_test_results:
-          path: reports/junit
-
-  test-browser:
-    working_directory: ~/jest
-    docker:
-      - image: circleci/node:8-browsers
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress
-      - save-cache: *save-cache
-      - run: yarn test-ci-es5-build-in-browser
-
-  test-node-10:
-    working_directory: ~/jest
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress
-      - save-cache: *save-cache
-      - run:
-          command: yarn test-ci-partial
-      - store_test_results:
-          path: reports/junit
-
-  test-jest-circus:
-    working_directory: ~/jest
-    docker:
-      - image: circleci/node:10
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress
-      - save-cache: *save-cache
-      - run:
-          command: JEST_CIRCUS=1 yarn test-ci-partial
-      - store_test_results:
-          path: reports/junit
-
-  test-node-8:
-    working_directory: ~/jest
-    docker:
-      - image: circleci/node:8
-    steps:
-      - checkout
-      - restore-cache: *restore-cache
-      - run: yarn --no-progress
-      - save-cache: *save-cache
-      - run:
-          command: yarn test-ci
       - store_test_results:
           path: reports/junit
 
@@ -90,7 +38,7 @@ jobs:
     steps:
       - checkout
       - restore-cache: *restore-cache
-      - run: yarn --no-progress --ignore-engines
+      - run: yarn --no-progress --frozen-lockfile --ignore-engines
       - save-cache: *save-cache
       - run:
           # react-native does not work with node 6
@@ -98,15 +46,82 @@ jobs:
       - store_test_results:
           path: reports/junit
 
-  test-or-deploy-website:
+  test-node-8:
     working_directory: ~/jest
     docker:
       - image: circleci/node:8
+    steps:
+      - checkout
+      - restore-cache: *restore-cache
+      - run: yarn --no-progress --frozen-lockfile
+      - save-cache: *save-cache
+      - run:
+          command: yarn test-ci-partial
+      - store_test_results:
+          path: reports/junit
+
+  test-node-10:
+    working_directory: ~/jest
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore-cache: *restore-cache
+      - run: yarn --no-progress --frozen-lockfile
+      - save-cache: *save-cache
+      - run:
+          command: yarn test-ci
+      - store_test_results:
+          path: reports/junit
+
+  test-jest-circus:
+    working_directory: ~/jest
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore-cache: *restore-cache
+      - run: yarn --no-progress --frozen-lockfile
+      - save-cache: *save-cache
+      - run:
+          command: JEST_CIRCUS=1 yarn test-ci-partial
+      - store_test_results:
+          path: reports/junit
+
+  test-node-11:
+    working_directory: ~/jest
+    docker:
+      - image: circleci/node:11
+    steps:
+      - checkout
+      - restore-cache: *restore-cache
+      - run: yarn --no-progress --frozen-lockfile
+      - save-cache: *save-cache
+      - run:
+          command: yarn test-ci-partial
+      - store_test_results:
+          path: reports/junit
+
+  test-browser:
+    working_directory: ~/jest
+    docker:
+      - image: circleci/node:10-browsers
+    steps:
+      - checkout
+      - restore-cache: *restore-cache
+      - run: yarn --no-progress --frozen-lockfile
+      - save-cache: *save-cache
+      - run: yarn test-ci-es5-build-in-browser
+
+  test-or-deploy-website:
+    working_directory: ~/jest
+    docker:
+      - image: circleci/node:10
     resource_class: large
     steps:
       - checkout
       - restore-cache: *restore-cache
-      - run: yarn --no-progress
+      - run: yarn --no-progress --frozen-lockfile
       - save-cache: *save-cache
       - run:
           name: Test or Deploy Jest Website
@@ -118,10 +133,11 @@ workflows:
   build-and-deploy:
     jobs:
       - lint-and-typecheck
-      - test-node-8
       - test-node-6
+      - test-node-8
       - test-node-10
       - test-jest-circus
+      - test-node-11 # current
       - test-browser
       - test-or-deploy-website:
           filters: *filter-ignore-gh-pages

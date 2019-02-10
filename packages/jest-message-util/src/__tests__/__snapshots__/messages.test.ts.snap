@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`.formatExecError() 1`] = `
+"  <bold>● </>Test suite failed to run
+
+    Whoops!
+"
+`;
+
+exports[`formatStackTrace should strip node internals 1`] = `
+"<bold><red>  <bold>● <bold>Unix test</></>
+
+      
+        Expected value to be of type:
+          \\"number\\"
+        Received:
+          \\"\\"
+        type:
+          \\"string\\"
+<dim></>
+<dim>      <dim>at Object.it (<dim>__tests__/test.js<dim>:8:14)<dim></>
+<dim>      <dim>at <dim>internal/process/next_tick.js<dim>:188:7<dim></>
+"
+`;
+
+exports[`retains message in babel code frame error 1`] = `
+"<bold><red>  <bold>● <bold>Babel test</></>
+
+      
+        packages/react/src/forwardRef.js: Unexpected token, expected , (20:10)
+<dim></>
+<dim>          </> <gray> 18 | </>        <cyan>false</><yellow>,</></>
+<dim>           <gray> 19 | </>        <green>'forwardRef requires a render function but received a \`memo\` '</> </>
+<dim>          <red><bold>><dim></><gray> 20 | </>          <green>'component. Instead of forwardRef(memo(...)), use '</> <yellow>+</></>
+<dim>           <gray>    | </>          <red><bold>^<dim></></>
+<dim>           <gray> 21 | </>          <green>'memo(forwardRef(...)).'</><yellow>,</></>
+<dim>           <gray> 22 | </>      )<yellow>;</></>
+<dim>           <gray> 23 | </>    } <cyan>else</> <cyan>if</> (<cyan>typeof</> render <yellow>!==</> <green>'function'</>) {</></>
+"
+`;
+
+exports[`should exclude jasmine from stack trace for Unix paths. 1`] = `
+"<bold><red>  <bold>● <bold>Unix test</></>
+
+      at stack (../jest-jasmine2/build/jasmine-2.4.1.js:1580:17)
+<dim></>
+<dim>      <dim>at Object.addResult (<dim>../jest-jasmine2/build/jasmine-2.4.1.js<dim>:1550:14)<dim></>
+<dim>      <dim>at Object.it (<dim>build/__tests__/messages-test.js<dim>:45:41)<dim></>
+"
+`;
+
+exports[`should not exclude vendor from stack trace 1`] = `
+"<bold><red>  <bold>● <bold>Vendor test</></>
+
+      
+        Expected value to be of type:
+          \\"number\\"
+        Received:
+          \\"\\"
+        type:
+          \\"string\\"
+<dim></>
+<dim>      <dim>at Object.it (<dim>__tests__/vendor/cool_test.js<dim>:6:666)<dim></>
+<dim>      <dim>at Object.asyncFn (<dim>__tests__/vendor/sulu/node_modules/sulu-content-bundle/best_component.js<dim>:1:5)<dim></>
+"
+`;

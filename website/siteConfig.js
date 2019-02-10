@@ -1,6 +1,6 @@
 /*eslint sort-keys: 0*/
 /**
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  * All rights reserved.
  *
  * This source code is licensed under the MIT license found in the
@@ -53,7 +53,6 @@ const users = [
     image: '/img/logos/facebook.png',
     infoLink: 'https://code.facebook.com',
   },
-
   {
     caption: 'Twitter',
     image: '/img/logos/twitter.png',
@@ -119,8 +118,8 @@ const siteConfig = {
   },
   gaTrackingId: 'UA-44373548-17',
   colors: {
-    primaryColor: '#99424f',
-    secondaryColor: '#7f2c39',
+    primaryColor: '#10910e',
+    secondaryColor: '#095708',
     prismColor: 'rgba(153, 66, 79, 0.03)',
   },
   scripts: ['https://buttons.github.io/buttons.js'],
@@ -128,6 +127,9 @@ const siteConfig = {
   siteConfigUrl:
     'https://github.com/facebook/jest/edit/master/website/siteConfig.js',
   cleanUrl: true,
+  twitter: true,
+  twitterUsername: 'fbjest',
+  twitterImage: 'img/jest.png',
 };
 
 module.exports = siteConfig;

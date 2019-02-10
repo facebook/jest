@@ -23,7 +23,8 @@
       "tutorial-jquery",
       "watch-plugins",
       "migration-guide",
-      "troubleshooting"
+      "troubleshooting",
+      "architecture"
     ],
     "Framework Guides": [
       "tutorial-react",

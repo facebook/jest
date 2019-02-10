@@ -1,28 +1,32 @@
 {
   "name": "jest-snapshot",
-  "version": "23.6.0",
+  "version": "24.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-snapshot"
   },
   "license": "MIT",
   "main": "build/index.js",
   "dependencies": {
-    "babel-types": "^6.0.0",
+    "@babel/types": "^7.0.0",
     "chalk": "^2.0.1",
-    "jest-diff": "^23.6.0",
-    "jest-matcher-utils": "^23.6.0",
-    "jest-message-util": "^23.4.0",
-    "jest-resolve": "^23.6.0",
+    "jest-diff": "^24.0.0",
+    "jest-matcher-utils": "^24.0.0",
+    "jest-message-util": "^24.0.0",
+    "jest-resolve": "^24.1.0",
     "mkdirp": "^0.5.1",
     "natural-compare": "^1.4.0",
-    "pretty-format": "^23.6.0",
+    "pretty-format": "^24.0.0",
     "semver": "^5.5.0"
   },
   "devDependencies": {
+    "@types/mkdirp": "^0.5.2",
+    "@types/semver": "^5.5.0",
     "prettier": "^1.13.4"
   },
   "engines": {
     "node": ">= 6"
-  }
+  },
+  "gitHead": "b16789230fd45056a7f2fa199bae06c7a1780deb"
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -41,8 +41,7 @@ export default class FailedTestsCache {
     if (!this._enabledTestsMap) {
       return globalConfig;
     }
-    // $FlowFixMe Object.assign
-    const newConfig: GlobalConfig = Object.assign({}, globalConfig);
+    const newConfig: GlobalConfig = {...globalConfig};
     newConfig.enabledTestsMap = this._enabledTestsMap;
     return Object.freeze(newConfig);
   }

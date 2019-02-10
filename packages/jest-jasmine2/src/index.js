@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,7 +11,6 @@ import type {Environment} from 'types/Environment';
 import type {GlobalConfig, ProjectConfig} from 'types/Config';
 import type {SnapshotState} from 'jest-snapshot';
 import type {TestResult} from 'types/TestResult';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import type Runtime from 'jest-runtime';
 
 import path from 'path';
@@ -76,7 +75,7 @@ async function jasmine2(
     };
   }
 
-  jasmineAsyncInstall(environment.global);
+  jasmineAsyncInstall(globalConfig, environment.global);
 
   installEach(environment);
 

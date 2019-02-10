@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -79,21 +79,25 @@ describe('watchman watch', () => {
               exists: true,
               mtime_ms: {toNumber: () => 30},
               name: 'fruits/strawberry.js',
+              size: 40,
             },
             {
               exists: true,
               mtime_ms: {toNumber: () => 31},
               name: 'fruits/tomato.js',
+              size: 41,
             },
             {
               exists: true,
               mtime_ms: {toNumber: () => 32},
               name: 'fruits/pear.js',
+              size: 42,
             },
             {
               exists: true,
               mtime_ms: {toNumber: () => 33},
               name: 'vegetables/melon.json',
+              size: 43,
             },
           ],
           is_fresh_instance: true,
@@ -104,9 +108,9 @@ describe('watchman watch', () => {
     };
 
     mockFiles = createMap({
-      [MELON_RELATIVE]: ['', 33, 0, [], null],
-      [STRAWBERRY_RELATIVE]: ['', 30, 0, [], null],
-      [TOMATO_RELATIVE]: ['', 31, 0, [], null],
+      [MELON_RELATIVE]: ['', 33, 43, 0, [], null],
+      [STRAWBERRY_RELATIVE]: ['', 30, 40, 0, [], null],
+      [TOMATO_RELATIVE]: ['', 31, 41, 0, [], null],
     });
   });
 
@@ -146,7 +150,7 @@ describe('watchman watch', () => {
         ['anyof', ['dirname', 'fruits'], ['dirname', 'vegetables']],
       ]);
 
-      expect(query[2].fields).toEqual(['name', 'exists', 'mtime_ms']);
+      expect(query[2].fields).toEqual(['name', 'exists', 'mtime_ms', 'size']);
 
       expect(query[2].glob).toEqual([
         'fruits/**/*.js',
@@ -181,6 +185,7 @@ describe('watchman watch', () => {
               exists: true,
               mtime_ms: {toNumber: () => 33},
               name: 'vegetables/durian.zip',
+              size: 43,
             },
           ],
           is_fresh_instance: true,
@@ -206,8 +211,8 @@ describe('watchman watch', () => {
     }).then(data => {
       expect(data.files).toEqual(
         createMap({
-          [path.join(DURIAN_RELATIVE, 'foo.1.js')]: ['', 33, 0, [], null],
-          [path.join(DURIAN_RELATIVE, 'foo.2.js')]: ['', 33, 0, [], null],
+          [path.join(DURIAN_RELATIVE, 'foo.1.js')]: ['', 33, 43, 0, [], null],
+          [path.join(DURIAN_RELATIVE, 'foo.2.js')]: ['', 33, 43, 0, [], null],
         }),
       );
     });
@@ -228,11 +233,13 @@ describe('watchman watch', () => {
               exists: true,
               mtime_ms: {toNumber: () => 42},
               name: 'fruits/kiwi.js',
+              size: 40,
             },
             {
               exists: false,
               mtime_ms: null,
               name: 'fruits/tomato.js',
+              size: 0,
             },
           ],
           is_fresh_instance: false,
@@ -267,9 +274,9 @@ describe('watchman watch', () => {
 
       expect(data.files).toEqual(
         createMap({
-          [KIWI_RELATIVE]: ['', 42, 0, [], null],
-          [MELON_RELATIVE]: ['', 33, 0, [], null],
-          [STRAWBERRY_RELATIVE]: ['', 30, 0, [], null],
+          [KIWI_RELATIVE]: ['', 42, 40, 0, [], null],
+          [MELON_RELATIVE]: ['', 33, 43, 0, [], null],
+          [STRAWBERRY_RELATIVE]: ['', 30, 40, 0, [], null],
         }),
       );
     });
@@ -292,17 +299,20 @@ describe('watchman watch', () => {
               exists: true,
               mtime_ms: {toNumber: () => 42},
               name: 'fruits/kiwi.js',
+              size: 52,
             },
             {
               exists: true,
               mtime_ms: {toNumber: () => 41},
               name: 'fruits/banana.js',
+              size: 51,
             },
             {
               'content.sha1hex': mockTomatoSha1,
               exists: true,
               mtime_ms: {toNumber: () => 76},
               name: 'fruits/tomato.js',
+              size: 41,
             },
           ],
           is_fresh_instance: true,
@@ -312,9 +322,9 @@ describe('watchman watch', () => {
       'watch-project': WATCH_PROJECT_MOCK,
     };
 
-    const mockBananaMetadata = ['Banana', 41, 1, ['Raspberry'], null];
+    const mockBananaMetadata = ['Banana', 41, 51, 1, ['Raspberry'], null];
     mockFiles.set(BANANA_RELATIVE, mockBananaMetadata);
-    const mockTomatoMetadata = ['Tomato', 31, 1, [], mockTomatoSha1];
+    const mockTomatoMetadata = ['Tomato', 31, 41, 1, [], mockTomatoSha1];
     mockFiles.set(TOMATO_RELATIVE, mockTomatoMetadata);
 
     const clocks = createMap({
@@ -344,8 +354,8 @@ describe('watchman watch', () => {
       expect(data.files).toEqual(
         createMap({
           [BANANA_RELATIVE]: mockBananaMetadata,
-          [KIWI_RELATIVE]: ['', 42, 0, [], null],
-          [TOMATO_RELATIVE]: ['Tomato', 76, 1, [], mockTomatoSha1],
+          [KIWI_RELATIVE]: ['', 42, 52, 0, [], null],
+          [TOMATO_RELATIVE]: ['Tomato', 76, 41, 1, [], mockTomatoSha1],
         }),
       );
 
@@ -373,6 +383,7 @@ describe('watchman watch', () => {
               exists: true,
               mtime_ms: {toNumber: () => 42},
               name: 'kiwi.js',
+              size: 52,
             },
           ],
           is_fresh_instance: false,
@@ -385,6 +396,7 @@ describe('watchman watch', () => {
               exists: true,
               mtime_ms: {toNumber: () => 33},
               name: 'melon.json',
+              size: 43,
             },
           ],
           is_fresh_instance: true,
@@ -425,8 +437,8 @@ describe('watchman watch', () => {
 
       expect(data.files).toEqual(
         createMap({
-          [KIWI_RELATIVE]: ['', 42, 0, [], null],
-          [MELON_RELATIVE]: ['', 33, 0, [], null],
+          [KIWI_RELATIVE]: ['', 42, 52, 0, [], null],
+          [MELON_RELATIVE]: ['', 33, 43, 0, [], null],
         }),
       );
     });
@@ -493,7 +505,7 @@ describe('watchman watch', () => {
         ['anyof', ['suffix', 'js'], ['suffix', 'json']],
       ]);
 
-      expect(query[2].fields).toEqual(['name', 'exists', 'mtime_ms']);
+      expect(query[2].fields).toEqual(['name', 'exists', 'mtime_ms', 'size']);
 
       expect(query[2].glob).toEqual(['**/*.js', '**/*.json']);
 

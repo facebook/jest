@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -23,11 +23,9 @@ export type Options = {
   coverageDirectory?: $PropertyType<GlobalConfig, 'coverageDirectory'>,
   coverageReporters?: $PropertyType<GlobalConfig, 'coverageReporters'>,
   mode?: 'watch' | 'watchAll',
-  noSCM?: $PropertyType<GlobalConfig, 'noSCM'>,
   notify?: $PropertyType<GlobalConfig, 'notify'>,
   notifyMode?: $PropertyType<GlobalConfig, 'notifyMode'>,
   onlyFailures?: $PropertyType<GlobalConfig, 'onlyFailures'>,
-  passWithNoTests?: $PropertyType<GlobalConfig, 'passWithNoTests'>,
   reporters?: $PropertyType<GlobalConfig, 'reporters'>,
   testNamePattern?: $PropertyType<GlobalConfig, 'testNamePattern'>,
   testPathPattern?: $PropertyType<GlobalConfig, 'testPathPattern'>,
@@ -36,8 +34,7 @@ export type Options = {
 };
 
 export default (globalConfig: GlobalConfig, options: Options): GlobalConfig => {
-  // $FlowFixMe Object.assign
-  const newConfig: GlobalConfig = Object.assign({}, globalConfig);
+  const newConfig: GlobalConfig = {...globalConfig};
 
   if (!options) {
     options = {};
@@ -66,8 +63,10 @@ export default (globalConfig: GlobalConfig, options: Options): GlobalConfig => {
     !newConfig.testNamePattern &&
     !newConfig.testPathPattern;
 
-  if (options.bail !== undefined) {
-    newConfig.bail = options.bail || false;
+  if (typeof options.bail === 'boolean') {
+    newConfig.bail = options.bail ? 1 : 0;
+  } else if (options.bail !== undefined) {
+    newConfig.bail = options.bail;
   }
 
   if (options.changedSince !== undefined) {

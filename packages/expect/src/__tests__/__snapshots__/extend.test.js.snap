@@ -3,11 +3,6 @@
 exports[`defines asymmetric unary matchers 1`] = `
 "<dim>expect(</><red>received</><dim>).toEqual(</><green>expected</><dim>)</>
 
-Expected value to equal:
-  <green>{\\"value\\": toBeDivisibleBy<2>}</>
-Received:
-  <red>{\\"value\\": 3}</>
-
 Difference:
 
 <green>- Expected</>
@@ -21,11 +16,6 @@ Difference:
 
 exports[`defines asymmetric unary matchers that can be prefixed by not 1`] = `
 "<dim>expect(</><red>received</><dim>).toEqual(</><green>expected</><dim>)</>
-
-Expected value to equal:
-  <green>{\\"value\\": not.toBeDivisibleBy<2>}</>
-Received:
-  <red>{\\"value\\": 2}</>
 
 Difference:
 
@@ -41,11 +31,6 @@ Difference:
 exports[`defines asymmetric variadic matchers 1`] = `
 "<dim>expect(</><red>received</><dim>).toEqual(</><green>expected</><dim>)</>
 
-Expected value to equal:
-  <green>{\\"value\\": toBeWithinRange<4, 11>}</>
-Received:
-  <red>{\\"value\\": 3}</>
-
 Difference:
 
 <green>- Expected</>
@@ -59,11 +44,6 @@ Difference:
 
 exports[`defines asymmetric variadic matchers that can be prefixed by not 1`] = `
 "<dim>expect(</><red>received</><dim>).toEqual(</><green>expected</><dim>)</>
-
-Expected value to equal:
-  <green>{\\"value\\": not.toBeWithinRange<1, 3>}</>
-Received:
-  <red>{\\"value\\": 2}</>
 
 Difference:
 

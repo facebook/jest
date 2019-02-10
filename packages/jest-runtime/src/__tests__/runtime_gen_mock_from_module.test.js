@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,6 +9,10 @@
 'use strict';
 
 let createRuntime;
+
+const moduleNameMapper = {
+  'module/name/(.*)': '<rootDir>/mapped_module_$1.js',
+};
 
 describe('Runtime', () => {
   beforeEach(() => {
@@ -34,6 +38,16 @@ describe('Runtime', () => {
         // Make sure we get a mock.
         expect(mock.fn()).toBe(undefined);
         expect(module.getModuleStateValue()).toBe(origModuleStateValue);
+      }));
+
+    it('resolves mapped modules correctly', () =>
+      createRuntime(__filename, {moduleNameMapper}).then(runtime => {
+        const root = runtime.requireModule(runtime.__mockRootPath);
+        const mockModule = root.jest.genMockFromModule(
+          'module/name/genMockFromModule',
+        );
+
+        expect(mockModule.test.mock).toBeTruthy();
       }));
   });
 

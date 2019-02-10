@@ -1,0 +1,9 @@
+{
+  "jest": {
+    "testEnvironment": "node",
+    "globalSetup": "<rootDir>/setup.js",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/transformer.js"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "jest": {
+    "moduleNameMapper": {
+      "^@@storage/(.*)$": "<rootDir>/src/storage/$1"
+    },
+    "testEnvironment": "node"
+  }
+}

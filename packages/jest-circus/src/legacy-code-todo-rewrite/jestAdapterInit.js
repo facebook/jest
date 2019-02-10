@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -18,6 +18,7 @@ import {
   addSerializer,
   buildSnapshotResolver,
 } from 'jest-snapshot';
+import throat from 'throat';
 import {addEventHandler, dispatch, ROOT_DESCRIBE_BLOCK_NAME} from '../state';
 import {getTestID} from '../utils';
 import run from '../run';
@@ -41,6 +42,8 @@ export const initialize = ({
   testPath: Path,
   parentProcess: Process,
 }) => {
+  const mutex = throat(globalConfig.maxConcurrency);
+
   Object.assign(global, globals);
 
   global.xit = global.it.skip;
@@ -60,7 +63,7 @@ export const initialize = ({
     // Unfortunately at this stage there's no way to know if there are any `.only` tests in the suite
     // that will result in this test to be skipped, so we'll be executing the promise function anyway,
     // even if it ends up being skipped.
-    const promise = testFn();
+    const promise = mutex(() => testFn());
     global.test(testName, () => promise, timeout);
   };
 
@@ -69,7 +72,7 @@ export const initialize = ({
     testFn: () => Promise<any>,
     timeout?: number,
   ) => {
-    const promise = testFn();
+    const promise = mutex(() => testFn());
     global.test.only(testName, () => promise, timeout);
   };
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -52,10 +52,9 @@ export default function setFromArgv(
       return options;
     }, {});
 
-  return Object.assign(
-    {},
-    options,
-    isJSONString(argv.config) ? JSON.parse(argv.config) : null,
-    argvToOptions,
-  );
+  return {
+    ...options,
+    ...(isJSONString(argv.config) ? JSON.parse(argv.config) : null),
+    ...argvToOptions,
+  };
 }

@@ -1,14 +1,9 @@
 [ignore]
 .*/examples/.*
 .*/node_modules/metro-bundler/.*
+.*/node_modules/metro-config/.*
+.*/node_modules/metro/.*
 .*/node_modules/module-deps/.*
-
-[options]
-module.name_mapper='^pretty-format$' -> '<PROJECT_ROOT>/packages/pretty-format/src/index.js'
-module.name_mapper='^types/\(.*\)$' -> '<PROJECT_ROOT>/types/\1.js'
-module.name_mapper='\(jest-[^/]*\)' -> '<PROJECT_ROOT>/packages/\1/src/index.js'
-include_warnings=true
-emoji=true
 
 [strict]
 nonstrict-import
@@ -18,4 +13,11 @@ untyped-import
 untyped-type-import
 
 [version]
-^0.85.0
+^0.91.0
+
+[options]
+module.name_mapper='^pretty-format$' -> '<PROJECT_ROOT>/packages/pretty-format/src/index.js'
+module.name_mapper='^types/\(.*\)$' -> '<PROJECT_ROOT>/types/\1.js'
+module.name_mapper='\(jest-[^/]*\)' -> '<PROJECT_ROOT>/packages/\1/src/index.js'
+include_warnings=true
+emoji=true

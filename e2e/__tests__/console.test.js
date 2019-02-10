@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,18 +7,17 @@
  * @flow
  */
 
-'use strict';
-
 import {extractSummary} from '../Utils';
 import runJest from '../runJest';
+import {wrap} from 'jest-snapshot-serializer-raw';
 
 test('console printing', () => {
   const {stderr, status} = runJest('console');
   const {summary, rest} = extractSummary(stderr);
 
   expect(status).toBe(0);
-  expect(rest).toMatchSnapshot();
-  expect(summary).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
 });
 
 test('console printing with --verbose', () => {
@@ -29,9 +28,9 @@ test('console printing with --verbose', () => {
   const {summary, rest} = extractSummary(stderr);
 
   expect(status).toBe(0);
-  expect(stdout).toMatchSnapshot();
-  expect(rest).toMatchSnapshot();
-  expect(summary).toMatchSnapshot();
+  expect(wrap(stdout)).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
 });
 
 test('does not print to console with --silent', () => {
@@ -47,9 +46,9 @@ test('does not print to console with --silent', () => {
   const {summary, rest} = extractSummary(stderr);
 
   expect(status).toBe(0);
-  expect(stdout).toMatchSnapshot();
-  expect(rest).toMatchSnapshot();
-  expect(summary).toMatchSnapshot();
+  expect(wrap(stdout)).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
 });
 
 // issue: https://github.com/facebook/jest/issues/5223
@@ -58,7 +57,7 @@ test('the jsdom console is the same as the test console', () => {
   const {summary, rest} = extractSummary(stderr);
 
   expect(status).toBe(0);
-  expect(stdout).toMatchSnapshot();
-  expect(rest).toMatchSnapshot();
-  expect(summary).toMatchSnapshot();
+  expect(wrap(stdout)).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
 });

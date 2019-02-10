@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
@@ -15,7 +15,9 @@ import ansiEscapes from 'ansi-escapes';
 import {KEYS} from 'jest-watcher';
 
 import {pluralize} from './reporters/utils';
-import {ARROW} from './constants';
+import {specialChars} from 'jest-util';
+
+const {ARROW, CLEAR} = specialChars;
 
 export default class SnapshotInteractiveMode {
   _pipe: stream$Writable | tty$WriteStream;
@@ -90,7 +92,7 @@ export default class SnapshotInteractiveMode {
   }
 
   _drawUIDoneWithSkipped() {
-    this._pipe.write(ansiEscapes.clearScreen);
+    this._pipe.write(CLEAR);
     const numPass = this._countPaths - this._testAssertions.length;
 
     let stats = chalk.bold.dim(
@@ -123,7 +125,7 @@ export default class SnapshotInteractiveMode {
   }
 
   _drawUIDone() {
-    this._pipe.write(ansiEscapes.clearScreen);
+    this._pipe.write(CLEAR);
     const numPass = this._countPaths - this._testAssertions.length;
 
     let stats = chalk.bold.dim(

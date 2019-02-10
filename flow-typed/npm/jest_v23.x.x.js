@@ -902,7 +902,7 @@ declare function beforeAll(
 /** A context for grouping tests together */
 declare var describe: {
   /**
-   * Creates a block that groups together several related tests in one "test suite"
+   * Creates a block that groups together several related tests
    */
   (name: JestTestName, fn: () => void): void,
 

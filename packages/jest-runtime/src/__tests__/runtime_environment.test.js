@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -42,11 +42,11 @@ describe('Runtime', () => {
           hasThrown = true;
           if (process.platform === 'win32') {
             expect(err.stack).toMatch(
-              /^Error: throwing fn\s+at sum.+\\__tests__\\test_root\\throwing_fn.js:11:9/,
+              /^Error: throwing fn\s+at sum.+\\__tests__\\test_root\\throwing_fn\.js/,
             );
           } else {
             expect(err.stack).toMatch(
-              /^Error: throwing fn\s+at sum.+\/__tests__\/test_root\/throwing_fn.js:11:9/,
+              /^Error: throwing fn\s+at sum.+\/__tests__\/test_root\/throwing_fn\.js/,
             );
           }
         }

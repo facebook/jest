@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`show error message when no js moduleFileExtensions 1`] = `
+● Validation Error:
+
+  moduleFileExtensions must include 'js':
+  but instead received:
+    ["jsx"]
+  Please change your configuration to include 'js'.
+
+  Configuration Documentation:
+  https://jestjs.io/docs/configuration.html
+
+
+`;
+
+exports[`show error message with matching files 1`] = `
+FAIL __tests__/test.js
+  ● Test suite failed to run
+
+    Cannot find module './some-json-file' from 'index.js'
+
+    However, Jest was able to find:
+    	'./some-json-file.json'
+
+    You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js'].
+
+    See https://jestjs.io/docs/en/configuration#modulefileextensions-array-string
+
+      1 | // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+      2 | 
+    > 3 | module.exports = require('./some-json-file');
+        |                  ^
+      4 | 
+
+      at Resolver.resolveModule (../../packages/jest-resolve/build/index.js:203:17)
+      at Object.require (index.js:3:18)
+`;

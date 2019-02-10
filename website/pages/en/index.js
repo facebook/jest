@@ -1,10 +1,9 @@
 /**
- * Copyright (c) 2017-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 const React = require('react');
 
 const CompLibrary = require('../../core/CompLibrary.js');
@@ -13,21 +12,22 @@ const Container = CompLibrary.Container;
 const GridBlock = CompLibrary.GridBlock;
 
 const translate = require('../../server/translate.js').translate;
-const translation = require('../../server/translation.js');
 const backers = require(process.cwd() + '/backers.json');
-
 const siteConfig = require(process.cwd() + '/siteConfig.js');
-const idx = (target, path) =>
-  path.reduce((obj, key) => (obj && obj[key] ? obj[key] : null), target);
+const getDocsUrl = (url, language) =>
+  siteConfig.baseUrl + 'docs/' + language + url;
+const getUrl = (url, language) => siteConfig.baseUrl + language + url;
 
 class Button extends React.Component {
   render() {
     return (
-      <div className="pluginWrapper buttonWrapper">
-        <a className="button" href={this.props.href} target={this.props.target}>
-          {this.props.children}
-        </a>
-      </div>
+      <a
+        className="jest-button"
+        href={this.props.href}
+        target={this.props.target}
+      >
+        {this.props.children}
+      </a>
     );
   }
 }
@@ -39,10 +39,10 @@ Button.defaultProps = {
 class Contributors extends React.Component {
   render() {
     return (
-      <div>
-        <h2>
+      <div className="opencollective">
+        <h3>
           <translate>Sponsors</translate>
-        </h2>
+        </h3>
         <p>
           <translate>
             Sponsors are those who contribute $100 or more per month to Jest
@@ -62,7 +62,7 @@ class Contributors extends React.Component {
                 {
                   <img
                     className="sponsor-avatar"
-                    src={b.avatar}
+                    src={b.avatar + '&width=96'}
                     alt={
                       b.name || b.slug
                         ? `${b.name || b.slug}'s avatar`
@@ -73,17 +73,9 @@ class Contributors extends React.Component {
               </a>
             ))}
         </div>
-        <div className="support">
-          <a
-            className="support-button"
-            href="https://opencollective.com/jest#support"
-          >
-            <translate>Become a sponsor</translate>
-          </a>
-        </div>
-        <h2>
+        <h3>
           <translate>Backers</translate>
-        </h2>
+        </h3>
         <p>
           <translate>
             Backers are those who contribute $2 or more per month to Jest
@@ -103,7 +95,7 @@ class Contributors extends React.Component {
                 {
                   <img
                     className="backer-avatar"
-                    src={b.avatar}
+                    src={b.avatar + '&width=96'}
                     alt={
                       b.name || b.slug
                         ? `${b.name || b.slug}'s avatar`
@@ -113,13 +105,101 @@ class Contributors extends React.Component {
                 }
               </a>
             ))}
-          <div>
-            <a
-              className="support-button"
-              href="https://opencollective.com/jest#support"
-            >
-              <translate>Become a backer</translate>
-            </a>
+        </div>
+      </div>
+    );
+  }
+}
+
+class Card extends React.Component {
+  render() {
+    const {index} = this.props;
+    return (
+      <div key={index} className="jest-card-hitslop">
+        <div className="jest-card jest-card-running" data-index={index}>
+          <div className="jest-card-front">
+            <div className="jest-card-label">JEST</div>
+            <div className="jest-card-logo-container">
+              <div className="jest-card-logo" />
+            </div>
+            <div className="jest-card-label jest-card-label-reverse">JEST</div>
+          </div>
+          <div className="jest-card-back">
+            <svg viewBox="0 0 200 200" style={{height: 150, width: 150}}>
+              <defs>
+                <path
+                  d="M100 100 m -75 0 a75 75 0 1 0 150 0 a 75 75 0 1 0 -150 0"
+                  id="runs-path"
+                />
+              </defs>
+              <circle
+                cx="100"
+                cy="100"
+                r="88"
+                stroke="#fff"
+                strokeWidth="8"
+                fill="#C2A813"
+              />
+              <g className="run-circle">
+                <circle cx="100" cy="100" r="50" fill="#fff" />
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="45"
+                  fill="#C2A813"
+                  className="run-circle"
+                />
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="35"
+                  fill="#fff"
+                  className="run-circle"
+                />
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="25"
+                  fill="#C2A813"
+                  className="run-circle"
+                />
+                <circle
+                  cx="100"
+                  cy="100"
+                  r="15"
+                  fill="#fff"
+                  className="run-circle"
+                />
+              </g>
+              <g
+                fill="#fff"
+                fontWeight="bold"
+                fontSize={26}
+                letterSpacing="0.2em"
+                className="run-text"
+              >
+                <text>
+                  <textPath xlinkHref="#runs-path" href="#runs-path">
+                    RUNS
+                  </textPath>
+                </text>
+                <text transform="rotate(90,100,100)">
+                  <textPath xlinkHref="#runs-path" href="#runs-path">
+                    RUNS
+                  </textPath>
+                </text>
+                <text transform="rotate(180,100,100)">
+                  <textPath xlinkHref="#runs-path" href="#runs-path">
+                    RUNS
+                  </textPath>
+                </text>
+                <text transform="rotate(270,100,100)">
+                  <textPath xlinkHref="#runs-path" href="#runs-path">
+                    RUNS
+                  </textPath>
+                </text>
+              </g>
+            </svg>
           </div>
         </div>
       </div>
@@ -127,78 +207,52 @@ class Contributors extends React.Component {
   }
 }
 
-class HomeSplash extends React.Component {
+class Hand extends React.Component {
   render() {
+    const cards = [0, 1, 2, 3, 4].map(i => <Card key={i} index={i} />);
     return (
-      <div className="homeContainer">
-        <div className="homeSplashFade">
-          <div className="wrapper homeWrapper">
-            <div className="projectLogo">
-              <img src={siteConfig.baseUrl + 'img/jest.svg'} alt="Jest" />
-            </div>
-            <div className="inner">
-              <h2 className="projectTitle">
-                {siteConfig.title}
-                <small>
-                  {idx(translation, [
-                    this.props.language,
-                    'localized-strings',
-                    'tagline',
-                  ]) || siteConfig.tagline}
-                </small>
-              </h2>
-              <div className="section promoSection">
-                <div className="promoRow">
-                  <div className="pluginRowBlock">
-                    <Button href="#use">
-                      <translate>Try Out Jest</translate>
-                    </Button>
-                    <Button
-                      href={
-                        siteConfig.baseUrl +
-                        'docs/' +
-                        this.props.language +
-                        '/getting-started.html'
-                      }
-                    >
-                      <translate>Get Started</translate>
-                    </Button>
-                    <Button href={'#watch'}>
-                      <translate>Watch Talks</translate>
-                    </Button>
-                    <Button
-                      href={
-                        siteConfig.baseUrl +
-                        'docs/' +
-                        this.props.language +
-                        '/snapshot-testing.html'
-                      }
-                    >
-                      <translate>Learn More</translate>
-                    </Button>
-                  </div>
-                </div>
-              </div>
-              <div className="githubButton" style={{minHeight: '20px'}}>
-                <a
-                  className="github-button"
-                  href={this.props.config.repoUrl}
-                  data-icon="octicon-star"
-                  data-count-href="/facebook/jest/stargazers"
-                  data-show-count={true}
-                  data-count-aria-label="# stargazers on GitHub"
-                  aria-label="Star facebook/jest on GitHub"
-                >
-                  Star
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="jest-hand">
+        {cards}
+        <script src="/landing.js" />
       </div>
     );
   }
 }
+
+const HeroInteractive = ({config: {repoUrl}, language}) => (
+  <div className="wrapper">
+    <div className="jest-hero-interactive">
+      <div className="hero-github-button-container">
+        <a
+          className="github-button"
+          href={repoUrl}
+          data-icon="octicon-star"
+          data-count-href="/facebook/jest/stargazers"
+          data-show-count={true}
+          data-count-aria-label="# stargazers on GitHub"
+          aria-label="Star facebook/jest on GitHub"
+        >
+          Star
+        </a>
+      </div>
+      <Hand />
+      <div className="jest-button-container">
+        <Button href={getDocsUrl('/getting-started.html', language)}>
+          <translate>Get Started</translate>
+        </Button>
+        <Button href={getDocsUrl('/getting-started.html', language)}>
+          <translate>Docs</translate>
+        </Button>
+        <Button href={getDocsUrl('/configuration', language)}>
+          <translate>Config</translate>
+        </Button>
+        <Button href={getUrl('/help', language)}>
+          <translate>Get help</translate>
+        </Button>
+      </div>
+    </div>
+  </div>
+);
 
 class Index extends React.Component {
   render() {
@@ -210,258 +264,287 @@ class Index extends React.Component {
 
     return (
       <div>
-        <HomeSplash language={this.props.language} config={siteConfig} />
-        <div className="mainContainer">
-          <Container padding={['bottom', 'top']} background="light">
+        <HeroInteractive language={this.props.language} config={siteConfig} />
+        <div className="mainContainer" style={{paddingTop: 0}}>
+          <Container
+            padding={['bottom', 'top']}
+            background="light"
+            className="intro"
+          >
+            <p>
+              <translate>
+                Jest is a delightful JavaScript Testing Framework with a focus
+                on simplicity.
+              </translate>
+            </p>
+            <p>
+              <MarkdownBlock>
+                <translate>
+                  It works with projects using: [Babel](https://babeljs.io/),
+                  [TypeScript](https://www.typescriptlang.org/),
+                  [Node](https://nodejs.org/en/), [React](https://reactjs.org),
+                  [Angular](https://angular.io), [Vue](https://vuejs.org) and
+                  more!
+                </translate>
+              </MarkdownBlock>
+            </p>
+          </Container>
+          <Container padding={['bottom', 'top']} className="features">
             <GridBlock
               align="center"
+              className="yellow"
               contents={[
                 {
                   content: (
                     <translate>
-                      Complete and ready to set-up JavaScript testing solution.
-                      Works out of the box for any React project.
+                      Jest aims to work out of the box, config free, on most
+                      JavaScript projects.
                     </translate>
                   ),
-                  image: '/img/content/female-technologist.png',
-                  imageAlign: 'top',
-                  title: <translate>Developer Ready</translate>,
+                  title: <translate>Zero config</translate>,
                 },
                 {
                   content: (
                     <translate>
-                      Fast interactive watch mode runs only test files related
-                      to changed files and is optimized to give signal quickly.
+                      Make tests which keep track of large objects with ease.
+                      Snapshots live either alongside your tests, or embedded
+                      inline.
                     </translate>
                   ),
-                  image: '/img/content/runner.png',
-                  imageAlign: 'top',
-                  title: <translate>Instant Feedback</translate>,
+                  title: <translate>Snapshots</translate>,
                 },
                 {
                   content: (
                     <translate>
-                      Capture snapshots of React trees or other serializable
-                      values to simplify testing and to analyze how state
-                      changes over time.
+                      Tests are parallelized by running them in their own
+                      processes to maximize performance.
                     </translate>
                   ),
-                  image: '/img/content/camera-with-flash.png',
-                  imageAlign: 'top',
-                  title: <translate>Snapshot Testing</translate>,
+                  title: <translate>Isolated</translate>,
+                },
+                {
+                  content: (
+                    <translate>
+                      From `it` to `expect` - Jest has the entire toolkit in one
+                      place. Well documented, well maintained, well good.
+                    </translate>
+                  ),
+                  title: <translate>Great api</translate>,
                 },
               ]}
               layout="fourColumn"
             />
           </Container>
-          <Container padding={['bottom', 'top']}>
-            <div
-              className="productShowcaseSection paddingBottom"
-              style={{textAlign: 'center'}}
-            >
-              <h2>
-                <translate>Zero configuration testing platform</translate>
-              </h2>
-              <MarkdownBlock>
-                <translate>
-                  Jest is used by Facebook to test all JavaScript code including
-                  React applications. One of Jest's philosophies is to provide
-                  an integrated \"zero-configuration\" experience. We observed
-                  that when engineers are provided with ready-to-use tools, they
-                  end up writing more tests, which in turn results in more
-                  stable and healthy code bases.
-                </translate>
-              </MarkdownBlock>
-            </div>
-          </Container>
-          <Container padding={['bottom', 'top']} background="light">
+
+          <Container
+            padding={['bottom', 'top']}
+            className="section-container lightBackground"
+          >
             <GridBlock
+              className="green"
               contents={[
                 {
                   content: (
                     <translate>
-                      Jest parallelizes test runs across workers to maximize
-                      performance. Console messages are buffered and printed
-                      together with test results. Sandboxed test files and
-                      automatic global state resets for every test so no two
-                      tests conflict with each other.
+                      By ensuring your tests have unique global state, Jest can
+                      reliably run tests in parallel. To make things quick, Jest
+                      runs previously failed tests first and re-organizes runs
+                      based on how long test files take.
                     </translate>
                   ),
                   image: '/img/content/feature-fast.png',
-                  imageAlign: 'right',
-                  title: <translate>Fast and sandboxed</translate>,
+                  imageAlign: 'left',
+                  title: <translate>Fast and safe</translate>,
                 },
               ]}
             />
+            {/* Wondering where the image + buttons come from? That's  client-side code in landing.js */}
           </Container>
-          <Container padding={['bottom', 'top']}>
+          <Container padding={['bottom', 'top']} className="section-container">
             <GridBlock
+              className="yellow"
               contents={[
                 {
                   content: (
                     <translate>
-                      Easily create code coverage reports using
+                      Generate code coverage by adding the flag
                       [`--coverage`](https://jestjs.io/docs/en/cli.html#coverage).
-                      No additional setup or libraries needed! Jest can collect
-                      code coverage information from entire projects, including
-                      untested files.
+                      No additional setup needed. Jest can collect code coverage
+                      information from entire projects, including untested
+                      files.
                     </translate>
                   ),
                   image: '/img/content/feature-coverage.png',
-                  imageAlign: 'left',
-                  title: <translate>Built-in code coverage reports</translate>,
-                },
-              ]}
-            />
-          </Container>
-          <Container padding={['bottom', 'top']} background="light">
-            <GridBlock
-              contents={[
-                {
-                  content: (
-                    <translate>
-                      Jest is already configured when you use
-                      [`create-react-app`](https://facebook.github.io/react/blog/2016/07/22/create-apps-with-no-configuration.html)
-                      or [`react-native
-                      init`](http://facebook.github.io/react-native/docs/getting-started.html)
-                      to create your React and React Native projects. Place your
-                      tests in a `__tests__` folder, or name your test files
-                      with a `.spec.js` or `.test.js` extension. Whatever you
-                      prefer, Jest will find and run your tests.
-                    </translate>
-                  ),
-                  image: '/img/content/feature-config-react.png',
                   imageAlign: 'right',
-                  title: <translate>Zero configuration</translate>,
+                  title: <translate>Code coverage</translate>,
                 },
               ]}
             />
           </Container>
-          <Container background="dark" padding={['bottom', 'top']}>
-            <a className="anchor" name="use" />
-            <a className="hash-link" href="#use" />
-            <div className="blockElement imageAlignSide twoByGridBlock">
-              <div className="blockContent">
-                <h2>
-                  <translate>Try it out!</translate>
-                </h2>
-                <div>
-                  <MarkdownBlock>
-                    <translate>
-                      You can try out a real version of Jest using
-                      [repl.it](https://repl.it/languages/jest). Consider a
-                      function, `add()`, that adds two numbers. We can use a
-                      basic test in `add-test.js` to verify that 1 + 2 equals 3.
-                      Hit \"run\" to try it out!
-                    </translate>
-                  </MarkdownBlock>
-                </div>
-              </div>
-              <div className="jest-repl">
-                <iframe src="https://repl.it/@amasad/try-jest?lite=true" />
-              </div>
-            </div>
-          </Container>
-
-          <Container padding={['bottom', 'top']}>
+          <Container
+            padding={['bottom', 'top']}
+            className="section-container lightBackground"
+          >
             <GridBlock
+              className="red"
               contents={[
                 {
                   content: (
                     <translate>
-                      Powerful [mocking library](/docs/en/mock-functions.html)
-                      for functions and modules. Mock React Native components
-                      using `jest-react-native`.
+                      Jest uses a custom resolver for imports in your tests
+                      making it simple to mock any object outside of your test’s
+                      scope. You can use mocked imports with the rich [Mock
+                      Functions](https://jestjs.io/docs/en/mock-functions.html)
+                      API to spy on function calls with readable test syntax.
                     </translate>
                   ),
                   image: '/img/content/feature-mocking.png',
                   imageAlign: 'left',
-                  title: <translate>Powerful mocking library</translate>,
+                  title: <translate>Easy Mocking</translate>,
                 },
               ]}
             />
           </Container>
-
-          <Container padding={['bottom', 'top']} background="light">
+          <Container padding={['bottom', 'top']} className="section-container">
             <GridBlock
+              className="green matchers"
               contents={[
                 {
                   content: (
                     <translate>
-                      Jest works with any compile-to-JavaScript language and
-                      integrates seamlessly with [Babel](https://babeljs.io) and
-                      with TypeScript through
-                      [ts-jest](https://github.com/kulshekhar/ts-jest).
+                      Tests fail, when they do Jest provides rich context why,
+                      here’s some examples:
                     </translate>
                   ),
-                  image: '/img/content/feature-typescript.png',
+                  image: '/img/content/matchers/different-types.png',
                   imageAlign: 'right',
-                  title: <translate>Works with TypeScript</translate>,
+                  title: <translate>Great Exceptions</translate>,
                 },
               ]}
             />
           </Container>
-
-          <Container padding={['bottom', 'top']}>
-            <a className="anchor" name="watch" />
-            <a className="hash-link" href="#watch" />
-            <div className="blockElement imageAlignSide twoByGridBlock">
-              <div className="video">
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/cAKYQpTC7MA"
-                  frameBorder="0"
-                  allow="autoplay; encrypted-media"
-                  allowFullScreen
-                />
-              </div>
+          <Container
+            padding={['bottom', 'top']}
+            background="light"
+            className="section-container philosophy"
+          >
+            <div className="blockElement yellow">
               <div className="blockContent">
                 <h2>
-                  <translate>Watch Talks about Jest</translate>
+                  <translate>Philosophy</translate>
                 </h2>
-                <div>
-                  <MarkdownBlock>
-                    <translate>
-                      The Jest core team and contributors regularly speak about
-                      [Jest and Delightful JavaScript
-                      Testing](https://www.youtube.com/watch?v=cAKYQpTC7MA).
-                      Check out our talk about [Building High-Quality JavaScript
-                      Tools](https://www.youtube.com/watch?v=PvabBs_utr8) at
-                      jsconf.eu 2017 and our talk about [Jest as a
-                      Platform](https://www.youtube.com/watch?v=NtjyeojAOBs) at
-                      ReactiveConf 2017.
-                    </translate>
-                  </MarkdownBlock>
+              </div>
+            </div>
+            <div className="blockElement imageAlignSide gridBlock threeByGridBlock bottom-margin philosophy">
+              <div className="blockContent">
+                <MarkdownBlock>
+                  <translate>
+                    Jest is a JavaScript testing framework designed to ensure
+                    correctness of any JavaScript codebase. It allows you to
+                    write tests with an approachable, familiar and feature-rich
+                    API that gives you results quickly.
+                  </translate>
+                </MarkdownBlock>
+              </div>
+              <div className="blockContent">
+                <MarkdownBlock>
+                  <translate>
+                    Jest is well-documented, requires little configuration and
+                    can be extended to match your requirements.
+                  </translate>
+                </MarkdownBlock>
+                <MarkdownBlock>
+                  <translate>Jest makes testing delightful.</translate>
+                </MarkdownBlock>
+                <div className="show-small">
+                  <p style={{fontFamily: 'Monaco, Courier, monospace'}}>
+                    <translate>- Jest Core Team</translate>
+                  </p>
+                </div>
+              </div>
+              <div className="blockContent flex-end hide-small">
+                <p style={{fontFamily: 'Monaco, Courier, monospace'}}>
+                  <translate>- Jest Core Team</translate>
+                </p>
+              </div>
+            </div>
+          </Container>
+          <Container
+            padding={['bottom', 'top']}
+            className="section-container bottom-margin docs"
+          >
+            <div className="blockElement imageAlignSide gridBlock video-block">
+              <div className="blockContent ">
+                <div className="video">
+                  <iframe
+                    width="560"
+                    height="315"
+                    src="https://www.youtube.com/embed/cAKYQpTC7MA"
+                    frameBorder="0"
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                  />
                 </div>
               </div>
             </div>
-
-            <div
-              className="productShowcaseSection paddingTop"
-              style={{textAlign: 'center'}}
-            >
-              <a
-                className="button"
-                href={siteConfig.baseUrl + this.props.language + '/videos.html'}
-              >
-                <translate>Watch more videos</translate>
-              </a>
+            <div className="blockElement red bottom-margin">
+              <div className="blockContent">
+                <h2>
+                  <translate>Docs and talks</translate>
+                </h2>
+                <MarkdownBlock>
+                  <translate>
+                    The Jest core team and contributors regularly speak about
+                    [Jest and Delightful JavaScript
+                    Testing](https://www.youtube.com/watch?v=cAKYQpTC7MA). Check
+                    out our talk about [Building High-Quality JavaScript
+                    Tools](https://www.youtube.com/watch?v=PvabBs_utr8) at
+                    jsconf.eu 2017 and our talk about [Jest as a
+                    Platform](https://www.youtube.com/watch?v=NtjyeojAOBs) at
+                    ReactiveConf 2017.
+                  </translate>
+                </MarkdownBlock>
+              </div>
             </div>
           </Container>
 
-          <div className="productShowcaseSection paddingBottom">
-            <h2>
-              <translate>Who's using Jest?</translate>
-            </h2>
-            <p>
-              <translate>
-                Jest is used by teams of all sizes to test web applications,
-                node.js services, mobile apps, and APIs.
-              </translate>
-            </p>
-            <div className="logos">{showcase}</div>
-            <Contributors />
+          <div className="container section-container imageAlignSide twoByGridBlock lightBackground">
+            <div className="wrapper">
+              <div className="gridBlock yellow">
+                <div className="blockContent">
+                  <h2>
+                    <translate>Open Collective</translate>
+                  </h2>
+                  <MarkdownBlock>
+                    <translate>
+                      With so many users, the core team of Jest uses an [Open
+                      Collective](https://opencollective.com/jest) for
+                      non-Facebook contributors.
+                    </translate>
+                  </MarkdownBlock>
+                  <Contributors />
+                </div>
+                <div className="blockContent yellow">
+                  <h2>
+                    <translate>Who uses Jest?</translate>
+                  </h2>
+                  <MarkdownBlock>
+                    <translate>
+                      A lot of people! With
+                      [8.5m](https://www.npmjs.com/package/jest) downloads in
+                      the last 30 days, and used on over
+                      [500,000](https://github.com/facebook/jest/network/dependents)
+                      public repos on GitHub. Jest is used extensively at these
+                      companies:
+                    </translate>
+                  </MarkdownBlock>
+                  <div className="gridBlock logos">
+                    {showcase}
+                    <p>And many others</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

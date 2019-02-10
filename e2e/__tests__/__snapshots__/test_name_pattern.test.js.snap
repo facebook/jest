@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`testNamePattern 1`] = `
-"Test Suites: 1 passed, 1 total
-Tests:       3 skipped, 2 passed, 5 total
-Snapshots:   0 total
-Time:        <<REPLACED>>
-Ran all test suites with tests matching \\"should match\\"."
-`;

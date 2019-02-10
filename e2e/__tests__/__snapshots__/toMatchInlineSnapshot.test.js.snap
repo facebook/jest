@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`basic support: initial write 1`] = `
+test('inline snapshots', () =>
+  expect({apple: 'original value'}).toMatchInlineSnapshot(\`
+Object {
+  "apple": "original value",
+}
+\`));
+
+`;
+
+exports[`basic support: snapshot mismatch 1`] = `
+test('inline snapshots', () =>
+  expect({apple: 'updated value'}).toMatchInlineSnapshot(\`
+Object {
+  "apple": "original value",
+}
+\`));
+
+`;
+
+exports[`basic support: snapshot passed 1`] = `
+test('inline snapshots', () =>
+  expect({apple: 'original value'}).toMatchInlineSnapshot(\`
+Object {
+  "apple": "original value",
+}
+\`));
+
+`;
+
+exports[`basic support: snapshot updated 1`] = `
+test('inline snapshots', () =>
+  expect({apple: 'updated value'}).toMatchInlineSnapshot(\`
+Object {
+  "apple": "updated value",
+}
+\`));
+
+`;
+
+exports[`handles property matchers: initial write 1`] = `
+test('handles property matchers', () => {
+  expect({createdAt: new Date()}).toMatchInlineSnapshot(
+    {createdAt: expect.any(Date)},
+    \`
+Object {
+  "createdAt": Any<Date>,
+}
+\`
+  );
+});
+
+`;
+
+exports[`handles property matchers: snapshot failed 1`] = `
+test('handles property matchers', () => {
+  expect({createdAt: "string"}).toMatchInlineSnapshot(
+    {createdAt: expect.any(Date)},
+    \`
+Object {
+  "createdAt": Any<Date>,
+}
+\`
+  );
+});
+
+`;
+
+exports[`handles property matchers: snapshot passed 1`] = `
+test('handles property matchers', () => {
+  expect({createdAt: new Date()}).toMatchInlineSnapshot(
+    {createdAt: expect.any(Date)},
+    \`
+Object {
+  "createdAt": Any<Date>,
+}
+\`
+  );
+});
+
+`;
+
+exports[`handles property matchers: snapshot updated 1`] = `
+test('handles property matchers', () => {
+  expect({createdAt: 'string'}).toMatchInlineSnapshot(
+    {createdAt: expect.any(String)},
+    \`
+Object {
+  "createdAt": Any<String>,
+}
+\`
+  );
+});
+
+`;
+
+exports[`removes obsolete external snapshots: external snapshot cleaned 1`] = `
+test('removes obsolete external snapshots', () => {
+  expect('1').toMatchInlineSnapshot(\`"1"\`);
+});
+
+`;
+
+exports[`removes obsolete external snapshots: initial write 1`] = `
+
+    test('removes obsolete external snapshots', () => {
+      expect('1').toMatchSnapshot();
+    });
+  
+`;
+
+exports[`removes obsolete external snapshots: inline snapshot written 1`] = `
+test('removes obsolete external snapshots', () => {
+  expect('1').toMatchInlineSnapshot(\`"1"\`);
+});
+
+`;
+
+exports[`supports async matchers 1`] = `
+test('inline snapshots', async () => {
+  expect(Promise.resolve('success')).resolves.toMatchInlineSnapshot(
+    \`"success"\`
+  );
+  expect(Promise.reject('fail')).rejects.toMatchInlineSnapshot(\`"fail"\`);
+});
+
+`;
+
+exports[`supports async tests 1`] = `
+test('inline snapshots', async () => {
+  await 'next tick';
+  expect(42).toMatchInlineSnapshot(\`42\`);
+});
+
+`;
+
+exports[`writes snapshots with non-literals in expect(...) 1`] = `
+it('works with inline snapshots', () => {
+  expect({a: 1}).toMatchInlineSnapshot(\`
+Object {
+  "a": 1,
+}
+\`);
+});
+
+`;

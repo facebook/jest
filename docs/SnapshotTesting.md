@@ -5,7 +5,7 @@ title: Snapshot Testing
 
 Snapshot tests are a very useful tool whenever you want to make sure your UI does not change unexpectedly.
 
-A typical snapshot test case for a mobile app renders a UI component, takes a screenshot, then compares it to a reference image stored alongside the test. The test will fail if the two images do not match: either the change is unexpected, or the screenshot needs to be updated to the new version of the UI component.
+A typical snapshot test case for a mobile app renders a UI component, takes a snapshot, then compares it to a reference snapshot file stored alongside the test. The test will fail if the two snapshots do not match: either the change is unexpected, or the reference snapshot needs to be updated to the new version of the UI component.
 
 ## Snapshot Testing with Jest
 

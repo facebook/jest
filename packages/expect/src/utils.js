@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -21,17 +21,32 @@ type GetPath = {
   value?: any,
 };
 
-export const hasOwnProperty = (object: Object, value: string) => {
-  // Account for objects created using unconventional means such as
-  // `Object.create(null)`, in which case the `object.constructor` is undefined
-  // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Custom_and_Null_objects
-  const objectConstructor = object.constructor || Object;
+// Return whether object instance inherits getter from its class.
+const hasGetterFromConstructor = (object: Object, key: string) => {
+  const constructor = object.constructor;
+  if (constructor === Object) {
+    // A literal object has Object as constructor.
+    // Therefore, it cannot inherit application-specific getters.
+    // Furthermore, Object has __proto__ getter which is not relevant.
+    // Array, Boolean, Number, String constructors don’t have any getters.
+    return false;
+  }
+  if (typeof constructor !== 'function') {
+    // Object.create(null) constructs object with no constructor nor prototype.
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/create#Custom_and_Null_objects
+    return false;
+  }
 
-  return (
-    Object.prototype.hasOwnProperty.call(object, value) ||
-    Object.prototype.hasOwnProperty.call(objectConstructor.prototype, value)
+  const descriptor = Object.getOwnPropertyDescriptor(
+    constructor.prototype,
+    key,
   );
+  return descriptor !== undefined && typeof descriptor.get === 'function';
 };
+
+export const hasOwnProperty = (object: Object, key: string) =>
+  Object.prototype.hasOwnProperty.call(object, key) ||
+  hasGetterFromConstructor(object, key);
 
 export const getPath = (
   object: Object,
@@ -66,7 +81,7 @@ export const getPath = (
     result.traversedPath.unshift(prop);
 
     if (lastProp) {
-      result.hasEndProp = hasOwnProperty(object, prop);
+      result.hasEndProp = prop in object;
       if (!result.hasEndProp) {
         result.traversedPath.shift();
       }
@@ -226,6 +241,17 @@ export const typeEquality = (a: any, b: any) => {
   }
 
   return false;
+};
+
+export const sparseArrayEquality = (a: any, b: any) => {
+  if (!Array.isArray(a) || !Array.isArray(b)) {
+    return undefined;
+  }
+
+  // A sparse array [, , 1] will have keys ["2"] whereas [undefined, undefined, 1] will have keys ["0", "1", "2"]
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  return equals(a, b) && equals(aKeys, bKeys);
 };
 
 export const partition = <T>(

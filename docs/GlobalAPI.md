@@ -171,7 +171,7 @@ If you only need to run some setup code once, before any tests run, use `beforeA
 
 ### `describe(name, fn)`
 
-`describe(name, fn)` creates a block that groups together several related tests in one "test suite". For example, if you have a `myBeverage` object that is supposed to be delicious but not sour, you could test it with:
+`describe(name, fn)` creates a block that groups together several related tests. For example, if you have a `myBeverage` object that is supposed to be delicious but not sour, you could test it with:
 
 ```js
 const myBeverage = {

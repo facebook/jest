@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,7 +12,7 @@ import path from 'path';
 import fs from 'fs';
 import execa, {sync as spawnSync} from 'execa';
 import {Writable} from 'readable-stream';
-const stripAnsi = require('strip-ansi');
+import stripAnsi from 'strip-ansi';
 import {normalizeIcons} from './Utils';
 
 const JEST_PATH = path.resolve(__dirname, '../packages/jest-cli/bin/jest.js');
@@ -31,7 +31,7 @@ export default function runJest(
   args?: Array<string>,
   options: RunJestOptions = {},
 ) {
-  const isRelative = dir[0] !== '/';
+  const isRelative = !path.isAbsolute(dir);
 
   if (isRelative) {
     dir = path.resolve(__dirname, dir);
@@ -44,12 +44,12 @@ export default function runJest(
       Make sure you have a local package.json file at
         "${localPackageJson}".
       Otherwise Jest will try to traverse the directory tree and find the
-      the global package.json, which will send Jest into infinite loop.
+      global package.json, which will send Jest into infinite loop.
     `,
     );
   }
 
-  const env = Object.assign({}, process.env, {FORCE_COLOR: 0});
+  const env = {...process.env, FORCE_COLOR: 0};
   if (options.nodePath) env['NODE_PATH'] = options.nodePath;
   const result = spawnSync(JEST_PATH, args || [], {
     cwd: dir,
@@ -101,7 +101,7 @@ export const until = async function(
   text: string,
   options: RunJestOptions = {},
 ) {
-  const isRelative = dir[0] !== '/';
+  const isRelative = !path.isAbsolute(dir);
 
   if (isRelative) {
     dir = path.resolve(__dirname, dir);
@@ -119,13 +119,15 @@ export const until = async function(
     );
   }
 
-  const env = Object.assign({}, process.env, {FORCE_COLOR: 0});
+  const env = {...process.env, FORCE_COLOR: 0};
   if (options.nodePath) env['NODE_PATH'] = options.nodePath;
 
   const jestPromise = execa(JEST_PATH, args || [], {
     cwd: dir,
     env,
     reject: false,
+    // this should never take more than 5-6 seconds, bailout after 30
+    timeout: 30000,
   });
 
   jestPromise.stderr.pipe(

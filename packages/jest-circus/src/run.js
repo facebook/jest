@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -118,7 +118,7 @@ const _runTest = async (test: TestEntry): Promise<void> => {
 
   // `afterAll` hooks should not affect test status (pass or fail), because if
   // we had a global `afterAll` hook it would block all existing tests until
-  // this hook is executed. So we dispatche `test_done` right away.
+  // this hook is executed. So we dispatch `test_done` right away.
   dispatch({name: 'test_done', test});
 };
 

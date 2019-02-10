@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,12 +22,14 @@ import type {
   TestName,
   TestResults,
 } from 'types/Circus';
+// $FlowFixMe: Converted to TS
 import {convertDescriptorToString} from 'jest-util';
 import isGeneratorFn from 'is-generator-fn';
 import co from 'co';
 
 import StackUtils from 'stack-utils';
 
+// $FlowFixMe: Converted to TS
 import prettyFormat from 'pretty-format';
 
 import {getState} from './state';
@@ -69,10 +71,12 @@ export const makeTest = (
     _mode = parent.mode;
   }
 
+  const errors: Array<[?Exception, Exception]> = [];
+
   return {
     asyncError,
     duration: null,
-    errors: [],
+    errors,
     fn,
     invocations: 0,
     mode: _mode,

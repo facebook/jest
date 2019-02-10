@@ -1,51 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`basic test constructs 1`] = `
-"PASS __tests__/basic.test-constructs.test.js
+PASS __tests__/basic.testConstructs.test.js
   ✓ it
   ✓ test
   describe
     ✓ it
     ✓ test
-
-"
 `;
 
 exports[`basic test constructs 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       4 passed, 4 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
 exports[`cannot have describe with no implementation 1`] = `
-"FAIL __tests__/only-constructs.test.js
+FAIL __tests__/onlyConstructs.test.js
   ● Test suite failed to run
 
     Missing second argument. It must be a callback function.
 
       1 | 
     > 2 |     describe('describe, no implementation');
-        |     ^
+        |              ^
       3 |   
 
-      at __tests__/only-constructs.test.js:2:5
-
-"
+      at Object.<anonymous> (__tests__/onlyConstructs.test.js:2:14)
 `;
 
 exports[`cannot have describe with no implementation 2`] = `
-"Test Suites: 1 failed, 1 total
+Test Suites: 1 failed, 1 total
 Tests:       0 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
 Ran all test suites.
-"
 `;
 
 exports[`cannot test with no implementation 1`] = `
-"FAIL __tests__/only-constructs.test.js
+FAIL __tests__/onlyConstructs.test.js
   ● Test suite failed to run
 
     Missing second argument. It must be a callback function. Perhaps you want to use \`test.todo\` for a test placeholder.
@@ -57,22 +52,19 @@ exports[`cannot test with no implementation 1`] = `
       4 |     test('test, no implementation');
       5 |   
 
-      at __tests__/only-constructs.test.js:3:5
-
-"
+      at Object.it (__tests__/onlyConstructs.test.js:3:5)
 `;
 
 exports[`cannot test with no implementation 2`] = `
-"Test Suites: 1 failed, 1 total
+Test Suites: 1 failed, 1 total
 Tests:       0 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
 Ran all test suites.
-"
 `;
 
 exports[`cannot test with no implementation with expand arg 1`] = `
-"FAIL __tests__/only-constructs.test.js
+FAIL __tests__/onlyConstructs.test.js
   ● Test suite failed to run
 
     Missing second argument. It must be a callback function. Perhaps you want to use \`test.todo\` for a test placeholder.
@@ -84,38 +76,33 @@ exports[`cannot test with no implementation with expand arg 1`] = `
       4 |     test('test, no implementation');
       5 |   
 
-      at __tests__/only-constructs.test.js:3:5
-
-"
+      at Object.it (__tests__/onlyConstructs.test.js:3:5)
 `;
 
 exports[`cannot test with no implementation with expand arg 2`] = `
-"Test Suites: 1 failed, 1 total
+Test Suites: 1 failed, 1 total
 Tests:       0 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
 Ran all test suites.
-"
 `;
 
 exports[`function as descriptor 1`] = `
-"PASS __tests__/function-as-descriptor.test.js
+PASS __tests__/functionAsDescriptor.test.js
   Foo
     ✓ it
-
-"
 `;
 
 exports[`function as descriptor 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
 exports[`only 1`] = `
-"PASS __tests__/only-constructs.test.js
+PASS __tests__/onlyConstructs.test.js
   ✓ test.only
   ✓ it.only
   ✓ fit
@@ -127,20 +114,18 @@ exports[`only 1`] = `
     ✓ test
     describe
       ✓ test
-
-"
 `;
 
 exports[`only 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 skipped, 7 passed, 8 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
 exports[`only with expand arg 1`] = `
-"PASS __tests__/only-constructs.test.js
+PASS __tests__/onlyConstructs.test.js
   ○ it
   ✓ test.only
   ✓ it.only
@@ -152,20 +137,18 @@ exports[`only with expand arg 1`] = `
     ✓ test
     describe
       ✓ test
-
-"
 `;
 
 exports[`only with expand arg 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 skipped, 7 passed, 8 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
 exports[`skips 1`] = `
-"PASS __tests__/skips-constructs.test.js
+PASS __tests__/skipsConstructs.test.js
   ✓ it
   ○ skipped 4 tests
   xdescribe
@@ -174,20 +157,18 @@ exports[`skips 1`] = `
     ○ skipped 1 test
     describe
       ○ skipped 1 test
-
-"
 `;
 
 exports[`skips 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       8 skipped, 1 passed, 9 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
 exports[`skips with expand arg 1`] = `
-"PASS __tests__/skips-constructs.test.js
+PASS __tests__/skipsConstructs.test.js
   ✓ it
   ○ xtest
   ○ xit
@@ -200,14 +181,12 @@ exports[`skips with expand arg 1`] = `
     ○ test
     describe
       ○ test
-
-"
 `;
 
 exports[`skips with expand arg 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       8 skipped, 1 passed, 9 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;

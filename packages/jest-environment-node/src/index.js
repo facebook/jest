@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -39,6 +39,7 @@ class NodeEnvironment {
     global.clearTimeout = clearTimeout;
     global.setInterval = setInterval;
     global.setTimeout = setTimeout;
+    global.ArrayBuffer = ArrayBuffer;
     // URL and URLSearchParams are global in Node >= 10
     if (typeof URL !== 'undefined' && typeof URLSearchParams !== 'undefined') {
       /* global URL, URLSearchParams */
@@ -87,9 +88,7 @@ class NodeEnvironment {
   }
 
   // Disabling rule as return type depends on script's return type.
-  /* eslint-disable flowtype/no-weak-types */
   runScript(script: Script): ?any {
-    /* eslint-enable flowtype/no-weak-types */
     if (this.context) {
       return script.runInContext(this.context);
     }

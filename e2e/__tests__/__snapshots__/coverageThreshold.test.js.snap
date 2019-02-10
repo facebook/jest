@@ -1,0 +1,113 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`excludes tests matched by path threshold groups from global group 1`] = `
+PASS __tests__/banana.test.js
+  ✓ banana
+
+Jest: "global" coverage threshold for lines (100%) not met: 0%
+`;
+
+exports[`excludes tests matched by path threshold groups from global group 2`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`excludes tests matched by path threshold groups from global group: stdout 1`] = `
+-----------|----------|----------|----------|----------|-------------------|
+File       |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+-----------|----------|----------|----------|----------|-------------------|
+All files  |       50 |      100 |       50 |       50 |                   |
+ apple.js  |        0 |      100 |        0 |        0 |               2,3 |
+ banana.js |      100 |      100 |      100 |      100 |                   |
+-----------|----------|----------|----------|----------|-------------------|
+
+`;
+
+exports[`exits with 0 if global threshold group is not found in coverage data: stdout 1`] = `
+-----------|----------|----------|----------|----------|-------------------|
+File       |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+-----------|----------|----------|----------|----------|-------------------|
+All files  |      100 |      100 |      100 |      100 |                   |
+ banana.js |      100 |      100 |      100 |      100 |                   |
+-----------|----------|----------|----------|----------|-------------------|
+`;
+
+exports[`exits with 1 if coverage threshold is not met 1`] = `
+PASS __tests__/a-banana.js
+  ✓ banana
+
+Jest: "global" coverage threshold for lines (90%) not met: 50%
+`;
+
+exports[`exits with 1 if coverage threshold is not met 2`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`exits with 1 if coverage threshold is not met: stdout 1`] = `
+----------------|----------|----------|----------|----------|-------------------|
+File            |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+----------------|----------|----------|----------|----------|-------------------|
+All files       |       50 |      100 |        0 |       50 |                   |
+ not-covered.js |       50 |      100 |        0 |       50 |                 3 |
+----------------|----------|----------|----------|----------|-------------------|
+
+`;
+
+exports[`exits with 1 if path threshold group is not found in coverage data 1`] = `
+PASS __tests__/banana.test.js
+  ✓ banana
+
+Jest: Coverage data for apple.js was not found.
+`;
+
+exports[`exits with 1 if path threshold group is not found in coverage data 2`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`exits with 1 if path threshold group is not found in coverage data: stdout 1`] = `
+-----------|----------|----------|----------|----------|-------------------|
+File       |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+-----------|----------|----------|----------|----------|-------------------|
+All files  |      100 |      100 |      100 |      100 |                   |
+ banana.js |      100 |      100 |      100 |      100 |                   |
+-----------|----------|----------|----------|----------|-------------------|
+
+`;
+
+exports[`file is matched by all path and glob threshold groups 1`] = `
+PASS __tests__/banana.test.js
+  ✓ banana
+
+Jest: "./" coverage threshold for lines (100%) not met: 50%
+Jest: "<<FULL_PATH_TO_BANANA_JS>>" coverage threshold for lines (100%) not met: 50%
+Jest: "./banana.js" coverage threshold for lines (100%) not met: 50%
+`;
+
+exports[`file is matched by all path and glob threshold groups 2`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`file is matched by all path and glob threshold groups: stdout 1`] = `
+-----------|----------|----------|----------|----------|-------------------|
+File       |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+-----------|----------|----------|----------|----------|-------------------|
+All files  |       50 |      100 |        0 |       50 |                   |
+ banana.js |       50 |      100 |        0 |       50 |                 3 |
+-----------|----------|----------|----------|----------|-------------------|
+
+`;

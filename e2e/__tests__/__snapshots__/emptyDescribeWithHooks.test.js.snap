@@ -1,0 +1,138 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`hook in describe with skipped test 1`] = `
+Object {
+  "rest": "",
+  "summary": "Test Suites: 1 skipped, 0 of 1 total
+Tests:       1 skipped, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /hookInDescribeWithSkippedTest.test.js/i.",
+}
+`;
+
+exports[`hook in empty describe 1`] = `
+Object {
+  "rest": "FAIL __tests__/hookInEmptyDescribe.test.js
+
+
+  ● Test suite failed to run
+
+    Invalid: beforeEach() may not be used in a describe block containing no tests.
+
+       7 | 
+       8 | describe('a block', () => {
+    >  9 |   beforeEach(() => {});
+         |   ^
+      10 | });
+      11 | 
+      12 | describe('another block with tests', () => {
+
+      at beforeEach (__tests__/hookInEmptyDescribe.test.js:9:3)
+      at Object.describe (__tests__/hookInEmptyDescribe.test.js:8:1)",
+  "summary": "Test Suites: 1 failed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /hookInEmptyDescribe.test.js/i.",
+}
+`;
+
+exports[`hook in empty nested describe 1`] = `
+Object {
+  "rest": "FAIL __tests__/hookInEmptyNestedDescribe.test.js
+
+
+  ● Test suite failed to run
+
+    Invalid: beforeEach() may not be used in a describe block containing no tests.
+
+       7 | 
+       8 | describe('a block', () => {
+    >  9 |   beforeEach(() => {});
+         |   ^
+      10 |   describe('another block', () => {});
+      11 | });
+      12 | 
+
+      at beforeEach (__tests__/hookInEmptyNestedDescribe.test.js:9:3)
+      at Object.describe (__tests__/hookInEmptyNestedDescribe.test.js:8:1)",
+  "summary": "Test Suites: 1 failed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /hookInEmptyNestedDescribe.test.js/i.",
+}
+`;
+
+exports[`multiple hooks in empty describe 1`] = `
+Object {
+  "rest": "FAIL __tests__/multipleHooksInEmptyDescribe.test.js
+
+
+  ● Test suite failed to run
+
+    Invalid: beforeEach() may not be used in a describe block containing no tests.
+
+       7 | 
+       8 | describe('a block', () => {
+    >  9 |   beforeEach(() => {});
+         |   ^
+      10 |   afterEach(() => {});
+      11 |   afterAll(() => {});
+      12 |   beforeAll(() => {});
+
+      at beforeEach (__tests__/multipleHooksInEmptyDescribe.test.js:9:3)
+      at Object.describe (__tests__/multipleHooksInEmptyDescribe.test.js:8:1)
+
+  ● Test suite failed to run
+
+    Invalid: afterEach() may not be used in a describe block containing no tests.
+
+       8 | describe('a block', () => {
+       9 |   beforeEach(() => {});
+    > 10 |   afterEach(() => {});
+         |   ^
+      11 |   afterAll(() => {});
+      12 |   beforeAll(() => {});
+      13 | });
+
+      at afterEach (__tests__/multipleHooksInEmptyDescribe.test.js:10:3)
+      at Object.describe (__tests__/multipleHooksInEmptyDescribe.test.js:8:1)
+
+  ● Test suite failed to run
+
+    Invalid: afterAll() may not be used in a describe block containing no tests.
+
+       9 |   beforeEach(() => {});
+      10 |   afterEach(() => {});
+    > 11 |   afterAll(() => {});
+         |   ^
+      12 |   beforeAll(() => {});
+      13 | });
+      14 | 
+
+      at afterAll (__tests__/multipleHooksInEmptyDescribe.test.js:11:3)
+      at Object.describe (__tests__/multipleHooksInEmptyDescribe.test.js:8:1)
+
+  ● Test suite failed to run
+
+    Invalid: beforeAll() may not be used in a describe block containing no tests.
+
+      10 |   afterEach(() => {});
+      11 |   afterAll(() => {});
+    > 12 |   beforeAll(() => {});
+         |   ^
+      13 | });
+      14 | 
+      15 | describe('another block with tests', () => {
+
+      at beforeAll (__tests__/multipleHooksInEmptyDescribe.test.js:12:3)
+      at Object.describe (__tests__/multipleHooksInEmptyDescribe.test.js:8:1)",
+  "summary": "Test Suites: 1 failed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /multipleHooksInEmptyDescribe.test.js/i.",
+}
+`;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,6 +11,7 @@
 import path from 'path';
 import {cleanup, extractSummary, writeFiles} from '../Utils';
 import runJest from '../runJest';
+import {wrap} from 'jest-snapshot-serializer-raw';
 
 const DIR = path.resolve(__dirname, '../timeouts');
 
@@ -36,7 +37,7 @@ test('exceeds the timeout', () => {
   expect(rest).toMatch(
     /(jest\.setTimeout|jasmine\.DEFAULT_TIMEOUT_INTERVAL|Exceeded timeout)/,
   );
-  expect(summary).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
   expect(status).toBe(1);
 });
 
@@ -56,7 +57,7 @@ test('does not exceed the timeout', () => {
 
   const {stderr, status} = runJest(DIR, ['-w=1', '--ci=false']);
   const {rest, summary} = extractSummary(stderr);
-  expect(rest).toMatchSnapshot();
-  expect(summary).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
   expect(status).toBe(0);
 });

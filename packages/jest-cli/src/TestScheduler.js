@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,7 +8,7 @@
  */
 
 import type {AggregatedResult, TestResult} from 'types/TestResult';
-import type {GlobalConfig, ReporterConfig} from 'types/Config';
+import type {GlobalConfig, ReporterConfig, Path} from 'types/Config';
 import type {Context} from 'types/Context';
 import type {Reporter, Test} from 'types/TestRunner';
 
@@ -29,8 +29,7 @@ import SummaryReporter from './reporters/summary_reporter';
 import TestRunner from 'jest-runner';
 import TestWatcher from './TestWatcher';
 import VerboseReporter from './reporters/verbose_reporter';
-
-const SLOW_TEST_TIME = 1000;
+import {shouldRunInBand} from './testSchedulerHelper';
 
 // The default jest-runner is required because it is the default test runner
 // and required implicitly through the `runner` ProjectConfig option.
@@ -42,6 +41,7 @@ export type TestSchedulerOptions = {|
 export type TestSchedulerContext = {|
   firstRun: boolean,
   previousSuccess: boolean,
+  changedFiles?: Set<Path>,
 |};
 export default class TestScheduler {
   _dispatcher: ReporterDispatcher;
@@ -85,25 +85,12 @@ export default class TestScheduler {
       getEstimatedTime(timings, this._globalConfig.maxWorkers) / 1000,
     );
 
-    // Run in band if we only have one test or one worker available, unless we
-    // are using the watch mode, in which case the TTY has to be responsive and
-    // we cannot schedule anything in the main thread. Same logic applies to
-    // watchAll.
-    //
-    // If we are confident from previous runs that the tests will finish
-    // quickly we also run in band to reduce the overhead of spawning workers.
-    const areFastTests = timings.every(timing => timing < SLOW_TEST_TIME);
-
-    const runInBandWatch = tests.length <= 1 && areFastTests;
-    const runInBandNonWatch =
-      this._globalConfig.maxWorkers <= 1 ||
-      tests.length <= 1 ||
-      (tests.length <= 20 && timings.length > 0 && areFastTests);
-
-    const runInBand =
-      this._globalConfig.watch || this._globalConfig.watchAll
-        ? runInBandWatch
-        : runInBandNonWatch;
+    const runInBand = shouldRunInBand(
+      tests,
+      this._globalConfig.watch || this._globalConfig.watchAll,
+      this._globalConfig.maxWorkers,
+      timings,
+    );
 
     const onResult = async (test: Test, testResult: TestResult) => {
       if (watcher.isInterrupted()) {
@@ -187,6 +174,7 @@ export default class TestScheduler {
         // $FlowFixMe
         testRunners[config.runner] = new (require(config.runner): TestRunner)(
           this._globalConfig,
+          {changedFiles: this._context && this._context.changedFiles},
         );
       }
     });
@@ -276,7 +264,11 @@ export default class TestScheduler {
     }
 
     if (!isDefault && collectCoverage) {
-      this.addReporter(new CoverageReporter(this._globalConfig));
+      this.addReporter(
+        new CoverageReporter(this._globalConfig, {
+          changedFiles: this._context && this._context.changedFiles,
+        }),
+      );
     }
 
     if (notify) {
@@ -302,7 +294,11 @@ export default class TestScheduler {
     );
 
     if (collectCoverage) {
-      this.addReporter(new CoverageReporter(this._globalConfig));
+      this.addReporter(
+        new CoverageReporter(this._globalConfig, {
+          changedFiles: this._context && this._context.changedFiles,
+        }),
+      );
     }
 
     this.addReporter(new SummaryReporter(this._globalConfig));
@@ -351,7 +347,10 @@ export default class TestScheduler {
     aggregatedResults: AggregatedResult,
     watcher: TestWatcher,
   ): Promise<void> {
-    if (this._globalConfig.bail && aggregatedResults.numFailedTests !== 0) {
+    if (
+      this._globalConfig.bail !== 0 &&
+      aggregatedResults.numFailedTests >= this._globalConfig.bail
+    ) {
       if (watcher.isWatchMode()) {
         watcher.setState({interrupted: true});
       } else {

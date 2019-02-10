@@ -1,7 +1,6 @@
 ---
 id: watch-plugins
 title: Watch Plugins
-original_id: watch-plugins
 ---
 
 The Jest watch plugin system provides a way to hook into specific parts of Jest and to define watch mode menu prompts that execute code on key press. Combined, these features allow you to develop interactive experiences custom for your workflow.
@@ -155,7 +154,8 @@ class MyWatchPlugin {
 
 For stability and safety reasons, only part of the global configuration keys can be updated with `updateConfigAndRun`. The current white list is as follows:
 
-- [`bail`](configuration.html#bail-boolean)
+- [`bail`](configuration.html#bail-number-boolean)
+- [`changedSince`](cli.html#changedsince)
 - [`collectCoverage`](configuration.html#collectcoverage-boolean)
 - [`collectCoverageFrom`](configuration.html#collectcoveragefrom-array)
 - [`collectCoverageOnlyFrom`](configuration.html#collectcoverageonlyfrom-array)

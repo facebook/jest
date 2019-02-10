@@ -11,7 +11,7 @@ init:
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - node --version
-  - yarn
+  - yarn --frozen-lockfile
 
 cache:
   - node_modules

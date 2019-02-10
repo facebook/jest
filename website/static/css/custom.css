@@ -1,4 +1,13 @@
-/* Copyright (c) 2014-present, Facebook, Inc. All rights reserved. */
+/* Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved. */
+
+.mainContainer a {
+  text-decoration: underline;
+}
+
+.mainContainer a:hover,
+.mainContainer a:active {
+  text-decoration: none;
+}
 
 .fixedHeaderContainer header img.logo {
   height: 60px;
@@ -7,46 +16,52 @@
   margin-right: -20px;
 }
 
+#languages-dropdown-items a {
+  color: white;
+}
+
+#languages-dropdown-items a:hover {
+  color: var(--green);
+}
+
 div.jest-repl {
   margin: 0 5%;
   position: relative;
   width: 600px;
 }
+
 div.jest-repl iframe {
   display: block;
   margin: 0 auto 10px;
   min-height: 420px;
   width: 100%;
 }
-@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
-  div.jest-repl {
-    display: none;
-  }
-}
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
-  div.jest-repl {
-    display: none;
-  }
-}
-@media only screen and (max-width: 1023px) {
-  div.jest-repl {
-    display: none;
-  }
+
+div.bottom-margin {
+  margin-bottom: 40px;
 }
 
-div.video {
-  margin: 0 5%;
-  position: relative;
+.docs .wrapper {
+  display: flex;
+}
+
+.docs .blockElement {
+  width: 50%;
+}
+
+.blockContent div.video {
   width: 100%;
-  min-width: 300px;
-  max-width: 600px;
+  height: 280px;
+  margin-top: 20px;
+  padding-right: 80px;
 }
 
 div.video iframe {
   display: block;
   margin: 0 auto 10px;
-  min-height: 340px;
+  min-height: 280px;
   width: 100%;
+  height: auto;
 }
 
 @media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
@@ -54,8 +69,286 @@ div.video iframe {
     display: none;
   }
 }
+
 @media only screen and (max-width: 1023px) {
-  div.video {
+  div.video,
+  div.video-block {
     display: none;
   }
+
+  .docs .blockElement {
+    width: 100%;
+  }
+}
+
+div.jest-hero-interactive {
+  position: relative;
+}
+
+div.hero-github-button-container {
+  min-height: 20px;
+  position: absolute;
+  left: initial;
+  right: 10px;
+  top: 20px;
+  visibility: hidden;
+  z-index: 1000;
+}
+
+/* Means the links doesn't push the vertical */
+.hash-link {
+  position: absolute;
+}
+
+@media only screen and (min-width: 580px) {
+  div.hero-github-button-container {
+    visibility: visible;
+  }
+}
+
+div.jest-hand {
+  width: 100%;
+  height: 350px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  perspective: 1000px;
+}
+
+div.jest-card-hitslop {
+  cursor: pointer;
+  position: absolute;
+  transform-origin: 50% 100%;
+  height: 400px;
+}
+
+div.jest-card {
+  position: relative;
+  top: 60px;
+  width: 240px;
+  height: 340px;
+  transition: transform 0.2s;
+  transform-style: preserve-3d;
+}
+
+div.jest-card-front,
+.jest-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  backface-visibility: hidden;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.jest-card-front {
+  background-color: #fff;
+  border: 1px solid #bbb;
+}
+
+div.jest-card-back {
+  background-color: #c2a813;
+  background-image: url(/img/running-card-background.png);
+  background-size: 20px;
+  border: 5px solid #c2a813;
+  backface-visibility: hidden;
+  transform: rotateY(180deg) translateZ(1px);
+}
+
+div.jest-card-running {
+  cursor: auto;
+  transform: translateY(-10px) rotateY(180deg);
+}
+
+div.jest-card-hitslop:hover
+  div.jest-card:not(.jest-card-running):not(.jest-card-pass) {
+  transform: translateY(-40px);
+}
+
+div.jest-card.jest-card-popping {
+  transform: translateY(-50px);
+}
+
+div.jest-card-hitslop:nth-child(1) {
+  visibility: hidden;
+}
+
+div.jest-card-hitslop:nth-child(3) {
+  z-index: 2;
+}
+
+div.jest-card-hitslop:nth-child(4) {
+  z-index: 1;
+}
+
+div.jest-card-hitslop:nth-child(5) {
+  visibility: hidden;
+}
+
+@media only screen and (min-width: 580px) {
+  div.jest-card-hitslop:nth-child(1) {
+    visibility: visible;
+  }
+
+  div.jest-card-hitslop:nth-child(5) {
+    visibility: visible;
+  }
+}
+
+div.jest-button-container {
+  position: absolute;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+a.jest-button {
+  text-transform: uppercase;
+  color: #fff;
+  background-color: var(--red);
+  margin: 10px;
+  padding: 0 1em;
+  font-size: 16px;
+  line-height: 2.2em;
+}
+
+a.jest-button:hover,
+a.jest-button:active {
+  background-color: #910e1b;
+}
+
+div.jest-card-label {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  color: white;
+  background-color: var(--red);
+  font-size: 16px;
+  font-weight: bold;
+  display: inline;
+  padding: 0 0.5em;
+}
+
+div.jest-card-label.jest-card-label-reverse {
+  color: white;
+  top: auto;
+  left: auto;
+  bottom: 15px;
+  right: 15px;
+  transform: rotateX(180deg);
+}
+
+div.jest-card-logo-container {
+  width: 120px;
+  height: 120px;
+}
+
+div.jest-card-logo {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 80% 80%;
+}
+
+div.jest-card-pass {
+  cursor: auto;
+}
+
+div.jest-card-pass .jest-card-label,
+div.jest-card-run .jest-card-label {
+  background-color: var(--green);
+}
+
+div.jest-card-pass .jest-card-logo-container {
+  background-color: var(--green);
+  transform: rotate(45deg);
+}
+
+div.jest-card-pass .jest-card-logo {
+  width: 90%;
+  height: 90%;
+  background-image: url(/img/jest-card-pass.svg);
+  transform: rotate(-65deg);
+  background-size: 65% 65%;
+  background-position: 50% 75%;
+}
+
+div.jest-card-fail .jest-card-logo-container {
+  background-color: var(--red);
+}
+
+div.jest-card-fail .jest-card-logo {
+  background-position: 50% 65%;
+  background-size: 65% 65%;
+  background-image: url(/img/jest-card-fail.svg);
+}
+
+div.jest-card-run .jest-card-logo-container {
+  background-color: white;
+}
+
+div.jest-card-run .jest-card-logo {
+  background-image: url(/img/jest-card-run.svg);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes undulate {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  90% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(0.8);
+  }
+}
+
+g.run-text {
+  transform-origin: 50% 50%;
+  animation-name: spin;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+circle.run-circle {
+  transform-origin: 50% 50%;
+  animation-name: undulate;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+circle.run-circle:nth-child(1) {
+  animation-delay: -1s;
+}
+circle.run-circle:nth-child(2) {
+  animation-delay: -2.2s;
+}
+circle.run-circle:nth-child(3) {
+  animation-delay: -2.6s;
+}
+circle.run-circle:nth-child(4) {
+  animation-delay: -3.3s;
 }

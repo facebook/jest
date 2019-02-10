@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -17,8 +17,10 @@ import type {
 import type {Test} from 'types/TestRunner';
 
 import chalk from 'chalk';
-import {ICONS} from '../constants';
+import {specialChars} from 'jest-util';
 import DefaultReporter from './default_reporter';
+
+const {ICONS} = specialChars;
 
 export default class VerboseReporter extends DefaultReporter {
   _globalConfig: GlobalConfig;

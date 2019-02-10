@@ -1,5 +1,9 @@
 {
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "transformIgnorePatterns": [
+      "/node_modules/",
+      "/packages/"
+    ]
   }
 }

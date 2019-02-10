@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -33,6 +33,7 @@ jest.mock('child_process', () => ({
 
 jest.mock('fs', () => {
   let mtime = 32;
+  const size = 42;
   const stat = (path, callback) => {
     setTimeout(
       () =>
@@ -48,6 +49,7 @@ jest.mock('fs', () => {
               return mtime++;
             },
           },
+          size,
         }),
       0,
     );
@@ -131,9 +133,9 @@ describe('node crawler', () => {
 
       expect(data.files).toEqual(
         createMap({
-          'fruits/strawberry.js': ['', 32, 0, [], null],
-          'fruits/tomato.js': ['', 33, 0, [], null],
-          'vegetables/melon.json': ['', 34, 0, [], null],
+          'fruits/strawberry.js': ['', 32, 42, 0, [], null],
+          'fruits/tomato.js': ['', 33, 42, 0, [], null],
+          'vegetables/melon.json': ['', 34, 42, 0, [], null],
         }),
       );
     });
@@ -147,9 +149,9 @@ describe('node crawler', () => {
     nodeCrawl = require('../node');
 
     // In this test sample, strawberry is changed and tomato is unchanged
-    const tomato = ['', 33, 1, [], null];
+    const tomato = ['', 33, 42, 1, [], null];
     const files = createMap({
-      'fruits/strawberry.js': ['', 30, 1, [], null],
+      'fruits/strawberry.js': ['', 30, 40, 1, [], null],
       'fruits/tomato.js': tomato,
     });
 
@@ -162,7 +164,7 @@ describe('node crawler', () => {
     }).then(data => {
       expect(data.files).toEqual(
         createMap({
-          'fruits/strawberry.js': ['', 32, 0, [], null],
+          'fruits/strawberry.js': ['', 32, 42, 0, [], null],
           'fruits/tomato.js': tomato,
         }),
       );
@@ -188,8 +190,8 @@ describe('node crawler', () => {
     }).then(data => {
       expect(data.files).toEqual(
         createMap({
-          'fruits/directory/strawberry.js': ['', 33, 0, [], null],
-          'fruits/tomato.js': ['', 32, 0, [], null],
+          'fruits/directory/strawberry.js': ['', 33, 42, 0, [], null],
+          'fruits/tomato.js': ['', 32, 42, 0, [], null],
         }),
       );
     });
@@ -211,8 +213,8 @@ describe('node crawler', () => {
     }).then(data => {
       expect(data.files).toEqual(
         createMap({
-          'fruits/directory/strawberry.js': ['', 33, 0, [], null],
-          'fruits/tomato.js': ['', 32, 0, [], null],
+          'fruits/directory/strawberry.js': ['', 33, 42, 0, [], null],
+          'fruits/tomato.js': ['', 32, 42, 0, [], null],
         }),
       );
     });

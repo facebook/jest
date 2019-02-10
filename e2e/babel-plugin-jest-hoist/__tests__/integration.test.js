@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -19,7 +19,7 @@ import b from '../__test_modules__/b';
 import c from '../__test_modules__/c';
 import d from '../__test_modules__/d';
 import e from '../__test_modules__/e';
-import jestBackticks from '../__test_modules__/jest-backticks';
+import jestBackticks from '../__test_modules__/jestBackticks';
 
 // The virtual mock call below will be hoisted above this `require` call.
 const virtualModule = require('virtual-module');
@@ -45,7 +45,7 @@ jest.mock('../__test_modules__/e', () => {
     },
   };
 });
-jest.mock(`../__test_modules__/jest-backticks`);
+jest.mock(`../__test_modules__/jestBackticks`);
 jest.mock('virtual-module', () => 'kiwi', {virtual: true});
 // This has types that should be ignored by the out-of-scope variables check.
 jest.mock('has-flow-types', () => (props: {children: mixed}) => 3, {
@@ -123,7 +123,7 @@ describe('babel-plugin-jest-hoist', () => {
   });
 
   it('requires modules that also call jest.mock', () => {
-    require('../mock-file');
+    require('../mockFile');
     const mock = require('../banana');
     expect(mock).toEqual('apple');
   });

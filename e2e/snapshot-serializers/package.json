@@ -2,7 +2,7 @@
   "jest": {
     "testEnvironment": "node",
     "transform": {
-      "^.+\\.js$": "<rootDir>/Transformer.js"
+      "^.+\\.js$": "<rootDir>/transformer.js"
     },
     "snapshotSerializers": [
       "./plugins/foo",

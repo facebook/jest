@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -95,7 +95,7 @@ describe('onRunComplete', () => {
       ].reduce((c, f) => {
         const file = path.resolve(f[0]);
         const override = f[1];
-        const obj = Object.assign({}, covSummary, override);
+        const obj = {...covSummary, ...override};
         c[file] = libCoverage.createCoverageSummary(obj);
         return c;
       }, {});

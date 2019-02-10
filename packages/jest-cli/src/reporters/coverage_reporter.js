@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -16,7 +16,7 @@ import type {
 } from 'types/TestResult';
 import typeof {worker} from './coverage_worker';
 
-import type {GlobalConfig} from 'types/Config';
+import type {GlobalConfig, Path} from 'types/Config';
 import type {Context} from 'types/Context';
 import type {Test} from 'types/TestRunner';
 
@@ -35,16 +35,22 @@ const RUNNING_TEST_COLOR = chalk.bold.dim;
 
 type CoverageWorker = {worker: worker};
 
+export type CoverageReporterOptions = {
+  changedFiles?: Set<Path>,
+};
+
 export default class CoverageReporter extends BaseReporter {
   _coverageMap: CoverageMap;
   _globalConfig: GlobalConfig;
   _sourceMapStore: any;
+  _options: CoverageReporterOptions;
 
-  constructor(globalConfig: GlobalConfig) {
+  constructor(globalConfig: GlobalConfig, options?: CoverageReporterOptions) {
     super();
     this._coverageMap = istanbulCoverage.createCoverageMap({});
     this._globalConfig = globalConfig;
     this._sourceMapStore = libSourceMaps.createSourceMapStore();
+    this._options = options || {};
   }
 
   onTestResult(
@@ -170,6 +176,7 @@ export default class CoverageReporter extends BaseReporter {
           const result = await worker.worker({
             config,
             globalConfig,
+            options: this._options,
             path: filename,
           });
 

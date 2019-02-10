@@ -1,14 +1,20 @@
 {
   "name": "jest-mock",
-  "version": "23.2.0",
+  "version": "24.0.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-mock"
   },
   "engines": {
     "node": ">= 6"
   },
+  "dependencies": {
+    "@jest/types": "^24.1.0"
+  },
   "license": "MIT",
   "main": "build/index.js",
-  "browser": "build-es5/index.js"
+  "types": "build/index.d.ts",
+  "browser": "build-es5/index.js",
+  "gitHead": "634e5a54f46b2a62d1dc81a170562e6f4e55ad60"
 }

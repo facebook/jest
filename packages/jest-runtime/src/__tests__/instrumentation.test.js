@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,7 +11,7 @@
 import vm from 'vm';
 import path from 'path';
 import os from 'os';
-import ScriptTransformer from '../script_transformer';
+import ScriptTransformer from '../ScriptTransformer';
 
 jest.mock('vm');
 
@@ -34,5 +34,5 @@ it('instruments files', () => {
   // We can't really snapshot the resulting coverage, because it depends on
   // absolute path of the file, which will be different on different
   // machines
-  expect(vm.Script.mock.calls[0][0]).toMatch(`gcv = '__coverage__'`);
+  expect(vm.Script.mock.calls[0][0]).toMatch(`gcv = "__coverage__"`);
 });

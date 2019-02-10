@@ -2,7 +2,7 @@
   "jest": {
     "rootDir": "./",
     "transform": {
-      "^.+\\.(js)$": "<rootDir>/Preprocessor.js"
+      "^.+\\.(js)$": "<rootDir>/preprocessor.js"
     },
     "testRegex": "/__tests__/.*\\.(js)$",
     "testEnvironment": "node",
@@ -12,13 +12,12 @@
   },
   "babel": {
     "presets": [
-      "env"
+      "@babel/preset-env"
     ]
   },
   "dependencies": {
-    "babel-core": "6.26.0",
-    "babel-plugin-istanbul": "4.1.5",
-    "babel-preset-env": "1.6.1",
-    "babel-preset-jest": "22.2.0"
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-plugin-istanbul": "^5.1.0"
   }
 }

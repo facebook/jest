@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prints stack trace pointing to process.exit call 1`] = `
+  ●  process.exit called with "1"
+
+      1 | // Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+      2 | 
+    > 3 | process.exit(1);
+        |         ^
+      4 | 
+      5 | test('something', () => {
+      6 |   expect(true).toBe(true);
+
+      at Object.exit (__tests__/test.js:3:9)
+
+`;

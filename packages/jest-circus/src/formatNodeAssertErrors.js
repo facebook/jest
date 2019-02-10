@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,12 +7,14 @@
  * @flow strict-local
  */
 
-import type {DiffOptions} from 'jest-diff/src/diffStrings';
+// $FlowFixMe: Converted to TS. It's also not exported, but should be imported from `matcher-utils`
+import type {DiffOptions} from 'jest-diff';
 import type {Event, State} from 'types/Circus';
 
-import {printExpected, printReceived} from 'jest-matcher-utils';
+// $FlowFixMe: Converted to TS
+import {diff, printExpected, printReceived} from 'jest-matcher-utils';
 import chalk from 'chalk';
-import diff from 'jest-diff';
+// $FlowFixMe: Converted to TS
 import prettyFormat from 'pretty-format';
 
 type AssertionError = {|

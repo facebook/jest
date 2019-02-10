@@ -1,29 +1,37 @@
 {
   "name": "jest-config",
-  "version": "23.6.0",
+  "version": "24.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-config"
   },
   "license": "MIT",
   "main": "build/index.js",
   "dependencies": {
-    "babel-core": "^6.0.0",
-    "babel-jest": "^23.6.0",
+    "@babel/core": "^7.1.0",
+    "babel-jest": "^24.1.0",
     "chalk": "^2.0.1",
     "glob": "^7.1.1",
-    "jest-environment-jsdom": "^23.4.0",
-    "jest-environment-node": "^23.4.0",
-    "jest-get-type": "^22.1.0",
-    "jest-jasmine2": "^23.6.0",
-    "jest-regex-util": "^23.3.0",
-    "jest-resolve": "^23.6.0",
-    "jest-util": "^23.4.0",
-    "jest-validate": "^23.6.0",
-    "micromatch": "^2.3.11",
-    "pretty-format": "^23.6.0"
+    "jest-environment-jsdom": "^24.0.0",
+    "jest-environment-node": "^24.0.0",
+    "jest-get-type": "^24.0.0",
+    "jest-jasmine2": "^24.1.0",
+    "jest-regex-util": "^24.0.0",
+    "jest-resolve": "^24.1.0",
+    "jest-util": "^24.0.0",
+    "jest-validate": "^24.0.0",
+    "micromatch": "^3.1.10",
+    "pretty-format": "^24.0.0",
+    "realpath-native": "^1.0.2"
+  },
+  "devDependencies":  {
+    "@types/babel__core": "^7.0.4",
+    "@types/glob": "^7.1.1",
+    "@types/micromatch": "^3.1.0"
   },
   "engines": {
     "node": ">= 6"
-  }
+  },
+  "gitHead": "b16789230fd45056a7f2fa199bae06c7a1780deb"
 }

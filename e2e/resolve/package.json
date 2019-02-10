@@ -5,7 +5,8 @@
       "platforms": [
         "native"
       ],
-      "defaultPlatform": "android"
+      "defaultPlatform": "android",
+      "hasteImplModulePath": "<rootDir>/hasteImpl.js"
     },
     "testEnvironment": "node",
     "moduleNameMapper": {

@@ -1,11 +1,12 @@
 {
   "name": "jest-each",
-  "version": "23.6.0",
+  "version": "24.0.0",
   "description": "Parameterised tests for Jest",
   "main": "build/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-each"
   },
   "keywords": [
     "jest",
@@ -17,10 +18,12 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^2.0.1",
-    "jest-util": "^23.4.0",
-    "pretty-format": "^23.6.0"
+    "jest-get-type": "^24.0.0",
+    "jest-util": "^24.0.0",
+    "pretty-format": "^24.0.0"
   },
   "engines": {
     "node": ">= 6"
-  }
+  },
+  "gitHead": "634e5a54f46b2a62d1dc81a170562e6f4e55ad60"
 }

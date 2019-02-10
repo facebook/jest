@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,7 +13,7 @@ jest.mock('prettier');
 const fs = require('fs');
 const path = require('path');
 const prettier = require('prettier');
-const babelTraverse = require('babel-traverse').default;
+const babelTraverse = require('@babel/traverse').default;
 
 const {saveInlineSnapshots} = require('../inline_snapshots');
 

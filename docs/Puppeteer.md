@@ -31,8 +31,8 @@ describe('Google', () => {
     await page.goto('https://google.com');
   });
 
-  it('should display "google" text on page', async () => {
-    await expect(page).toMatch('google');
+  it('should be titled "Google"', async () => {
+    await expect(page.title()).resolves.toMatch('Google');
   });
 });
 ```

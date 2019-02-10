@@ -86,6 +86,8 @@ class MongoEnvironment extends NodeEnvironment {
     return super.runScript(script);
   }
 }
+
+module.exports = MongoEnvironment;
 ```
 
 Finally we can shut down mongodb server
@@ -142,5 +144,3 @@ it('should aggregate docs from collection', async () => {
   ]);
 });
 ```
-
-Here's the code of [full working example](https://github.com/vladgolubev/jest-mongodb).

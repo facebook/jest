@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -175,3 +175,110 @@ it('unmocks modules in config.unmockedModulePathPatterns for tests with automock
     const moduleData = nodeModule();
     expect(moduleData.isUnmocked()).toBe(true);
   }));
+
+describe('resetModules', () => {
+  it('resets all the modules', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      let exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithState',
+      );
+      expect(exports.getState()).toBe(1);
+      exports.increment();
+      expect(exports.getState()).toBe(2);
+      runtime.resetModules();
+      exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithState',
+      );
+      expect(exports.getState()).toBe(1);
+    }));
+});
+
+describe('isolateModules', () => {
+  it('resets all modules after the block', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      let exports;
+      runtime.isolateModules(() => {
+        exports = runtime.requireModuleOrMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        expect(exports.getState()).toBe(1);
+        exports.increment();
+        expect(exports.getState()).toBe(2);
+      });
+
+      exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithState',
+      );
+      expect(exports.getState()).toBe(1);
+    }));
+
+  it('cannot nest isolateModules blocks', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      expect(() => {
+        runtime.isolateModules(() => {
+          runtime.isolateModules(() => {});
+        });
+      }).toThrowError(
+        'isolateModules cannot be nested inside another isolateModules.',
+      );
+    }));
+
+  it('can call resetModules within a isolateModules block', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      let exports;
+      runtime.isolateModules(() => {
+        exports = runtime.requireModuleOrMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        expect(exports.getState()).toBe(1);
+
+        exports.increment();
+        runtime.resetModules();
+
+        exports = runtime.requireModuleOrMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        expect(exports.getState()).toBe(1);
+      });
+
+      exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithState',
+      );
+      expect(exports.getState()).toBe(1);
+    }));
+
+  describe('can use isolateModules from a beforeEach block', () => {
+    let exports;
+    beforeEach(() => {
+      jest.isolateModules(() => {
+        exports = require('./test_root/ModuleWithState');
+      });
+    });
+
+    it('can use the required module from beforeEach and re-require it', () => {
+      expect(exports.getState()).toBe(1);
+      exports.increment();
+      expect(exports.getState()).toBe(2);
+
+      exports = require('./test_root/ModuleWithState');
+      expect(exports.getState()).toBe(1);
+      exports.increment();
+      expect(exports.getState()).toBe(2);
+    });
+  });
+});

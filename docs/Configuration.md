@@ -29,7 +29,7 @@ When using the `--config` option, the JSON file must not contain a "jest" key:
 
 ```json
 {
-  "bail": true,
+  "bail": 1,
   "verbose": true
 }
 ```
@@ -99,11 +99,11 @@ _Note: Core modules, like `fs`, are not mocked by default. They can be mocked ex
 
 _Note: Automocking has a performance cost most noticeable in large projects. See [here](troubleshooting.html#tests-are-slow-when-leveraging-automocking) for details and a workaround._
 
-### `bail` [boolean]
+### `bail` [number | boolean]
 
-Default: `false`
+Default: `0`
 
-By default, Jest runs all tests and produces all errors into the console upon completion. The bail config option can be used here to have Jest stop running tests after the first failure.
+By default, Jest runs all tests and produces all errors into the console upon completion. The bail config option can be used here to have Jest stop running tests after `n` failures. Setting bail to `true` is the same as setting bail to `1`.
 
 ### `browser` [boolean]
 
@@ -261,9 +261,28 @@ Jest will fail if:
 
 Default: `undefined`
 
-This option allows the use of a custom dependency extractor. It must be a node module that exports an object with an `extract` function expecting a string as the first argument for the code to analyze and Jest's dependency extractor as the second argument (in case you only want to extend it).
+This option allows the use of a custom dependency extractor. It must be a node module that exports an object with an `extract` function. E.g.:
 
-The function should return an iterable (`Array`, `Set`, etc.) with the dependencies found in the code.
+```javascript
+const fs = require('fs');
+const crypto = require('crypto');
+
+module.exports = {
+  extract(code, filePath, defaultExtract) {
+    const deps = defaultExtract(code, filePath);
+    // Scan the file and add dependencies in `deps` (which is a `Set`)
+    return deps;
+  },
+  getCacheKey() {
+    return crypto
+      .createHash('md5')
+      .update(fs.readFileSync(__filename))
+      .digest('hex');
+  },
+};
+```
+
+The `extract` function should return an iterable (`Array`, `Set`, etc.) with the dependencies found in the code.
 
 That module can also contain a `getCacheKey` function to generate a cache key to determine if the logic has changed and any cached artifacts relying on it should be discarded.
 
@@ -272,6 +291,23 @@ That module can also contain a `getCacheKey` function to generate a cache key to
 Default: `false`
 
 Make calling deprecated APIs throw helpful error messages. Useful for easing the upgrade process.
+
+### `extraGlobals` [array<string>]
+
+Default: `undefined`
+
+Test files run inside a [vm](https://nodejs.org/api/vm.html), which slows calls to global context properties (e.g. `Math`). With this option you can specify extra properties to be defined inside the vm for faster lookups.
+
+For example, if your tests call `Math` often, you can pass it by setting `extraGlobals`.
+
+```json
+{
+  ...
+  "jest": {
+    "extraGlobals": ["Math"]
+  }
+}
+```
 
 ### `forceCoverageMatch` [array<string>]
 
@@ -333,11 +369,45 @@ Default: `undefined`
 
 This option allows the use of a custom global setup module which exports an async function that is triggered once before all test suites. This function gets Jest's `globalConfig` object as a parameter.
 
+_Note: A global setup module configured in a project (using multi-project runner) will be triggered only when you run at least one test from this project._
+
+_Note: Any global variables that are defined through `globalSetup` can only be read in `globalTeardown`. You cannot retrieve globals defined here in your test suites._
+
+_Note: While code transformation is applied to the linked setup-file, Jest will **not** transform any code in `node_modules`. This is due to the need to load the actual transformers (e.g. `babel` or `typescript`) to perform transformation._
+
+Example:
+
+```js
+// setup.js
+module.exports = async () => {
+  // ...
+  // Set reference to mongod in order to close the server during teardown.
+  global.__MONGOD__ = mongod;
+};
+```
+
+```js
+// teardown.js
+module.exports = async function() {
+  await global.__MONGOD__.stop();
+};
+```
+
 ### `globalTeardown` [string]
 
 Default: `undefined`
 
 This option allows the use of a custom global teardown module which exports an async function that is triggered once after all test suites. This function gets Jest's `globalConfig` object as a parameter.
+
+_Note: A global teardown module configured in a project (using multi-project runner) will be triggered only when you run at least one test from this project._
+
+_Node: The same caveat concerning transformation of `node_modules_ as for `globalSetup` applies to `globalTeardown`.
+
+### `maxConcurrency` [number]
+
+Default: `5`
+
+A number limiting the number of tests that are allowed to run at the same time when using `test.concurrent`. Any test above this limit will be queued and executed once a slot is released.
 
 ### `moduleDirectories` [array<string>]
 
@@ -347,11 +417,11 @@ An array of directory names to be searched recursively up from the requiring mod
 
 ### `moduleFileExtensions` [array<string>]
 
-Default: `["js", "json", "jsx", "node"]`
+Default: `["js", "json", "jsx", "ts", "tsx", "node"]`
 
-An array of file extensions your modules use. If you require modules without specifying a file extension, these are the extensions Jest will look for.
+An array of file extensions your modules use. If you require modules without specifying a file extension, these are the extensions Jest will look for, in left-to-right order.
 
-If you are using TypeScript this should be `["js", "jsx", "json", "ts", "tsx"]`, check [ts-jest's documentation](https://github.com/kulshekhar/ts-jest).
+We recommend placing the extensions most commonly used in your project on the left, so if you are using TypeScript, you may want to consider moving "ts" and/or "tsx" to the beginning of the array.
 
 ### `moduleNameMapper` [object<string, string>]
 
@@ -660,12 +730,11 @@ _Note: `setupTestFrameworkScriptFile` is deprecated in favor of `setupFilesAfter
 
 Default: `undefined`
 
-The path to a module that can resolve test<->snapshot path. This config option lets you customize where Jest stores that snapshot files on disk.
+The path to a module that can resolve test<->snapshot path. This config option lets you customize where Jest stores snapshot files on disk.
 
 Example snapshot resolver module:
 
 ```js
-// my-snapshot-resolver-module
 module.exports = {
   // resolves from test to snapshot path
   resolveSnapshotPath: (testPath, snapshotExtension) =>
@@ -676,6 +745,9 @@ module.exports = {
     snapshotFilePath
       .replace('__snapshots__', '__tests__')
       .slice(0, -snapshotExtension.length),
+
+  // Example test path, used for preflight consistency check of the implementation above
+  testPathForConsistencyCheck: 'some/__tests__/example.test.js',
 };
 ```
 
@@ -771,13 +843,14 @@ Example:
 const NodeEnvironment = require('jest-environment-node');
 
 class CustomEnvironment extends NodeEnvironment {
-  constructor(config) {
-    super(config);
+  constructor(config, context) {
+    super(config, context);
+    this.testPath = context.testPath;
   }
 
   async setup() {
     await super.setup();
-    await someSetupTasks();
+    await someSetupTasks(this.testPath);
     this.global.someGlobalObject = createGlobalObject();
   }
 
@@ -804,6 +877,8 @@ beforeAll(() => {
 });
 ```
 
+_Note: Jest comes with JSDOM@11 by default. Due to JSDOM 12 and newer dropping support for Node 6, Jest is unable to upgrade for the time being. However, you can install a custom `testEnvironment` with whichever version of JSDOM you want. E.g. [jest-environment-jsdom-thirteen](https://www.npmjs.com/package/jest-environment-jsdom-thirteen), which has JSDOM@13._
+
 ### `testEnvironmentOptions` [Object]
 
 Default: `{}`
@@ -812,9 +887,9 @@ Test environment options that will be passed to the `testEnvironment`. The relev
 
 ### `testMatch` [array<string>]
 
-(default: `[ "**/__tests__/**/*.js?(x)", "**/?(*.)+(spec|test).js?(x)" ]`)
+(default: `[ "**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)" ]`)
 
-The glob patterns Jest uses to detect test files. By default it looks for `.js` and `.jsx` files inside of `__tests__` folders, as well as any files with a suffix of `.test` or `.spec` (e.g. `Component.test.js` or `Component.spec.js`). It will also find files called `test.js` or `spec.js`.
+The glob patterns Jest uses to detect test files. By default it looks for `.js`, `.jsx`, `.ts` and `.tsx` files inside of `__tests__` folders, as well as any files with a suffix of `.test` or `.spec` (e.g. `Component.test.js` or `Component.spec.js`). It will also find files called `test.js` or `spec.js`.
 
 See the [micromatch](https://github.com/jonschlinkert/micromatch) package for details of the patterns you can specify.
 
@@ -830,9 +905,9 @@ These pattern strings match against the full path. Use the `<rootDir>` string to
 
 ### `testRegex` [string | Array<string>]
 
-Default: `(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$`
+Default: `(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$`
 
-The pattern or patterns Jest uses to detect test files. By default it looks for `.js` and `.jsx` files inside of `__tests__` folders, as well as any files with a suffix of `.test` or `.spec` (e.g. `Component.test.js` or `Component.spec.js`). It will also find files called `test.js` or `spec.js`. See also [`testMatch` [array<string>]](#testmatch-array-string), but note that you cannot specify both options.
+The pattern or patterns Jest uses to detect test files. By default it looks for `.js`, `.jsx`, `.ts` and `.tsx` files inside of `__tests__` folders, as well as any files with a suffix of `.test` or `.spec` (e.g. `Component.test.js` or `Component.spec.js`). It will also find files called `test.js` or `spec.js`. See also [`testMatch` [array<string>]](#testmatch-array-string), but note that you cannot specify both options.
 
 The following is a visualization of the default regex:
 

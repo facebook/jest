@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "lib": ["dom", "es2017"],
+    "declaration": true,
+    "declarationMap": true,
+    "composite": true,
+    "emitDeclarationOnly": true,
+    // "importHelpers": true,
+    // "isolatedModules": true,
+
+    "strict": true,
+
+    /* Additional Checks */
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",
+    "esModuleInterop": true
+  },
+  "exclude": ["**/__tests__/**/*", "**/build/**/*", "**/build-es5/**/*"]
+}

@@ -75,7 +75,7 @@ Object {
       "name": "(anonymous_0)",
     },
   },
-  "path": "/sum.js",
+  "path": Any<String>,
   "s": Object {
     "0": 0,
     "1": 0,

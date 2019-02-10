@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -33,5 +33,22 @@ describe('getMaxWorkers', () => {
   it('Returns based on the number of cpus', () => {
     expect(getMaxWorkers({})).toBe(3);
     expect(getMaxWorkers({watch: true})).toBe(2);
+  });
+
+  describe('% based', () => {
+    it('50% = 2 workers', () => {
+      const argv = {maxWorkers: '50%'};
+      expect(getMaxWorkers(argv)).toBe(2);
+    });
+
+    it('< 0 workers should become 1', () => {
+      const argv = {maxWorkers: '1%'};
+      expect(getMaxWorkers(argv)).toBe(1);
+    });
+
+    it("0% shouldn't break", () => {
+      const argv = {maxWorkers: '0%'};
+      expect(getMaxWorkers(argv)).toBe(1);
+    });
   });
 });

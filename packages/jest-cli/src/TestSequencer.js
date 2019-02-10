@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -67,8 +67,8 @@ export default class TestSequencer {
   // fastest results.
   sort(tests: Array<Test>): Array<Test> {
     const stats = {};
-    const fileSize = test =>
-      stats[test.path] || (stats[test.path] = fs.statSync(test.path).size);
+    const fileSize = ({path, context: {hasteFS}}) =>
+      stats[path] || (stats[path] = hasteFS.getSize(path) || 0);
     const hasFailed = (cache, test) =>
       cache[test.path] && cache[test.path][0] === FAIL;
     const time = (cache, test) => cache[test.path] && cache[test.path][1];
@@ -83,8 +83,8 @@ export default class TestSequencer {
       if (failedA !== failedB) {
         return failedA ? -1 : 1;
       } else if (hasTimeA != (testB.duration != null)) {
-        // Check if only one of two tests has timing information
-        return hasTimeA != null ? 1 : -1;
+        // If only one of two tests has timing information, run it last
+        return hasTimeA ? 1 : -1;
       } else if (testA.duration != null && testB.duration != null) {
         return testA.duration < testB.duration ? 1 : -1;
       } else {

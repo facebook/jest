@@ -1,0 +1,43 @@
+{
+  "version-24.0-docs": {
+    "Introduction": [
+      "version-24.0-getting-started",
+      "version-24.0-using-matchers",
+      "version-24.0-asynchronous",
+      "version-24.0-setup-teardown",
+      "version-24.0-mock-functions",
+      "version-24.0-jest-platform",
+      "version-24.0-jest-community",
+      "version-24.0-more-resources"
+    ],
+    "Guides": [
+      "version-24.0-snapshot-testing",
+      "version-24.0-tutorial-async",
+      "version-24.0-timer-mocks",
+      "version-24.0-manual-mocks",
+      "version-24.0-es6-class-mocks",
+      "version-24.0-bypassing-module-mocks",
+      "version-24.0-webpack",
+      "version-24.0-puppeteer",
+      "version-24.0-mongodb",
+      "version-24.0-tutorial-jquery",
+      "version-24.0-watch-plugins",
+      "version-24.0-migration-guide",
+      "version-24.0-troubleshooting",
+      "version-24.0-architecture"
+    ],
+    "Framework Guides": [
+      "version-24.0-tutorial-react",
+      "version-24.0-tutorial-react-native",
+      "version-24.0-testing-frameworks"
+    ],
+    "API Reference": [
+      "version-24.0-api",
+      "version-24.0-expect",
+      "version-24.0-mock-function-api",
+      "version-24.0-jest-object",
+      "version-24.0-configuration",
+      "version-24.0-cli"
+    ]
+  }
+}

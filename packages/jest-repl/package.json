@@ -1,23 +1,28 @@
 {
   "name": "jest-repl",
-  "version": "23.6.0",
+  "version": "24.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-repl"
   },
   "license": "MIT",
   "main": "build/index.js",
   "dependencies": {
-    "jest-config": "^23.6.0",
-    "jest-runtime": "^23.6.0",
-    "jest-validate": "^23.6.0",
+    "jest-config": "^24.1.0",
+    "jest-runtime": "^24.1.0",
+    "jest-validate": "^24.0.0",
     "repl": "^0.1.3",
     "yargs": "^12.0.2"
+  },
+  "devDependencies":  {
+    "@types/yargs": "^12.0.2"
   },
   "bin": {
     "jest-repl": "./bin/jest-repl.js"
   },
   "engines": {
     "node": ">= 6"
-  }
+  },
+  "gitHead": "b16789230fd45056a7f2fa199bae06c7a1780deb"
 }

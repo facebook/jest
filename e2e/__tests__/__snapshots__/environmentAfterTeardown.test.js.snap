@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prints useful error for environment methods after test is done 1`] = `
+ReferenceError: You are trying to access a property or method of the Jest environment after it has been torn down.
+
+       9 | test('access environment methods after done', () => {
+      10 |   setTimeout(() => {
+    > 11 |     jest.clearAllTimers();
+         |          ^
+      12 |   }, 0);
+      13 | });
+      14 | 
+`;

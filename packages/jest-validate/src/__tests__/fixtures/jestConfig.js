@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -22,7 +22,7 @@ const NODE_MODULES_REGEXP = replacePathSepForRegex(NODE_MODULES);
 
 const defaultConfig = {
   automock: false,
-  bail: false,
+  bail: 0,
   browser: false,
   cacheDirectory: path.join(os.tmpdir(), 'jest'),
   clearMocks: false,
@@ -49,7 +49,7 @@ const defaultConfig = {
   snapshotSerializers: [],
   testEnvironment: 'jest-environment-jsdom',
   testPathIgnorePatterns: [NODE_MODULES_REGEXP],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   testResultsProcessor: null,
   testURL: 'http://localhost',
   timers: 'real',
@@ -62,7 +62,7 @@ const defaultConfig = {
 
 const validConfig = {
   automock: false,
-  bail: false,
+  bail: 0,
   browser: false,
   cache: true,
   cacheDirectory: '/tmp/user/jest',
@@ -113,7 +113,7 @@ const validConfig = {
   testEnvironment: 'jest-environment-jsdom',
   testNamePattern: 'test signature',
   testPathIgnorePatterns: [NODE_MODULES_REGEXP],
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.jsx?$',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   testResultsProcessor: 'processor-node-module',
   testRunner: 'jasmine2',
   testURL: 'http://localhost',

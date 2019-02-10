@@ -15,6 +15,8 @@ At the Jest Summit we announced the Jest Open Collective. This is our way to hel
 
 In this post we'll outline what the Jest Open Collective is, the structure, and the goals we have.
 
+<!--truncate-->
+
 # The Jest Open Collective
 
 ![Banner image for Jest Open Collective](/img/blog/collective.png)

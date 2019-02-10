@@ -3,34 +3,20 @@
   "version": "0.0.0",
   "name": "example-typescript",
   "dependencies": {
-    "react": "16.4.1",
-    "react-dom": "16.4.1",
-    "typescript": "*"
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "typescript": "^3.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^23.1.1",
-    "jest": "*",
-    "ts-jest": "*"
+    "@babel/core": "*",
+    "@babel/preset-env": "*",
+    "@babel/preset-react": "*",
+    "@babel/preset-typescript": "*",
+    "@types/jest": "^24.0.0",
+    "babel-jest": "*",
+    "jest": "*"
   },
   "scripts": {
     "test": "jest"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "transform": {
-      "^.+\\.(ts|tsx)$": "ts-jest"
-    },
-    "globals": {
-      "ts-jest": {
-        "tsConfigFile": "tsconfig.json"
-      }
-    },
-    "testMatch": [
-      "**/__tests__/*.+(ts|tsx|js)"
-    ]
   }
 }

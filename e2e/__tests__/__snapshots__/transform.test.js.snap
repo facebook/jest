@@ -1,28 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`babel-jest ignored tells user to match ignored files 1`] = `
+FAIL __tests__/ignoredFile.test.js
+  ● Test suite failed to run
+
+    babel-jest: Babel ignores __tests__/ignoredFile.test.js - make sure to include the file in Jest's transformIgnorePatterns as well.
+
+      at loadBabelConfig (../../../packages/babel-jest/build/index.js:134:13)
+`;
+
 exports[`babel-jest instruments only specific files and collects coverage 1`] = `
-"------------|----------|----------|----------|----------|-------------------|
+------------|----------|----------|----------|----------|-------------------|
 File        |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
 ------------|----------|----------|----------|----------|-------------------|
 All files   |    83.33 |      100 |       50 |       80 |                   |
- Covered.js |    83.33 |      100 |       50 |       80 |                13 |
-------------|----------|----------|----------|----------|-------------------|"
+ covered.js |    83.33 |      100 |       50 |       80 |                13 |
+------------|----------|----------|----------|----------|-------------------|
 `;
 
 exports[`custom transformer instruments files 1`] = `
-"----------|----------|----------|----------|----------|-------------------|
+----------|----------|----------|----------|----------|-------------------|
 File      |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
 ----------|----------|----------|----------|----------|-------------------|
-All files |  Unknown |  Unknown |  Unknown |  Unknown |                   |
-----------|----------|----------|----------|----------|-------------------|"
+All files |        0 |        0 |        0 |        0 |                   |
+----------|----------|----------|----------|----------|-------------------|
 `;
 
 exports[`no babel-jest instrumentation with no babel-jest 1`] = `
-"------------|----------|----------|----------|----------|-------------------|
+------------|----------|----------|----------|----------|-------------------|
 File        |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
 ------------|----------|----------|----------|----------|-------------------|
 All files   |    83.33 |      100 |       50 |       80 |                   |
- Covered.js |    83.33 |      100 |       50 |       80 |                13 |
+ covered.js |    83.33 |      100 |       50 |       80 |                13 |
 ------------|----------|----------|----------|----------|-------------------|
-"
+
 `;

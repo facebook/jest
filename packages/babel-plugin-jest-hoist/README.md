@@ -10,14 +10,12 @@ $ yarn add --dev babel-plugin-jest-hoist
 
 ## Usage
 
-### Via `.babelrc` (Recommended)
+### Via `babel.config.js` (Recommended)
 
-**.babelrc**
-
-```json
-{
-  "plugins": ["jest-hoist"]
-}
+```js
+module.exports = {
+  plugins: ['jest-hoist'],
+};
 ```
 
 ### Via CLI
@@ -29,7 +27,7 @@ $ babel --plugins jest-hoist script.js
 ### Via Node API
 
 ```javascript
-require('babel-core').transform('code', {
+require('@babel/core').transform('code', {
   plugins: ['jest-hoist'],
 });
 ```

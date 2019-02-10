@@ -1,0 +1,39 @@
+{
+  "version-22.x-docs": {
+    "Introduction": [
+      "version-22.x-getting-started",
+      "version-22.x-using-matchers",
+      "version-22.x-asynchronous",
+      "version-22.x-setup-teardown",
+      "version-22.x-mock-functions",
+      "version-22.x-jest-platform",
+      "version-22.x-more-resources"
+    ],
+    "Guides": [
+      "version-22.x-snapshot-testing",
+      "version-22.x-tutorial-async",
+      "version-22.x-timer-mocks",
+      "version-22.x-manual-mocks",
+      "version-22.x-es6-class-mocks",
+      "version-22.x-webpack",
+      "version-22.x-puppeteer",
+      "version-22.x-mongodb",
+      "version-22.x-tutorial-jquery",
+      "version-22.x-migration-guide",
+      "version-22.x-troubleshooting"
+    ],
+    "Framework Guides": [
+      "version-22.x-tutorial-react",
+      "version-22.x-tutorial-react-native",
+      "version-22.x-testing-frameworks"
+    ],
+    "API Reference": [
+      "version-22.x-api",
+      "version-22.x-expect",
+      "version-22.x-mock-function-api",
+      "version-22.x-jest-object",
+      "version-22.x-configuration",
+      "version-22.x-cli"
+    ]
+  }
+}

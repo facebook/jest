@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`can press "f" to run only failed tests: test results 1`] = `
+FAIL __tests__/bar.spec.js
+  ● bar 1
+    expect(received).toBe(expected) // Object.is equality
+    Expected: "foo"
+    Received: "bar"
+      1 |
+    > 2 |       test('bar 1', () => { expect('bar').toBe('foo'); });
+        |                                           ^
+      3 |
+      at Object.toBe (__tests__/bar.spec.js:2:43)
+
+PASS __tests__/foo.spec.js
+`;
+
+exports[`can press "f" to run only failed tests: test results 2`] = `
+FAIL __tests__/bar.spec.js
+  ✕ bar 1
+  ● bar 1
+    expect(received).toBe(expected) // Object.is equality
+    Expected: "foo"
+    Received: "bar"
+      1 |
+    > 2 |       test('bar 1', () => { expect('bar').toBe('foo'); });
+        |                                           ^
+      3 |
+      at Object.toBe (__tests__/bar.spec.js:2:43)
+
+`;
+
+exports[`can press "f" to run only failed tests: test summary 1`] = `
+Test Suites: 1 failed, 1 passed, 2 total
+Tests:       1 failed, 1 passed, 2 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`can press "f" to run only failed tests: test summary 2`] = `
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;

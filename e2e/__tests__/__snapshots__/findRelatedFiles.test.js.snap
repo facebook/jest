@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`--findRelatedTests flag coverage configuration is applied correctly 1`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites related to files matching /a.js|b.js/i.
+`;
+
+exports[`--findRelatedTests flag coverage configuration is applied correctly 2`] = `
+PASS __tests__/a.test.js
+✓ a
+`;
+
+exports[`--findRelatedTests flag coverage configuration is applied correctly 3`] = `
+----------|----------|----------|----------|----------|-------------------|
+File      |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+----------|----------|----------|----------|----------|-------------------|
+All files |      100 |      100 |      100 |      100 |                   |
+ a.js     |      100 |      100 |      100 |      100 |                   |
+----------|----------|----------|----------|----------|-------------------|
+`;
+
+exports[`--findRelatedTests flag generates coverage report for filename 1`] = `
+Test Suites: 2 passed, 2 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`--findRelatedTests flag generates coverage report for filename 2`] = `
+PASS __tests__/a.test.js
+PASS __tests__/b.test.js
+`;
+
+exports[`--findRelatedTests flag generates coverage report for filename 3`] = `
+----------|----------|----------|----------|----------|-------------------|
+File      |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+----------|----------|----------|----------|----------|-------------------|
+All files |      100 |      100 |      100 |      100 |                   |
+ a.js     |      100 |      100 |      100 |      100 |                   |
+ b.js     |      100 |      100 |      100 |      100 |                   |
+----------|----------|----------|----------|----------|-------------------|
+`;
+
+exports[`--findRelatedTests flag generates coverage report for filename 4`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites related to files matching /a.js/i.
+`;
+
+exports[`--findRelatedTests flag generates coverage report for filename 5`] = `
+PASS __tests__/a.test.js
+  ✓ a
+`;
+
+exports[`--findRelatedTests flag generates coverage report for filename 6`] = `
+----------|----------|----------|----------|----------|-------------------|
+File      |  % Stmts | % Branch |  % Funcs |  % Lines | Uncovered Line #s |
+----------|----------|----------|----------|----------|-------------------|
+All files |      100 |      100 |      100 |      100 |                   |
+ a.js     |      100 |      100 |      100 |      100 |                   |
+----------|----------|----------|----------|----------|-------------------|
+`;

@@ -23,9 +23,10 @@ Object {
 `;
 
 exports[`ScriptTransformer transforms a file properly 1`] = `
-"({\\"Object.<anonymous>\\":function(module,exports,require,__dirname,__filename,global,jest){/* istanbul ignore next */var cov_25u22311x4 = function () {
+"({\\"Object.<anonymous>\\":function(module,exports,require,__dirname,__filename,global,jest){/* istanbul ignore next */
+var cov_25u22311x4 = function () {
   var path = \\"/fruits/banana.js\\",
-      hash = \\"04636d4ae73b4b3e24bf6fba39e08c946fd0afb5\\",
+      hash = \\"ef12c7f3c0d46c0ac007781d50b4e524293578c6\\",
       Function = function () {}.constructor,
       global = new Function('return this')(),
       gcv = \\"__coverage__\\",
@@ -50,7 +51,7 @@ exports[`ScriptTransformer transforms a file properly 1`] = `
     },
     f: {},
     b: {},
-    _coverageSchema: \\"332fd63041d2c1bcb487cc26dd0d5f7d97098a6c\\"
+    _coverageSchema: \\"43e27e138ebf9cfc5966b082cf9a028302ed4184\\"
   },
       coverage = global[gcv] || (global[gcv] = {});
 
@@ -68,9 +69,10 @@ module.exports = \\"banana\\";
 `;
 
 exports[`ScriptTransformer transforms a file properly 2`] = `
-"({\\"Object.<anonymous>\\":function(module,exports,require,__dirname,__filename,global,jest){/* istanbul ignore next */var cov_23yvu8etmu = function () {
+"({\\"Object.<anonymous>\\":function(module,exports,require,__dirname,__filename,global,jest){/* istanbul ignore next */
+var cov_23yvu8etmu = function () {
   var path = \\"/fruits/kiwi.js\\",
-      hash = \\"58d742d8c615e16eb5dffec9322e6ed1babde8f3\\",
+      hash = \\"90cf6273dfbcd93e4510a6c5503c2125aab1f1b8\\",
       Function = function () {}.constructor,
       global = new Function('return this')(),
       gcv = \\"__coverage__\\",
@@ -133,7 +135,7 @@ exports[`ScriptTransformer transforms a file properly 2`] = `
       \\"0\\": 0
     },
     b: {},
-    _coverageSchema: \\"332fd63041d2c1bcb487cc26dd0d5f7d97098a6c\\"
+    _coverageSchema: \\"43e27e138ebf9cfc5966b082cf9a028302ed4184\\"
   },
       coverage = global[gcv] || (global[gcv] = {});
 
@@ -146,11 +148,18 @@ exports[`ScriptTransformer transforms a file properly 2`] = `
 }();
 
 cov_23yvu8etmu.s[0]++;
+
 module.exports = () => {
-  /* istanbul ignore next */cov_23yvu8etmu.f[0]++;
+  /* istanbul ignore next */
+  cov_23yvu8etmu.f[0]++;
   cov_23yvu8etmu.s[1]++;
   return \\"kiwi\\";
 };
+}});"
+`;
+
+exports[`ScriptTransformer transforms a file properly 3`] = `
+"({\\"Object.<anonymous>\\":function(module,exports,require,__dirname,__filename,global,jest,Math){module.exports = \\"banana\\";
 }});"
 `;
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,7 +7,7 @@
  * @flow strict-local
  */
 
-import type {EventHandler} from 'types/Circus';
+import type {EventHandler, Exception} from 'types/Circus';
 
 import {
   addErrorToEachTestUnderDescribe,
@@ -130,7 +130,8 @@ const eventHandler: EventHandler = (event, state): void => {
       break;
     }
     case 'test_retry': {
-      event.test.errors = [];
+      const errors: Array<[?Exception, Exception]> = [];
+      event.test.errors = errors;
       break;
     }
     case 'run_start': {

@@ -1,7 +1,5 @@
 // Copyright 2004-present Facebook. All Rights Reserved.
 
-/* eslint-disable no-unused-vars */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import * as TestUtils from 'react-dom/test-utils';

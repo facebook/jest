@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`should support rejecting promises 1`] = `
-"// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[\`should support rejecting promises 1\`] = \`\\"octopus\\"\`;
-"
-`;

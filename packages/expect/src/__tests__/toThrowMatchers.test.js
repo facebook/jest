@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -52,11 +52,20 @@ class customError extends Error {
         ).toThrowErrorMatchingSnapshot();
       });
 
-      test('threw, but message did not match', () => {
+      test('threw, but message did not match (error)', () => {
         expect(() => {
           jestExpect(() => {
             throw new customError('apple');
           })[toThrow]('banana');
+        }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('threw, but message did not match (non-error falsey)', () => {
+        expect(() => {
+          jestExpect(() => {
+            // eslint-disable-next-line no-throw-literal
+            throw '';
+          })[toThrow]('Server Error');
         }).toThrowErrorMatchingSnapshot();
       });
 
@@ -66,11 +75,20 @@ class customError extends Error {
         })[toThrow]('"this"? throws.');
       });
 
-      test('threw, but should not have', () => {
+      test('threw, but message should not match (error)', () => {
         expect(() => {
           jestExpect(() => {
             throw new customError('apple');
           }).not[toThrow]('apple');
+        }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('threw, but message should not match (non-error truthy)', () => {
+        expect(() => {
+          jestExpect(() => {
+            // eslint-disable-next-line no-throw-literal
+            throw 'Internal Server Error';
+          }).not[toThrow]('Server Error');
         }).toThrowErrorMatchingSnapshot();
       });
     });
@@ -92,7 +110,7 @@ class customError extends Error {
         ).toThrowErrorMatchingSnapshot();
       });
 
-      test('threw, but message did not match', () => {
+      test('threw, but message did not match (error)', () => {
         expect(() => {
           jestExpect(() => {
             throw new customError('apple');
@@ -100,11 +118,29 @@ class customError extends Error {
         }).toThrowErrorMatchingSnapshot();
       });
 
-      test('threw, but should not have', () => {
+      test('threw, but message did not match (non-error falsey)', () => {
+        expect(() => {
+          jestExpect(() => {
+            // eslint-disable-next-line no-throw-literal
+            throw 0;
+          })[toThrow](/^[123456789]\d*/);
+        }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('threw, but message should not match (error)', () => {
         expect(() => {
           jestExpect(() => {
             throw new customError('apple');
           }).not[toThrow](/apple/);
+        }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('threw, but message should not match (non-error truthy)', () => {
+        expect(() => {
+          jestExpect(() => {
+            // eslint-disable-next-line no-throw-literal
+            throw 404;
+          }).not[toThrow](/^[123456789]\d*/);
         }).toThrowErrorMatchingSnapshot();
       });
     });
@@ -129,7 +165,7 @@ class customError extends Error {
         ).toThrowErrorMatchingSnapshot();
       });
 
-      test('threw, but class did not match', () => {
+      test('threw, but class did not match (error)', () => {
         expect(() => {
           jestExpect(() => {
             throw new Err('apple');
@@ -137,12 +173,233 @@ class customError extends Error {
         }).toThrowErrorMatchingSnapshot();
       });
 
-      test('threw, but should not have', () => {
+      test('threw, but class did not match (non-error falsey)', () => {
+        expect(() => {
+          jestExpect(() => {
+            // eslint-disable-next-line no-throw-literal
+            throw undefined;
+          })[toThrow](Err2);
+        }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('threw, but class should not match (error)', () => {
         expect(() => {
           jestExpect(() => {
             throw new Err('apple');
           }).not[toThrow](Err);
         }).toThrowErrorMatchingSnapshot();
+      });
+    });
+
+    describe('error-message', () => {
+      // Received message in report if object has message property.
+      class ErrorMessage {
+        // not extending Error!
+        constructor(message) {
+          this.message = message;
+        }
+      }
+      const expected = new ErrorMessage('apple');
+
+      describe('pass', () => {
+        test('isNot false', () => {
+          jestExpect(() => {
+            throw new ErrorMessage('apple');
+          })[toThrow](expected);
+        });
+
+        test('isNot true', () => {
+          jestExpect(() => {
+            throw new ErrorMessage('banana');
+          }).not[toThrow](expected);
+        });
+      });
+
+      describe('fail', () => {
+        test('isNot false', () => {
+          expect(() =>
+            jestExpect(() => {
+              throw new ErrorMessage('banana');
+            })[toThrow](expected),
+          ).toThrowErrorMatchingSnapshot();
+        });
+
+        test('isNot true', () => {
+          expect(() =>
+            jestExpect(() => {
+              throw new ErrorMessage('apple');
+            }).not[toThrow](expected),
+          ).toThrowErrorMatchingSnapshot();
+        });
+      });
+    });
+
+    describe('asymmetric', () => {
+      describe('any-Class', () => {
+        describe('pass', () => {
+          test('isNot false', () => {
+            jestExpect(() => {
+              throw new Err('apple');
+            })[toThrow](expect.any(Err));
+          });
+
+          test('isNot true', () => {
+            jestExpect(() => {
+              throw new Err('apple');
+            }).not[toThrow](expect.any(Err2));
+          });
+        });
+
+        describe('fail', () => {
+          test('isNot false', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new Err('apple');
+              })[toThrow](expect.any(Err2)),
+            ).toThrowErrorMatchingSnapshot();
+          });
+
+          test('isNot true', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new Err('apple');
+              }).not[toThrow](expect.any(Err)),
+            ).toThrowErrorMatchingSnapshot();
+          });
+        });
+      });
+
+      describe('anything', () => {
+        describe('pass', () => {
+          test('isNot false', () => {
+            jestExpect(() => {
+              throw new customError('apple');
+            })[toThrow](expect.anything());
+          });
+
+          test('isNot true', () => {
+            jestExpect(() => {}).not[toThrow](expect.anything());
+            jestExpect(() => {
+              // eslint-disable-next-line no-throw-literal
+              throw null;
+            }).not[toThrow](expect.anything());
+          });
+        });
+
+        describe('fail', () => {
+          test('isNot false', () => {
+            expect(() =>
+              jestExpect(() => {
+                // eslint-disable-next-line no-throw-literal
+                throw null;
+              })[toThrow](expect.anything()),
+            ).toThrowErrorMatchingSnapshot();
+          });
+
+          test('isNot true', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new customError('apple');
+              }).not[toThrow](expect.anything()),
+            ).toThrowErrorMatchingSnapshot();
+          });
+        });
+      });
+
+      describe('no-symbol', () => {
+        // Test serialization of asymmetric matcher which has no property:
+        // this.$$typeof = Symbol.for('jest.asymmetricMatcher')
+        const matchError = {
+          asymmetricMatch(received) {
+            return (
+              received !== null &&
+              received !== undefined &&
+              received.name === 'Error'
+            );
+          },
+        };
+        const matchNotError = {
+          asymmetricMatch(received) {
+            return (
+              received !== null &&
+              received !== undefined &&
+              received.name !== 'Error'
+            );
+          },
+        };
+
+        describe('pass', () => {
+          test('isNot false', () => {
+            jestExpect(() => {
+              throw new customError('apple');
+            })[toThrow](matchError);
+          });
+
+          test('isNot true', () => {
+            jestExpect(() => {
+              throw new customError('apple');
+            }).not[toThrow](matchNotError);
+          });
+        });
+
+        describe('fail', () => {
+          test('isNot false', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new customError('apple');
+              })[toThrow](matchNotError),
+            ).toThrowErrorMatchingSnapshot();
+          });
+
+          test('isNot true', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new customError('apple');
+              }).not[toThrow](matchError),
+            ).toThrowErrorMatchingSnapshot();
+          });
+        });
+      });
+
+      describe('objectContaining', () => {
+        const matchError = expect.objectContaining({
+          name: 'Error',
+        });
+        const matchNotError = expect.objectContaining({
+          name: 'NotError',
+        });
+
+        describe('pass', () => {
+          test('isNot false', () => {
+            jestExpect(() => {
+              throw new customError('apple');
+            })[toThrow](matchError);
+          });
+
+          test('isNot true', () => {
+            jestExpect(() => {
+              throw new customError('apple');
+            }).not[toThrow](matchNotError);
+          });
+        });
+
+        describe('fail', () => {
+          test('isNot false', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new customError('apple');
+              })[toThrow](matchNotError),
+            ).toThrowErrorMatchingSnapshot();
+          });
+
+          test('isNot true', () => {
+            expect(() =>
+              jestExpect(() => {
+                throw new customError('apple');
+              }).not[toThrow](matchError),
+            ).toThrowErrorMatchingSnapshot();
+          });
+        });
       });
     });
 
@@ -199,39 +456,38 @@ class customError extends Error {
       });
 
       test('did not throw at all', async () => {
-        let err;
-        try {
-          await jestExpect(asyncFn()).rejects.toThrow();
-        } catch (error) {
-          err = error;
-        }
-        expect(err).toMatchSnapshot();
+        await expect(
+          jestExpect(asyncFn()).rejects[toThrow](),
+        ).rejects.toThrowErrorMatchingSnapshot();
       });
 
       test('threw, but class did not match', async () => {
-        let err;
-        try {
-          await jestExpect(asyncFn(true)).rejects.toThrow(Err2);
-        } catch (error) {
-          err = error;
-        }
-        expect(err).toMatchSnapshot();
+        await expect(
+          jestExpect(asyncFn(true)).rejects[toThrow](Err2),
+        ).rejects.toThrowErrorMatchingSnapshot();
       });
 
       test('threw, but should not have', async () => {
-        let err;
-        try {
-          await jestExpect(asyncFn(true)).rejects.not.toThrow();
-        } catch (error) {
-          err = error;
-        }
-        expect(err).toMatchSnapshot();
+        await expect(
+          jestExpect(asyncFn(true)).rejects.not[toThrow](),
+        ).rejects.toThrowErrorMatchingSnapshot();
+      });
+    });
+
+    describe('expected is undefined', () => {
+      test('threw, but should not have (non-error falsey)', () => {
+        expect(() => {
+          jestExpect(() => {
+            // eslint-disable-next-line no-throw-literal
+            throw null;
+          }).not[toThrow]();
+        }).toThrowErrorMatchingSnapshot();
       });
     });
 
     test('invalid arguments', () => {
       expect(() =>
-        jestExpect(() => {})[toThrow](111),
+        jestExpect(() => {}).not[toThrow](111),
       ).toThrowErrorMatchingSnapshot();
     });
 

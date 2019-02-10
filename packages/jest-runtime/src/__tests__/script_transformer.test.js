@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,14 +8,24 @@
 
 'use strict';
 
-const slash = require('slash');
-
 jest
   .mock('fs', () =>
     // Node 10.5.x compatibility
-    Object.assign({}, jest.genMockFromModule('fs'), {
+    ({
+      ...jest.genMockFromModule('fs'),
       ReadStream: jest.requireActual('fs').ReadStream,
       WriteStream: jest.requireActual('fs').WriteStream,
+      readFileSync: jest.fn((path, options) => {
+        if (mockFs[path]) {
+          return mockFs[path];
+        }
+
+        throw new Error(`Cannot read path '${path}'.`);
+      }),
+      statSync: path => ({
+        isFile: () => !!mockFs[path],
+        mtime: {getTime: () => 42, toString: () => '42'},
+      }),
     }),
   )
   .mock('graceful-fs')
@@ -27,7 +37,8 @@ jest
     util.createDirectory = jest.fn();
     return util;
   })
-  .mock('vm');
+  .mock('vm')
+  .mock('path', () => jest.requireActual('path').posix);
 
 jest.mock(
   'test_preprocessor',
@@ -126,8 +137,7 @@ let writeFileAtomic;
 
 jest.mock('write-file-atomic', () => ({
   sync: jest.fn().mockImplementation((filePath, data) => {
-    const normalizedPath = require('slash')(filePath);
-    mockFs[normalizedPath] = data;
+    mockFs[filePath] = data;
   }),
 }));
 
@@ -145,6 +155,7 @@ describe('ScriptTransformer', () => {
         'module.exports = function () { return "grapefruit"; }',
       ].join('\n'),
       '/fruits/kiwi.js': ['module.exports = () => "kiwi";'].join('\n'),
+      '/fruits/package.json': ['{"name": "fruits"}'].join('\n'),
       '/node_modules/react.js': ['module.exports = "react";'].join('\n'),
       '/styles/App.css': ['root {', '  font-family: Helvetica;', '}'].join(
         '\n',
@@ -154,7 +165,6 @@ describe('ScriptTransformer', () => {
     fs = require('graceful-fs');
     fs.readFileSync = jest.fn((path, options) => {
       expect(options).toBe('utf8');
-
       if (mockFs[path]) {
         return mockFs[path];
       }
@@ -163,14 +173,13 @@ describe('ScriptTransformer', () => {
     });
     fs.writeFileSync = jest.fn((path, data, options) => {
       expect(options).toBe('utf8');
-      const normalizedPath = slash(path);
-      mockFs[normalizedPath] = data;
+      mockFs[path] = data;
     });
 
     fs.unlinkSync = jest.fn();
     fs.statSync = jest.fn(path => ({
       isFile: () => !!mockFs[path],
-      mtime: {getTime: () => 42},
+      mtime: {getTime: () => 42, toString: () => '42'},
     }));
 
     fs.existsSync = jest.fn(path => !!mockFs[path]);
@@ -185,11 +194,11 @@ describe('ScriptTransformer', () => {
       transformIgnorePatterns: ['/node_modules/'],
     };
 
-    ScriptTransformer = require('../script_transformer').default;
+    ScriptTransformer = require('../ScriptTransformer').default;
   };
 
   beforeEach(reset);
-  afterEach(() => jest.unmock('../should_instrument'));
+  afterEach(() => jest.unmock('../shouldInstrument'));
 
   it('transforms a file properly', () => {
     const scriptTransformer = new ScriptTransformer(config);
@@ -201,7 +210,7 @@ describe('ScriptTransformer', () => {
     expect(vm.Script.mock.calls[0][0]).toMatchSnapshot();
 
     // no-cache case
-    expect(fs.readFileSync.mock.calls.length).toBe(1);
+    expect(fs.readFileSync).toHaveBeenCalledTimes(1);
     expect(fs.readFileSync).toBeCalledWith('/fruits/banana.js', 'utf8');
 
     // in-memory cache
@@ -224,12 +233,18 @@ describe('ScriptTransformer', () => {
     // If we disable coverage, we get a different result.
     scriptTransformer.transform('/fruits/kiwi.js', {collectCoverage: false});
     expect(vm.Script.mock.calls[1][0]).toEqual(snapshot);
+
+    scriptTransformer.transform('/fruits/banana.js', {
+      // to make sure jest isn't declared twice
+      extraGlobals: ['Math', 'jest'],
+    }).script;
+    expect(vm.Script.mock.calls[3][0]).toMatchSnapshot();
   });
 
   it('does not transform Node core modules', () => {
-    jest.mock('../should_instrument');
+    jest.mock('../shouldInstrument');
 
-    const shouldInstrument = require('../should_instrument').default;
+    const shouldInstrument = require('../shouldInstrument').default;
     const scriptTransformer = new ScriptTransformer(config);
     const fsSourceCode = process.binding('natives').fs;
 
@@ -243,16 +258,17 @@ describe('ScriptTransformer', () => {
     expect(vm.Script.mock.calls[0][0]).toContain(fsSourceCode);
 
     // Native files should never be transformed.
-    expect(shouldInstrument.mock.calls.length).toBe(0);
+    expect(shouldInstrument).toHaveBeenCalledTimes(0);
   });
 
   it(
     "throws an error if `process` doesn't return a string or an object" +
       'containing `code` key with processed string',
     () => {
-      config = Object.assign(config, {
+      config = {
+        ...config,
         transform: [['^.+\\.js$', 'passthrough-preprocessor']],
-      });
+      };
       const scriptTransformer = new ScriptTransformer(config);
 
       const incorrectReturnValues = [
@@ -285,9 +301,10 @@ describe('ScriptTransformer', () => {
   );
 
   it("throws an error if `process` doesn't defined", () => {
-    Object.assign(config, {
+    config = {
+      ...config,
       transform: [['^.+\\.js$', 'skipped-required-props-preprocessor']],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
     expect(() =>
       scriptTransformer.transformSource('sample.js', '', false),
@@ -295,11 +312,12 @@ describe('ScriptTransformer', () => {
   });
 
   it('throws an error if createTransformer returns object without `process` method', () => {
-    Object.assign(config, {
+    config = {
+      ...config,
       transform: [
         ['^.+\\.js$', 'skipped-required-create-transformer-props-preprocessor'],
       ],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
     expect(() =>
       scriptTransformer.transformSource('sample.js', '', false),
@@ -307,9 +325,10 @@ describe('ScriptTransformer', () => {
   });
 
   it("shouldn't throw error without process method. But with corrent createTransformer method", () => {
-    Object.assign(config, {
+    config = {
+      ...config,
       transform: [['^.+\\.js$', 'skipped-process-method-preprocessor']],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
     expect(() =>
       scriptTransformer.transformSource('sample.js', '', false),
@@ -317,9 +336,7 @@ describe('ScriptTransformer', () => {
   });
 
   it('uses the supplied preprocessor', () => {
-    config = Object.assign(config, {
-      transform: [['^.+\\.js$', 'test_preprocessor']],
-    });
+    config = {...config, transform: [['^.+\\.js$', 'test_preprocessor']]};
     const scriptTransformer = new ScriptTransformer(config);
     scriptTransformer.transform('/fruits/banana.js', {});
 
@@ -333,12 +350,13 @@ describe('ScriptTransformer', () => {
   });
 
   it('uses multiple preprocessors', () => {
-    config = Object.assign(config, {
+    config = {
+      ...config,
       transform: [
         ['^.+\\.js$', 'test_preprocessor'],
         ['^.+\\.css$', 'css-preprocessor'],
       ],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
 
     scriptTransformer.transform('/fruits/banana.js', {});
@@ -355,9 +373,10 @@ describe('ScriptTransformer', () => {
   });
 
   it('writes source map if preprocessor supplies it', () => {
-    config = Object.assign(config, {
+    config = {
+      ...config,
       transform: [['^.+\\.js$', 'preprocessor-with-sourcemaps']],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
 
     const map = {
@@ -381,9 +400,10 @@ describe('ScriptTransformer', () => {
   });
 
   it('writes source map if preprocessor inlines it', () => {
-    config = Object.assign(config, {
+    config = {
+      ...config,
       transform: [['^.+\\.js$', 'preprocessor-with-sourcemaps']],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
 
     const sourceMap = JSON.stringify({
@@ -410,9 +430,10 @@ describe('ScriptTransformer', () => {
   });
 
   it('writes source maps if given by the transformer', () => {
-    config = Object.assign(config, {
+    config = {
+      ...config,
       transform: [['^.+\\.js$', 'preprocessor-with-sourcemaps']],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
 
     const map = {
@@ -439,9 +460,10 @@ describe('ScriptTransformer', () => {
   });
 
   it('does not write source map if not given by the transformer', () => {
-    config = Object.assign(config, {
+    config = {
+      ...config,
       transform: [['^.+\\.js$', 'preprocessor-with-sourcemaps']],
-    });
+    };
     const scriptTransformer = new ScriptTransformer(config);
 
     require('preprocessor-with-sourcemaps').process.mockReturnValue({
@@ -457,9 +479,7 @@ describe('ScriptTransformer', () => {
   });
 
   it('passes expected transform options to getCacheKey', () => {
-    config = Object.assign(config, {
-      transform: [['^.+\\.js$', 'test_preprocessor']],
-    });
+    config = {...config, transform: [['^.+\\.js$', 'test_preprocessor']]};
     const scriptTransformer = new ScriptTransformer(config);
 
     scriptTransformer.transform('/fruits/banana.js', {
@@ -471,9 +491,10 @@ describe('ScriptTransformer', () => {
   });
 
   it('reads values from the cache', () => {
-    const transformConfig = Object.assign(config, {
+    const transformConfig = {
+      ...config,
       transform: [['^.+\\.js$', 'test_preprocessor']],
-    });
+    };
     let scriptTransformer = new ScriptTransformer(transformConfig);
     scriptTransformer.transform('/fruits/banana.js', {});
 
@@ -491,7 +512,7 @@ describe('ScriptTransformer', () => {
     scriptTransformer = new ScriptTransformer(transformConfig);
     scriptTransformer.transform('/fruits/banana.js', {});
 
-    expect(fs.readFileSync.mock.calls.length).toBe(2);
+    expect(fs.readFileSync).toHaveBeenCalledTimes(2);
     expect(fs.readFileSync).toBeCalledWith('/fruits/banana.js', 'utf8');
     expect(fs.readFileSync).toBeCalledWith(cachePath, 'utf8');
     expect(writeFileAtomic.sync).not.toBeCalled();
@@ -504,30 +525,45 @@ describe('ScriptTransformer', () => {
     scriptTransformer = new ScriptTransformer(transformConfig);
     scriptTransformer.transform('/fruits/banana.js', {});
 
-    expect(fs.readFileSync.mock.calls.length).toBe(1);
+    expect(fs.readFileSync).toHaveBeenCalledTimes(1);
     expect(fs.readFileSync).toBeCalledWith('/fruits/banana.js', 'utf8');
     expect(fs.readFileSync).not.toBeCalledWith(cachePath, 'utf8');
     expect(writeFileAtomic.sync).toBeCalled();
   });
 
   it('does not reuse the in-memory cache between different projects', () => {
-    const scriptTransformer = new ScriptTransformer(
-      Object.assign({}, config, {
-        transform: [['^.+\\.js$', 'test_preprocessor']],
-      }),
-    );
+    const scriptTransformer = new ScriptTransformer({
+      ...config,
+      transform: [['^.+\\.js$', 'test_preprocessor']],
+    });
 
     scriptTransformer.transform('/fruits/banana.js', {});
 
-    const anotherScriptTransformer = new ScriptTransformer(
-      Object.assign({}, config, {
-        transform: [['^.+\\.js$', 'css-preprocessor']],
-      }),
-    );
+    const anotherScriptTransformer = new ScriptTransformer({
+      ...config,
+      transform: [['^.+\\.js$', 'css-preprocessor']],
+    });
 
     anotherScriptTransformer.transform('/fruits/banana.js', {});
 
-    expect(fs.readFileSync.mock.calls.length).toBe(2);
+    expect(fs.readFileSync).toHaveBeenCalledTimes(2);
     expect(fs.readFileSync).toBeCalledWith('/fruits/banana.js', 'utf8');
+  });
+
+  it('preload transformer when using `preloadTransformer`', () => {
+    const scriptTransformer = new ScriptTransformer({
+      ...config,
+      transform: [['^.+\\.js$', 'test_preprocessor']],
+    });
+
+    expect(Array.from(scriptTransformer._transformCache.entries())).toEqual([]);
+
+    expect(
+      scriptTransformer.preloadTransformer('/fruits/banana.js'),
+    ).toBeUndefined();
+
+    expect(Array.from(scriptTransformer._transformCache.entries())).toEqual([
+      ['test_preprocessor', expect.any(Object)],
+    ]);
   });
 });

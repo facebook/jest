@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 
 'use strict';
 
@@ -26,16 +26,19 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/testSetupFile.js'],
   snapshotSerializers: [
     '<rootDir>/packages/pretty-format/build/plugins/ConvertAnsi.js',
+    require.resolve('jest-snapshot-serializer-raw'),
   ],
   testEnvironment: './packages/jest-environment-node',
   testPathIgnorePatterns: [
     '/node_modules/',
     '/examples/',
     '/e2e/.*/__tests__',
+    '/e2e/global-setup',
+    '/e2e/global-teardown',
     '\\.snap$',
     '/packages/.*/build',
     '/packages/.*/build-es5',
-    '/packages/.*/src/__tests__/getPrettyPrint.js',
+    '/packages/.*/src/__tests__/setPrettyPrint.ts',
     '/packages/jest-cli/src/__tests__/test_root',
     '/packages/jest-cli/src/__tests__/__fixtures__/',
     '/packages/jest-cli/src/lib/__tests__/fixtures/',
@@ -53,6 +56,6 @@ module.exports = {
     '/e2e/__tests__/iterator-to-null-test.js',
   ],
   transform: {
-    '^.+\\.js$': '<rootDir>/packages/babel-jest',
+    '^.+\\.[jt]sx?$': '<rootDir>/packages/babel-jest',
   },
 };

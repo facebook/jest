@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -199,14 +199,14 @@ test('StringContaining matches string against string', () => {
   jestExpect(stringContaining('en').asymmetricMatch('queue')).toBe(false);
 });
 
-test('StringContaining throws for non-strings', () => {
+test('StringContaining throws if expected value is not string', () => {
   jestExpect(() => {
     stringContaining([1]).asymmetricMatch('queen');
   }).toThrow();
+});
 
-  jestExpect(() => {
-    stringContaining('en*').asymmetricMatch(1);
-  }).toThrow();
+test('StringContaining returns false if received value is not string', () => {
+  jestExpect(stringContaining('en*').asymmetricMatch(1)).toBe(false);
 });
 
 test('StringNotContaining matches string against string', () => {
@@ -214,14 +214,14 @@ test('StringNotContaining matches string against string', () => {
   jestExpect(stringNotContaining('en').asymmetricMatch('queue')).toBe(true);
 });
 
-test('StringNotContaining throws for non-strings', () => {
+test('StringNotContaining throws if expected value is not string', () => {
   jestExpect(() => {
     stringNotContaining([1]).asymmetricMatch('queen');
   }).toThrow();
+});
 
-  jestExpect(() => {
-    stringNotContaining('en*').asymmetricMatch(1);
-  }).toThrow();
+test('StringNotContaining returns true if received value is not string', () => {
+  jestExpect(stringNotContaining('en*').asymmetricMatch(1)).toBe(true);
 });
 
 test('StringMatching matches string against regexp', () => {
@@ -234,16 +234,18 @@ test('StringMatching matches string against string', () => {
   jestExpect(stringMatching('en').asymmetricMatch('queue')).toBe(false);
 });
 
-test('StringMatching throws for non-strings and non-regexps', () => {
+test('StringMatching throws if expected value is neither string nor regexp', () => {
   jestExpect(() => {
     stringMatching([1]).asymmetricMatch('queen');
   }).toThrow();
 });
 
-test('StringMatching throws for non-string actual values', () => {
-  jestExpect(() => {
-    stringMatching('en').asymmetricMatch(1);
-  }).toThrow();
+test('StringMatching returns false if received value is not string', () => {
+  jestExpect(stringMatching('en').asymmetricMatch(1)).toBe(false);
+});
+
+test('StringMatching returns false even if coerced non-string received value matches pattern', () => {
+  jestExpect(stringMatching('null').asymmetricMatch(null)).toBe(false);
 });
 
 test('StringNotMatching matches string against regexp', () => {
@@ -256,14 +258,12 @@ test('StringNotMatching matches string against string', () => {
   jestExpect(stringNotMatching('en').asymmetricMatch('queue')).toBe(true);
 });
 
-test('StringNotMatching throws for non-strings and non-regexps', () => {
+test('StringNotMatching throws if expected value is neither string nor regexp', () => {
   jestExpect(() => {
     stringNotMatching([1]).asymmetricMatch('queen');
   }).toThrow();
 });
 
-test('StringNotMatching throws for non-string actual values', () => {
-  jestExpect(() => {
-    stringNotMatching('en').asymmetricMatch(1);
-  }).toThrow();
+test('StringNotMatching returns true if received value is not string', () => {
+  jestExpect(stringNotMatching('en').asymmetricMatch(1)).toBe(true);
 });

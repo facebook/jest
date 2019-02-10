@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -69,11 +69,7 @@ const notifyEvents = [
 ];
 
 test('.addReporter() .removeReporter()', () => {
-  const scheduler = new TestScheduler(
-    {},
-    {},
-    Object.assign({}, initialContext),
-  );
+  const scheduler = new TestScheduler({}, {}, {...initialContext});
   const reporter = new NotifyReporter();
   scheduler.addReporter(reporter);
   expect(scheduler._dispatcher._reporters).toContain(reporter);

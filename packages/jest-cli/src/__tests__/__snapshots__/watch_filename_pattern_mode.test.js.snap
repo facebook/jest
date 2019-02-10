@@ -112,11 +112,11 @@ exports[`Watch mode flows Pressing "P" enters pattern mode and invalid regexp 1`
 
 exports[`Watch mode flows Pressing "c" clears the filters 1`] = `
 "[MOCK - cursorHide]
-[MOCK - clearScreen]
+[MOCK - clear]
 
-Pattern Mode Usage
- › Press Esc to exit pattern mode.
- › Press Enter to filter by a filenames regex pattern.
+<bold>Pattern Mode Usage</>
+ <dim>› Press</> Esc <dim>to exit pattern mode.</>
+ <dim>› Press</> Enter <dim>to filter by a filenames regex pattern.</>
 
 
 [MOCK - cursorShow]

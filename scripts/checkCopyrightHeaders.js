@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -114,11 +114,12 @@ const INCLUDED_PATTERNS = [
   /\.[^/]+$/,
 ];
 
-const COPYRIGHT_HEADER_RE = /(Facebook, Inc(.|,)? and its affiliates)|([0-9]{4}-present(.|,)? Facebook)|([0-9]{4}(.|,)? Facebook)/;
+const COPYRIGHT_HEADER =
+  'Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.';
 
 function needsCopyrightHeader(file) {
   const contents = getFileContents(file);
-  return contents.trim().length > 0 && !COPYRIGHT_HEADER_RE.test(contents);
+  return contents.trim().length > 0 && !contents.includes(COPYRIGHT_HEADER);
 }
 
 function check() {

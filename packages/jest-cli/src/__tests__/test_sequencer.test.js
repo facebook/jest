@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -23,6 +23,9 @@ const context = {
     cacheDirectory: '/cache',
     name: 'test',
   },
+  hasteFS: {
+    getSize: path => path.length,
+  },
 };
 
 const secondContext = {
@@ -30,6 +33,9 @@ const secondContext = {
     cache: true,
     cacheDirectory: '/cache2',
     name: 'test2',
+  },
+  hasteFS: {
+    getSize: path => path.length,
   },
 };
 
@@ -45,7 +51,6 @@ beforeEach(() => {
 
   fs.readFileSync = jest.fn(() => '{}');
   fs.existsSync = () => true;
-  fs.statSync = jest.fn(filePath => ({size: filePath.length}));
   fs.writeFileSync = jest.fn();
 });
 

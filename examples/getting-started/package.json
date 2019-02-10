@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "name": "example-getting-started",
   "devDependencies": {
-    "babel-preset-env": "*",
+    "@babel/core": "*",
+    "@babel/preset-env": "*",
+    "babel-jest": "*",
     "jest": "*"
   },
   "scripts": {

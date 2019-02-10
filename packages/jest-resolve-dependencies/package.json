@@ -1,17 +1,19 @@
 {
   "name": "jest-resolve-dependencies",
-  "version": "23.6.0",
+  "version": "24.1.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebook/jest.git"
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/jest-resolve-dependencies"
   },
   "license": "MIT",
   "main": "build/index.js",
   "dependencies": {
-    "jest-regex-util": "^23.3.0",
-    "jest-snapshot": "^23.6.0"
+    "jest-regex-util": "^24.0.0",
+    "jest-snapshot": "^24.1.0"
   },
   "engines": {
     "node": ">= 6"
-  }
+  },
+  "gitHead": "b16789230fd45056a7f2fa199bae06c7a1780deb"
 }

@@ -1,0 +1,244 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`background color of spaces cyan for inchanged (expanded) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  <div></>
+<red>+   <p></>
+<cyan>      <span></>
+<cyan>        following string consists of a space:</>
+<cyan>        <inverse> </></>
+<cyan>        <inverse> </>line has preceding space only</>
+<cyan>        <inverse> </>line has both preceding and following space<inverse> </></>
+<cyan>        line has following space only<inverse> </></>
+<cyan>      </span></>
+<red>+   </p></>
+<dim>  </div></>"
+`;
+
+exports[`background color of spaces green for removed (expanded) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  <div></>
+<dim>    <span></>
+<green>-     following string consists of a space:</>
+<green>-     <inverse> </></>
+<green>-     <inverse> </>line has preceding space only</>
+<green>-     <inverse> </>line has both preceding and following space<inverse> </></>
+<green>-     line has following space only<inverse> </></>
+<red>+     </>
+<dim>    </span></>
+<dim>  </div></>"
+`;
+
+exports[`background color of spaces red for added (expanded) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  <div></>
+<dim>    <span></>
+<green>-     </>
+<red>+     following string consists of a space:</>
+<red>+     <inverse> </></>
+<red>+     <inverse> </>line has preceding space only</>
+<red>+     <inverse> </>line has both preceding and following space<inverse> </></>
+<red>+     line has following space only<inverse> </></>
+<dim>    </span></>
+<dim>  </div></>"
+`;
+
+exports[`background color of spaces yellow for unchanged (expanded) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  <div></>
+<green>-   <span></>
+<red>+   <p></>
+<dim>      following string consists of a space:</>
+<dim>      <bgYellow> </></>
+<dim>      <bgYellow> </>line has preceding space only</>
+<dim>      <bgYellow> </>line has both preceding and following space<bgYellow> </></>
+<dim>      line has following space only<bgYellow> </></>
+<green>-   </span></>
+<red>+   </p></>
+<dim>  </div></>"
+`;
+
+exports[`collapses big diffs to patch format 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<yellow>@@ -6,9 +6,9 @@</>
+<dim>      4,</>
+<dim>      5,</>
+<dim>      6,</>
+<dim>      7,</>
+<dim>      8,</>
+<green>-     9,</>
+<dim>      10,</>
+<red>+     9,</>
+<dim>    ],</>
+<dim>  }</>"
+`;
+
+exports[`color of text (expanded) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  Object {</>
+<dim>    \\"searching\\": \\"\\",</>
+<green>-   \\"sorting\\": Object {</>
+<red>+   \\"sorting\\": Array [</>
+<red>+     Object {</>
+<cyan>        \\"descending\\": false,</>
+<cyan>        \\"fieldKey\\": \\"what\\",</>
+<cyan>      },</>
+<red>+   ],</>
+<dim>  }</>"
+`;
+
+exports[`context number of lines: -1 (5 default) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<yellow>@@ -6,9 +6,9 @@</>
+<dim>      4,</>
+<dim>      5,</>
+<dim>      6,</>
+<dim>      7,</>
+<dim>      8,</>
+<green>-     9,</>
+<dim>      10,</>
+<red>+     9,</>
+<dim>    ],</>
+<dim>  }</>"
+`;
+
+exports[`context number of lines: 0  1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<yellow>@@ -11,1 +11,0 @@</>
+<green>-     9,</>
+<yellow>@@ -13,0 +12,1 @@</>
+<red>+     9,</>"
+`;
+
+exports[`context number of lines: 1  1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<yellow>@@ -10,4 +10,4 @@</>
+<dim>      8,</>
+<green>-     9,</>
+<dim>      10,</>
+<red>+     9,</>
+<dim>    ],</>"
+`;
+
+exports[`context number of lines: 2  1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<yellow>@@ -9,6 +9,6 @@</>
+<dim>      7,</>
+<dim>      8,</>
+<green>-     9,</>
+<dim>      10,</>
+<red>+     9,</>
+<dim>    ],</>
+<dim>  }</>"
+`;
+
+exports[`context number of lines: null (5 default) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<yellow>@@ -6,9 +6,9 @@</>
+<dim>      4,</>
+<dim>      5,</>
+<dim>      6,</>
+<dim>      7,</>
+<dim>      8,</>
+<green>-     9,</>
+<dim>      10,</>
+<red>+     9,</>
+<dim>    ],</>
+<dim>  }</>"
+`;
+
+exports[`falls back to not call toJSON if it throws and then objects have differences 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  Object {</>
+<green>-   \\"line\\": 1,</>
+<red>+   \\"line\\": 2,</>
+<dim>    \\"toJSON\\": [Function toJSON],</>
+<dim>  }</>"
+`;
+
+exports[`falls back to not call toJSON if serialization has no differences but then objects have differences 1`] = `
+"<dim>Compared values serialize to the same structure.</>
+<dim>Printing internal object structure without calling \`toJSON\` instead.</>
+
+<green>- Expected</>
+<red>+ Received</>
+
+<dim>  Object {</>
+<green>-   \\"line\\": 1,</>
+<red>+   \\"line\\": 2,</>
+<dim>    \\"toJSON\\": [Function toJSON],</>
+<dim>  }</>"
+`;
+
+exports[`highlight only the last in odd length of leading spaces (expanded) 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<dim>  <pre></>
+<green>-   attributes.reduce(function (props, attribute) {</>
+<green>-   <inverse> </>props[attribute.name] = attribute.value;</>
+<red>+   attributes.reduce((props, {name, value}) =&gt; {</>
+<red>+   props[name] = value;</>
+<dim>    return props;</>
+<green>- <inverse> </>}, {});</>
+<red>+ }, {});</>
+<dim>  </pre></>"
+`;
+
+exports[`oneline strings 1`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<green>- ab</>
+<red>+ aa</>"
+`;
+
+exports[`oneline strings 2`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<green>- 123456789</>
+<red>+ 234567890</>"
+`;
+
+exports[`oneline strings 3`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<green>- oneline</>
+<red>+ multi</>
+<red>+ line</>"
+`;
+
+exports[`oneline strings 4`] = `
+"<green>- Expected</>
+<red>+ Received</>
+
+<green>- multi</>
+<green>- line</>
+<red>+ oneline</>"
+`;

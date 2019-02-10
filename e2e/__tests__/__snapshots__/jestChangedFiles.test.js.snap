@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`handles a bad revision for "changedSince", for git 1`] = `
+
+
+  ● Test suite failed to run
+
+    fatal: bad revision '^blablabla'
+
+
+`;
+
+exports[`handles a bad revision for "changedSince", for hg 1`] = `
+
+
+  ● Test suite failed to run
+
+    abort: unknown revision 'blablabla'!
+
+
+`;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,13 +7,13 @@
  * @flow
  */
 
-type Question = {
-  intial?: boolean | number,
+type Question = {|
+  initial?: boolean | number,
   message: string,
   name: string,
   type: string,
   choices?: Array<{title: string, value: string}>,
-};
+|};
 
 const defaultQuestions: Array<Question> = [
   {
@@ -47,12 +47,5 @@ export const testScriptQuestion: Question = {
   message:
     'Would you like to use Jest when running "test" script in "package.json"?',
   name: 'scripts',
-  type: 'confirm',
-};
-
-export const typescriptQuestion: Question = {
-  initial: true,
-  message: 'Typescript detected, would you like to setup Jest for Typescript?',
-  name: 'typescript',
   type: 'confirm',
 };

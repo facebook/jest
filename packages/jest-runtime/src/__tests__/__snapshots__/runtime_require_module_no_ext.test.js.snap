@@ -6,7 +6,7 @@ exports[`Runtime requireModule with no extension throws error pointing out file 
 However, Jest was able to find:
 	'./RegularModuleWithWrongExt.txt'
 
-You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js', 'json', 'jsx', 'node'].
+You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js', 'json', 'jsx', 'ts', 'tsx', 'node'].
 
 See https://jestjs.io/docs/en/configuration#modulefileextensions-array-string"
 `;

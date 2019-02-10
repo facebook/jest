@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,9 +13,11 @@
  */
 
 import type {Global} from 'types/Global';
+import type {GlobalConfig} from 'types/Config';
 
-import isGeneratorFn from 'is-generator-fn';
 import co from 'co';
+import isGeneratorFn from 'is-generator-fn';
+import throat from 'throat';
 import isError from './isError';
 
 function isPromise(obj) {
@@ -125,21 +127,23 @@ function promisifyIt(originalFn, env, jasmine) {
   };
 }
 
-function makeConcurrent(originalFn: Function, env) {
+function makeConcurrent(originalFn: Function, env, mutex) {
   return function(specName, fn, timeout) {
     if (env != null && !env.specFilter({getFullName: () => specName || ''})) {
       return originalFn.call(env, specName, () => Promise.resolve(), timeout);
     }
 
     let promise;
-
     try {
-      promise = fn();
-      if (!isPromise(promise)) {
+      promise = mutex(() => {
+        const promise = fn();
+        if (isPromise(promise)) {
+          return promise;
+        }
         throw new Error(
           `Jest: concurrent test "${specName}" must return a Promise.`,
         );
-      }
+      });
     } catch (error) {
       return originalFn.call(env, specName, () => Promise.reject(error));
     }
@@ -148,16 +152,20 @@ function makeConcurrent(originalFn: Function, env) {
   };
 }
 
-export default function jasmineAsyncInstall(global: Global) {
+export default function jasmineAsyncInstall(
+  globalConfig: GlobalConfig,
+  global: Global,
+) {
   const jasmine = global.jasmine;
+  const mutex = throat(globalConfig.maxConcurrency);
 
   const env = jasmine.getEnv();
   env.it = promisifyIt(env.it, env, jasmine);
   env.fit = promisifyIt(env.fit, env, jasmine);
-  global.it.concurrent = makeConcurrent(env.it, env);
-  global.it.concurrent.only = makeConcurrent(env.fit, env);
-  global.it.concurrent.skip = makeConcurrent(env.xit, env);
-  global.fit.concurrent = makeConcurrent(env.fit);
+  global.it.concurrent = makeConcurrent(env.it, env, mutex);
+  global.it.concurrent.only = makeConcurrent(env.fit, env, mutex);
+  global.it.concurrent.skip = makeConcurrent(env.xit, env, mutex);
+  global.fit.concurrent = makeConcurrent(env.fit, env, mutex);
   env.afterAll = promisifyLifeCycleFunction(env.afterAll, env);
   env.afterEach = promisifyLifeCycleFunction(env.afterEach, env);
   env.beforeAll = promisifyLifeCycleFunction(env.beforeAll, env);

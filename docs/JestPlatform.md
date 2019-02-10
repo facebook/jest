@@ -45,7 +45,7 @@ console.log(result);
 
 ## jest-docblock
 
-Tool for extracting and parsing the comments at the top of a JavaScript file. Exports various function to manipulate the data inside the comment block.
+Tool for extracting and parsing the comments at the top of a JavaScript file. Exports various functions to manipulate the data inside the comment block.
 
 ### Example
 

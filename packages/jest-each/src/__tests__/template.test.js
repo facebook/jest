@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -220,7 +220,7 @@ describe('jest-each', () => {
         const globalMock = get(globalTestMocks, keyPath);
         expect(globalMock).toHaveBeenCalledTimes(1);
         expect(globalMock).toHaveBeenCalledWith(
-          'interpolates object keyPath to value: "baz"',
+          'interpolates object keyPath to value: baz',
           expectFunction,
           undefined,
         );
@@ -280,6 +280,32 @@ describe('jest-each', () => {
           'some test',
           expect.any(Function),
           10000,
+        );
+      });
+
+      test('formats primitive values using .toString()', () => {
+        const globalTestMocks = getGlobalTestMocks();
+        const number = 1;
+        const string = 'hello';
+        const boolean = true;
+        const symbol = Symbol('world');
+        const nullValue = null;
+        const undefinedValue = undefined;
+        const eachObject = each.withGlobal(globalTestMocks)`
+          number | string | boolean | symbol | nullValue | undefinedValue
+          ${number} | ${string} | ${boolean} | ${symbol} | ${nullValue} | ${undefinedValue}
+        `;
+
+        const testFunction = get(eachObject, keyPath);
+        testFunction(
+          'number: $number | string: $string | boolean: $boolean | symbol: $symbol | null: $nullValue | undefined: $undefinedValue',
+          noop,
+        );
+        const globalMock = get(globalTestMocks, keyPath);
+        expect(globalMock).toHaveBeenCalledWith(
+          'number: 1 | string: hello | boolean: true | symbol: Symbol(world) | null: null | undefined: undefined',
+          expect.any(Function),
+          undefined,
         );
       });
     });

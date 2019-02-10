@@ -132,7 +132,7 @@ If you are using Facebook's [`create-react-app`](https://github.com/facebookincu
 
 ## Caching Issues
 
-The transform script was changed or babel was updated and the changes aren't being recognized by Jest?
+The transform script was changed or Babel was updated and the changes aren't being recognized by Jest?
 
 Retry with [`--no-cache`](CLI.md#cache). Jest caches transformed module files to speed up test execution. If you are using your own custom transformer, consider adding a `getCacheKey` function to it: [getCacheKey in Relay](https://github.com/facebook/relay/blob/58cf36c73769690f0bbf90562707eadb062b029d/scripts/jest/preprocessor.js#L56-L61).
 

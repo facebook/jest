@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,12 +12,13 @@ import type {Global} from './Global';
 import type {Script} from 'vm';
 import type {ModuleMocker} from 'jest-mock';
 
-export type EnvironmentOptions = {
+export type EnvironmentContext = {
   console?: Object,
+  testPath?: string,
 };
 
 declare class $JestEnvironment {
-  constructor(config: ProjectConfig, options?: EnvironmentOptions): void;
+  constructor(config: ProjectConfig, context?: EnvironmentContext): void;
   runScript(script: Script): any;
   global: Global;
   fakeTimers: {

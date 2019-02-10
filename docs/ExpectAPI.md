@@ -117,7 +117,15 @@ These helper functions and properties can be found on `this` inside a custom mat
 
 #### `this.isNot`
 
-A boolean to let you know this matcher was called with the negated `.not` modifier allowing you to flip your assertion.
+A boolean to let you know this matcher was called with the negated `.not` modifier allowing you to flip your assertion and display a clear and correct matcher hint (see example code).
+
+#### `this.promise`
+
+A string allowing you to display a clear and correct matcher hint:
+
+- `'rejects'` if matcher was called with the promise `.rejects` modifier
+- `'resolves'` if matcher was called with the promise `.resolves` modifier
+- `''` if matcher was not called with a promise modifier
 
 #### `this.equals(a, b)`
 
@@ -137,28 +145,31 @@ The most useful ones are `matcherHint`, `printExpected` and `printReceived` to f
 const diff = require('jest-diff');
 expect.extend({
   toBe(received, expected) {
+    const options = {
+      comment: 'Object.is equality',
+      isNot: this.isNot,
+      promise: this.promise,
+    };
+
     const pass = Object.is(received, expected);
 
     const message = pass
       ? () =>
-          this.utils.matcherHint('.not.toBe') +
+          this.utils.matcherHint('toBe', undefined, undefined, options) +
           '\n\n' +
-          `Expected value to not be (using Object.is):\n` +
-          `  ${this.utils.printExpected(expected)}\n` +
-          `Received:\n` +
-          `  ${this.utils.printReceived(received)}`
+          `Expected: ${this.utils.printExpected(expected)}\n` +
+          `Received: ${this.utils.printReceived(received)}`
       : () => {
-          const diffString = diff(expected, received, {
+          const difference = diff(expected, received, {
             expand: this.expand,
           });
           return (
-            this.utils.matcherHint('.toBe') +
+            this.utils.matcherHint('toBe', undefined, undefined, options) +
             '\n\n' +
-            `Expected value to be (using Object.is):\n` +
-            `  ${this.utils.printExpected(expected)}\n` +
-            `Received:\n` +
-            `  ${this.utils.printReceived(received)}` +
-            (diffString ? `\n\nDifference:\n\n${diffString}` : '')
+            (difference && difference.includes('- Expect')
+              ? `Difference:\n\n${diffString}`
+              : `Expected: ${this.utils.printExpected(expected)}\n` +
+                `Received: ${this.utils.printReceived(received)}`)
           );
         };
 
@@ -351,7 +362,7 @@ describe('not.objectContaining', () => {
 
 ### `expect.not.stringContaining(string)`
 
-`expect.not.stringContaining(string)` matches the received string that does not contain the exact expected string.
+`expect.not.stringContaining(string)` matches the received value if it is not a string or if it is a string that does not contain the exact expected string.
 
 It is the inverse of `expect.stringContaining`.
 
@@ -359,7 +370,7 @@ It is the inverse of `expect.stringContaining`.
 describe('not.stringContaining', () => {
   const expected = 'Hello world!';
 
-  it('matches if the actual string does not contain the expected substring', () => {
+  it('matches if the received value does not contain the expected substring', () => {
     expect('How are you?').toEqual(expect.not.stringContaining(expected));
   });
 });
@@ -367,7 +378,7 @@ describe('not.stringContaining', () => {
 
 ### `expect.not.stringMatching(string | regexp)`
 
-`expect.not.stringMatching(string | regexp)` matches the received string that does not match the expected regexp.
+`expect.not.stringMatching(string | regexp)` matches the received value if it is not a string or if it is a string that does not match the expected string or regular expression.
 
 It is the inverse of `expect.stringMatching`.
 
@@ -375,7 +386,7 @@ It is the inverse of `expect.stringMatching`.
 describe('not.stringMatching', () => {
   const expected = /Hello world!/;
 
-  it('matches if the actual string does not match the expected regex', () => {
+  it('matches if the received value does not match the expected regex', () => {
     expect('How are you?').toEqual(expect.not.stringMatching(expected));
   });
 });
@@ -404,11 +415,11 @@ test('onPress gets called with the right thing', () => {
 
 ### `expect.stringContaining(string)`
 
-`expect.stringContaining(string)` matches the received string that contains the exact expected string.
+`expect.stringContaining(string)` matches the received value if it is a string that contains the exact expected string.
 
 ### `expect.stringMatching(string | regexp)`
 
-`expect.stringMatching(string | regexp)` matches the received string that matches the expected regexp.
+`expect.stringMatching(string | regexp)` matches the received value if it is a string that matches the expected string or regular expression.
 
 You can use it instead of a literal value:
 
@@ -890,6 +901,17 @@ test('the best drink for octopus flavor is undefined', () => {
 
 You could write `expect(bestDrinkForFlavor('octopus')).toBe(undefined)`, but it's better practice to avoid referring to `undefined` directly in your code.
 
+### `.toBeNaN()`
+
+Use `.toBeNaN` when checking a value is `NaN`.
+
+```js
+test('passes when value is NaN', () => {
+  expect(NaN).toBeNaN();
+  expect(1).not.toBeNaN();
+});
+```
+
 ### `.toContain(item)`
 
 Use `.toContain` when you want to check that an item is in an array. For testing the items in the array, this uses `===`, a strict equality check. `.toContain` can also check whether a string is a substring of another string.
@@ -1017,7 +1039,7 @@ test('the house has my desired features', () => {
 ```
 
 ```js
-describe('toMatchObject applied to arrays arrays', () => {
+describe('toMatchObject applied to arrays', () => {
   test('the number of elements must match exactly', () => {
     expect([{foo: 'bar'}, {baz: 1}]).toMatchObject([{foo: 'bar'}, {baz: 1}]);
   });
@@ -1105,7 +1127,7 @@ _Note: While snapshot testing is most commonly used with React components, any s
 
 Ensures that a value matches the most recent snapshot. Unlike [`.toMatchSnapshot()`](#tomatchsnapshotpropertymatchers-snapshotname), the snapshots will be written to the current source file, inline.
 
-Check out the section on [Inline Snapshots](./SnapshotTesting.md#inline-snapshots) for more info.
+Check out the section on [Inline Snapshots](SnapshotTesting.md#inline-snapshots) for more info.
 
 ### `.toStrictEqual(value)`
 
@@ -1114,6 +1136,7 @@ Use `.toStrictEqual` to test that objects have the same types as well as structu
 Differences from `.toEqual`:
 
 - Keys with `undefined` properties are checked. e.g. `{a: undefined, b: 2}` does not match `{b: 2}` when using `.toStrictEqual`.
+- Array sparseness is checked. e.g. `[, 1]` does not match `[undefined, 1]` when using `.toStrictEqual`.
 - Object types are checked to be equal. e.g. A class instance with fields `a` and `b` will not equal a literal object with fields `a` and `b`.
 
 ```js
@@ -1145,7 +1168,14 @@ test('throws on octopus', () => {
 });
 ```
 
-If you want to test that a specific error gets thrown, you can provide an argument to `toThrow`. The argument can be a string that should be contained in the error message, a class for the error, or a regex that should match the error message. For example, let's say that `drinkFlavor` is coded like this:
+To test that a specific error is thrown, you can provide an argument:
+
+- regular expression: error message **matches** the pattern
+- string: error message **includes** the substring
+- error object: error message is **equal to** the message property of the object
+- error class: error object is **instance of** class
+
+For example, let's say that `drinkFlavor` is coded like this:
 
 ```js
 function drinkFlavor(flavor) {
@@ -1170,6 +1200,7 @@ test('throws on octopus', () => {
 
   // Test the exact error message
   expect(drinkOctopus).toThrowError(/^yuck, octopus flavor$/);
+  expect(drinkOctopus).toThrowError(new Error('yuck, octopus flavor'));
 
   // Test that we get a DisgustingFlavorError
   expect(drinkOctopus).toThrowError(DisgustingFlavorError);
@@ -1215,4 +1246,4 @@ Check out [React Tree Snapshot Testing](https://jestjs.io/blog/2016/07/27/jest-1
 
 This matcher is much like [`.toThrowErrorMatchingSnapshot`](#tothrowerrormatchingsnapshot), except instead of writing the snapshot value to a `.snap` file, it will be written into the source code automatically.
 
-Check out the section on [Inline Snapshots](./SnapshotTesting.md#inline-snapshots) for more info.
+Check out the section on [Inline Snapshots](SnapshotTesting.md#inline-snapshots) for more info.

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,11 @@
 
 import type {HasteFS} from 'types/HasteMap';
 import type {Path} from 'types/Config';
-import type {Resolver, ResolveModuleConfig} from 'types/Resolve';
+import type {
+  Resolver,
+  ResolveModuleConfig,
+  ResolvedModule,
+} from 'types/Resolve';
 import type {SnapshotResolver} from 'types/SnapshotResolver';
 import {isSnapshotPath} from 'jest-snapshot';
 
@@ -38,52 +42,66 @@ class DependencyResolver {
       return [];
     }
 
-    return dependencies
-      .map(dependency => {
-        if (this._resolver.isCoreModule(dependency)) {
-          return null;
-        }
-        try {
-          return this._resolver.resolveModule(file, dependency, options);
-        } catch (e) {}
-        return this._resolver.getMockModule(file, dependency);
-      })
-      .filter(Boolean);
+    return dependencies.reduce((acc, dependency) => {
+      if (this._resolver.isCoreModule(dependency)) {
+        return acc;
+      }
+      let resolvedDependency;
+      try {
+        resolvedDependency = this._resolver.resolveModule(
+          file,
+          dependency,
+          options,
+        );
+      } catch (e) {
+        resolvedDependency = this._resolver.getMockModule(file, dependency);
+      }
+
+      if (resolvedDependency) {
+        acc.push(resolvedDependency);
+      }
+
+      return acc;
+    }, []);
   }
 
-  resolveInverse(
+  resolveInverseModuleMap(
     paths: Set<Path>,
     filter: (file: Path) => boolean,
     options?: ResolveModuleConfig,
-  ): Array<Path> {
+  ): Array<ResolvedModule> {
     if (!paths.size) {
       return [];
     }
 
-    const collectModules = (relatedPaths, moduleMap, changed) => {
+    const collectModules = (related, moduleMap, changed) => {
       const visitedModules = new Set();
+      const result: Array<ResolvedModule> = [];
       while (changed.size) {
         changed = new Set(
-          moduleMap
-            .filter(
-              module =>
-                !visitedModules.has(module.file) &&
-                module.dependencies.some(dep => dep && changed.has(dep)),
-            )
-            .map(module => {
-              const file = module.file;
-              if (filter(file)) {
-                relatedPaths.add(file);
-              }
-              visitedModules.add(file);
-              return module.file;
-            }),
+          moduleMap.reduce((acc, module) => {
+            if (
+              visitedModules.has(module.file) ||
+              !module.dependencies.some(dep => dep && changed.has(dep))
+            ) {
+              return acc;
+            }
+
+            const file = module.file;
+            if (filter(file)) {
+              result.push(module);
+              related.delete(file);
+            }
+            visitedModules.add(file);
+            acc.push(module.file);
+            return acc;
+          }, []),
         );
       }
-      return relatedPaths;
+      return result.concat(Array.from(related).map(file => ({file})));
     };
 
-    const relatedPaths = new Set();
+    const relatedPaths = new Set<Path>();
     const changed = new Set();
     for (const path of paths) {
       if (this._hasteFS.exists(path)) {
@@ -103,7 +121,17 @@ class DependencyResolver {
         file,
       });
     }
-    return Array.from(collectModules(relatedPaths, modules, changed));
+    return collectModules(relatedPaths, modules, changed);
+  }
+
+  resolveInverse(
+    paths: Set<Path>,
+    filter: (file: Path) => boolean,
+    options?: ResolveModuleConfig,
+  ): Array<Path> {
+    return this.resolveInverseModuleMap(paths, filter, options).map(
+      module => module.file,
+    );
   }
 }
 

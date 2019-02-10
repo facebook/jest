@@ -2,6 +2,10 @@
   "name": "custom-resolver",
   "jest": {
     "globalSetup": "foo",
-    "resolver": "./resolver.js"
+    "resolver": "./resolver.js",
+    "transformIgnorePatterns": [
+      "/node_modules/",
+      "/packages/"
+    ]
   }
 }

@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Tests are executed only once even in an MPR 1`] = `
-"PASS foo/folder/my-test-bar.js
-  ✓ bar
-
-"
-`;

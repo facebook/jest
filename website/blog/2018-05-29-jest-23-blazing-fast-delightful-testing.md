@@ -11,6 +11,8 @@ We would also like to welcome both [Babel](https://babeljs.io/) and [Webpack](ht
 
 Here's are some of the Jest 23 highlights and breaking changes.
 
+<!--truncate-->
+
 For a full list see the [changelog](https://github.com/facebook/jest/blob/master/CHANGELOG.md).
 
 ## Interactive Snapshot Mode
@@ -117,7 +119,7 @@ As with every major release, we are making a few breaking changes to make larger
 Last week, the Jest Core Team met for the Jest Summit at Facebook London where worked on and released Jest 23, announced the Jest Open Collective, and gave a number of talks:
 
 - **Christoph Nakazawa** – [Intro](https://www.youtube.com/watch?v=cAKYQpTC7MA)
-- **Aaaron Abramov** – [Writing Meaningful Tests](https://youtu.be/cAKYQpTC7MA?t=440)
+- **Aaron Abramov** – [Writing Meaningful Tests](https://youtu.be/cAKYQpTC7MA?t=440)
 - **Rick Hanlon II** – [Blazing Fast Snapshot Testing in Jest 23](https://youtu.be/cAKYQpTC7MA?t=1881)
 - **Simen Bekkhus** – [Jest's Delightful Error Messages](https://youtu.be/cAKYQpTC7MA?t=2990)
 - **Matt Phillips** – [Level up your Jest experience with community packages](https://youtu.be/cAKYQpTC7MA?t=3852)

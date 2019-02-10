@@ -1,5 +1,6 @@
 ---
 name: 💥 Regression Report
+labels: ':boom: Regression'
 about: Report unexpected behavior that worked in previous versions
 ---
 

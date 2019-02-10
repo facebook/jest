@@ -1,14 +1,10 @@
-// Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 
 const {
   default: defaultResolver,
 } = require('jest-resolve/build/defaultResolver');
 
-const exportedModules = new Map([
-  ['foo', 'foo'],
-  ['bar', 'bar'],
-  ['regenerator-runtime/runtime', 'fake-regenerator'],
-]);
+const exportedModules = new Map([['foo', 'foo'], ['bar', 'bar']]);
 
 module.exports = (name, options) => {
   const resolution = exportedModules.get(name);

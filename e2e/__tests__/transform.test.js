@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -12,11 +12,13 @@ import {
   cleanup,
   copyDir,
   createEmptyPackage,
+  extractSummary,
   linkJestPackage,
   run,
 } from '../Utils';
 import runJest, {json as runWithJson} from '../runJest';
 import os from 'os';
+import {wrap} from 'jest-snapshot-serializer-raw';
 
 describe('babel-jest', () => {
   const dir = path.resolve(__dirname, '..', 'transform/babel-jest');
@@ -29,18 +31,29 @@ describe('babel-jest', () => {
     // --no-cache because babel can cache stuff and result in false green
     const {json} = runWithJson(dir, ['--no-cache']);
     expect(json.success).toBe(true);
-    expect(json.numTotalTests).toBeGreaterThanOrEqual(1);
+    expect(json.numTotalTests).toBeGreaterThanOrEqual(2);
   });
 
   it('instruments only specific files and collects coverage', () => {
     const {stdout} = runJest(dir, ['--coverage', '--no-cache'], {
       stripAnsi: true,
     });
-    expect(stdout).toMatch('Covered.js');
-    expect(stdout).not.toMatch('NotCovered.js');
-    expect(stdout).not.toMatch('ExcludedFromCoverage.js');
+    expect(stdout).toMatch('covered.js');
+    expect(stdout).not.toMatch('notCovered.js');
+    expect(stdout).not.toMatch('excludedFromCoverage.js');
     // coverage result should not change
-    expect(stdout).toMatchSnapshot();
+    expect(wrap(stdout)).toMatchSnapshot();
+  });
+});
+
+describe('babel-jest ignored', () => {
+  const dir = path.resolve(__dirname, '..', 'transform/babel-jest-ignored');
+
+  it('tells user to match ignored files', () => {
+    // --no-cache because babel can cache stuff and result in false green
+    const {status, stderr} = runJest(dir, ['--no-cache']);
+    expect(status).toBe(1);
+    expect(wrap(extractSummary(stderr).rest)).toMatchSnapshot();
   });
 });
 
@@ -60,7 +73,7 @@ describe('no babel-jest', () => {
 
   test('fails with syntax error on flow types', () => {
     const {stderr} = runJest(tempDir, ['--no-cache', '--no-watchman']);
-    expect(stderr).toMatch(/FAIL.*fails_with_syntax_error/);
+    expect(stderr).toMatch(/FAIL.*failsWithSyntaxError/);
     expect(stderr).toMatch('Unexpected token');
   });
 
@@ -70,10 +83,10 @@ describe('no babel-jest', () => {
       ['--no-cache', '--coverage', '--no-watchman'],
       {stripAnsi: true},
     );
-    expect(stdout).toMatch('Covered.js');
-    expect(stdout).not.toMatch('ExcludedFromCoverage.js');
+    expect(stdout).toMatch('covered.js');
+    expect(stdout).not.toMatch('excludedFromCoverage.js');
     // coverage result should not change
-    expect(stdout).toMatchSnapshot();
+    expect(wrap(stdout)).toMatchSnapshot();
   });
 });
 
@@ -98,7 +111,7 @@ describe('custom transformer', () => {
       stripAnsi: true,
     });
     // coverage should be empty because there's no real instrumentation
-    expect(stdout).toMatchSnapshot();
+    expect(wrap(stdout)).toMatchSnapshot();
     expect(status).toBe(0);
   });
 });

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,9 +9,9 @@
 'use strict';
 
 import path from 'path';
-import {skipSuiteOnWindows} from '../../../../scripts/ConditionalTest';
 
 jest.setTimeout(15000);
+
 const rootDir = path.resolve(__dirname, 'test_root');
 const testRegex = path.sep + '__testtests__' + path.sep;
 const testMatch = ['**/__testtests__/**/*'];
@@ -23,8 +23,6 @@ let findMatchingTests;
 let normalize;
 
 describe('SearchSource', () => {
-  skipSuiteOnWindows();
-
   const name = 'SearchSource';
   let Runtime;
   let SearchSource;
@@ -421,6 +419,20 @@ describe('SearchSource', () => {
         rootPath,
       ]);
     });
+
+    it('excludes untested files from coverage', () => {
+      const unrelatedFile = path.join(rootDir, 'JSONFile.json');
+      const regular = path.join(rootDir, 'RegularModule.js');
+      const requireRegular = path.join(rootDir, 'RequireRegularMode.js');
+
+      const data = searchSource.findRelatedTests(
+        new Set([regular, requireRegular, unrelatedFile]),
+        true,
+      );
+      expect(Array.from(data.collectCoverageFrom)).toEqual([
+        'RegularModule.js',
+      ]);
+    });
   });
 
   describe('findRelatedTestsFromPattern', () => {
@@ -481,22 +493,24 @@ describe('SearchSource', () => {
     });
 
     it('does not mistake roots folders with prefix names', async () => {
-      const config = normalize(
-        {
-          name,
-          rootDir: '.',
-          roots: ['/foo/bar/prefix'],
-        },
-        {},
-      ).options;
+      if (process.platform !== 'win32') {
+        const config = normalize(
+          {
+            name,
+            rootDir: '.',
+            roots: ['/foo/bar/prefix'],
+          },
+          {},
+        ).options;
 
-      searchSource = new SearchSource(
-        await Runtime.createContext(config, {maxWorkers}),
-      );
+        searchSource = new SearchSource(
+          await Runtime.createContext(config, {maxWorkers}),
+        );
 
-      const input = ['/foo/bar/prefix-suffix/__tests__/my-test.test.js'];
-      const data = searchSource.findTestsByPaths(input);
-      expect(data.tests).toEqual([]);
+        const input = ['/foo/bar/prefix-suffix/__tests__/my-test.test.js'];
+        const data = searchSource.findTestsByPaths(input);
+        expect(data.tests).toEqual([]);
+      }
     });
   });
 });

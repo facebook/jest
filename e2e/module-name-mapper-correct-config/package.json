@@ -1,7 +1,7 @@
 {
   "jest": {
     "moduleNameMapper": {
-      "\\.(css|less)$": "./__mocks__/style_mock.js"
+      "\\.(css|less)$": "./__mocks__/styleMock.js"
     }
   }
 }

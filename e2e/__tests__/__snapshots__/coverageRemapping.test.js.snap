@@ -1,0 +1,348 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`maps code coverage against original source 1`] = `
+Object {
+  "covered.ts": Object {
+    "b": Object {
+      "0": Array [
+        1,
+        0,
+      ],
+      "1": Array [
+        1,
+        0,
+      ],
+      "2": Array [
+        1,
+        0,
+        0,
+      ],
+      "3": Array [
+        1,
+        0,
+      ],
+    },
+    "branchMap": Object {
+      "0": Object {
+        "loc": Object {
+          "end": Object {
+            "column": 35,
+            "line": 6,
+          },
+          "start": Object {
+            "column": 34,
+            "line": 6,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 35,
+              "line": 6,
+            },
+            "start": Object {
+              "column": 34,
+              "line": 6,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 39,
+              "line": 6,
+            },
+            "start": Object {
+              "column": 38,
+              "line": 6,
+            },
+          },
+        ],
+        "type": "cond-expr",
+      },
+      "1": Object {
+        "loc": Object {
+          "end": Object {
+            "column": 35,
+            "line": 7,
+          },
+          "start": Object {
+            "column": 34,
+            "line": 7,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 35,
+              "line": 7,
+            },
+            "start": Object {
+              "column": 34,
+              "line": 7,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 39,
+              "line": 7,
+            },
+            "start": Object {
+              "column": 38,
+              "line": 7,
+            },
+          },
+        ],
+        "type": "cond-expr",
+      },
+      "2": Object {
+        "loc": Object {
+          "end": Object {
+            "column": 31,
+            "line": 8,
+          },
+          "start": Object {
+            "column": 27,
+            "line": 8,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 31,
+              "line": 8,
+            },
+            "start": Object {
+              "column": 27,
+              "line": 8,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 39,
+              "line": 8,
+            },
+            "start": Object {
+              "column": 35,
+              "line": 8,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 48,
+              "line": 8,
+            },
+            "start": Object {
+              "column": 43,
+              "line": 8,
+            },
+          },
+        ],
+        "type": "binary-expr",
+      },
+      "3": Object {
+        "loc": Object {
+          "end": Object {
+            "column": 40,
+            "line": 9,
+          },
+          "start": Object {
+            "column": 30,
+            "line": 9,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 40,
+              "line": 9,
+            },
+            "start": Object {
+              "column": 30,
+              "line": 9,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 53,
+              "line": 9,
+            },
+            "start": Object {
+              "column": 43,
+              "line": 9,
+            },
+          },
+        ],
+        "type": "cond-expr",
+      },
+    },
+    "f": Object {
+      "0": 1,
+      "1": 0,
+      "2": 0,
+    },
+    "fnMap": Object {
+      "0": Object {
+        "decl": Object {
+          "end": Object {
+            "column": 29,
+            "line": 5,
+          },
+          "start": Object {
+            "column": 9,
+            "line": 5,
+          },
+        },
+        "loc": Object {
+          "end": Object {
+            "column": 1,
+            "line": 12,
+          },
+          "start": Object {
+            "column": 49,
+            "line": 5,
+          },
+        },
+        "name": "difference",
+      },
+      "1": Object {
+        "decl": Object {
+          "end": Object {
+            "column": 36,
+            "line": 9,
+          },
+          "start": Object {
+            "column": 30,
+            "line": 9,
+          },
+        },
+        "loc": Object {
+          "end": Object {
+            "column": 40,
+            "line": 9,
+          },
+          "start": Object {
+            "column": 30,
+            "line": 9,
+          },
+        },
+        "name": "(anonymous_1)",
+      },
+      "2": Object {
+        "decl": Object {
+          "end": Object {
+            "column": 49,
+            "line": 9,
+          },
+          "start": Object {
+            "column": 43,
+            "line": 9,
+          },
+        },
+        "loc": Object {
+          "end": Object {
+            "column": 53,
+            "line": 9,
+          },
+          "start": Object {
+            "column": 43,
+            "line": 9,
+          },
+        },
+        "name": "(anonymous_2)",
+      },
+    },
+    "path": "covered.ts",
+    "s": Object {
+      "0": 1,
+      "1": 1,
+      "2": 1,
+      "3": 1,
+      "4": 1,
+      "5": 0,
+      "6": 0,
+      "7": 1,
+    },
+    "statementMap": Object {
+      "0": Object {
+        "end": Object {
+          "column": 2,
+          "line": 12,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 5,
+        },
+      },
+      "1": Object {
+        "end": Object {
+          "column": 39,
+          "line": 6,
+        },
+        "start": Object {
+          "column": 27,
+          "line": 6,
+        },
+      },
+      "2": Object {
+        "end": Object {
+          "column": 39,
+          "line": 7,
+        },
+        "start": Object {
+          "column": 27,
+          "line": 7,
+        },
+      },
+      "3": Object {
+        "end": Object {
+          "column": 48,
+          "line": 8,
+        },
+        "start": Object {
+          "column": 27,
+          "line": 8,
+        },
+      },
+      "4": Object {
+        "end": Object {
+          "column": 53,
+          "line": 9,
+        },
+        "start": Object {
+          "column": 23,
+          "line": 9,
+        },
+      },
+      "5": Object {
+        "end": Object {
+          "column": 43,
+          "line": 9,
+        },
+        "start": Object {
+          "column": 36,
+          "line": 9,
+        },
+      },
+      "6": Object {
+        "end": Object {
+          "column": 54,
+          "line": 9,
+        },
+        "start": Object {
+          "column": 49,
+          "line": 9,
+        },
+      },
+      "7": Object {
+        "end": Object {
+          "column": 15,
+          "line": 11,
+        },
+        "start": Object {
+          "column": 2,
+          "line": 11,
+        },
+      },
+    },
+  },
+}
+`;

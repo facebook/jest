@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`moduleNameMapper correct configuration 1`] = `
+PASS __tests__/index.js
+  ✓ moduleNameMapping correct configuration
+`;
+
+exports[`moduleNameMapper wrong configuration 1`] = `
+FAIL __tests__/index.js
+  ● Test suite failed to run
+
+    Configuration error:
+
+    Could not locate module ./style.css mapped as:
+    no-such-module.
+
+    Please check your configuration for these entries:
+    {
+      "moduleNameMapper": {
+        "/\\.(css|less)$/": "no-such-module"
+      },
+      "resolver": null
+    }
+
+       8 | 'use strict';
+       9 | 
+    > 10 | require('./style.css');
+         | ^
+      11 | 
+      12 | module.exports = () => 'test';
+      13 | 
+
+      at createNoMappedModuleFoundError (../../packages/jest-resolve/build/index.js:436:17)
+      at Object.require (index.js:10:1)
+`;

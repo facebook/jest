@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -13,12 +13,11 @@ import type {EnvironmentClass} from 'types/Environment';
 import chalk from 'chalk';
 import os from 'os';
 import path from 'path';
+import {sync as realpath} from 'realpath-native';
 import yargs from 'yargs';
 import {Console, setGlobal} from 'jest-util';
 import {validateCLIOptions} from 'jest-validate';
 import {readConfig, deprecationEntries} from 'jest-config';
-// eslint-disable-next-line import/default
-import Runtime from '../';
 import * as args from './args';
 
 const VERSION = (require('../../package.json').version: string);
@@ -38,10 +37,7 @@ export function run(cliArgv?: Argv, cliInfo?: Array<string>) {
       .version(false)
       .options(args.options).argv;
 
-    validateCLIOptions(
-      argv,
-      Object.assign({}, args.options, {deprecationEntries}),
-    );
+    validateCLIOptions(argv, {...args.options, deprecationEntries});
   }
 
   if (argv.help) {
@@ -61,7 +57,7 @@ export function run(cliArgv?: Argv, cliInfo?: Array<string>) {
     return;
   }
 
-  const root = process.cwd();
+  const root = realpath(process.cwd());
   const filePath = path.resolve(root, argv._[0]);
 
   if (argv.debug) {
@@ -71,10 +67,15 @@ export function run(cliArgv?: Argv, cliInfo?: Array<string>) {
   const options = readConfig(argv, root);
   const globalConfig = options.globalConfig;
   // Always disable automocking in scripts.
-  const config = Object.assign({}, options.projectConfig, {
+  const config = {
+    ...options.projectConfig,
     automock: false,
     unmockedModulePathPatterns: null,
-  });
+  };
+
+  // Break circular dependency
+  const Runtime = require('..');
+
   Runtime.createContext(config, {
     maxWorkers: Math.max(os.cpus().length - 1, 1),
     watchman: globalConfig.watchman,

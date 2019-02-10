@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -51,6 +51,7 @@ export type RawModuleMap = {|
 export type FileMetaData = [
   /* id */ string,
   /* mtime */ number,
+  /* size */ number,
   /* visited */ 0 | 1,
   /* dependencies */ Array<string>,
   /* sha1 */ ?string,
@@ -62,8 +63,9 @@ export type ModuleMetaData = [Path, /* type */ number];
 export type HType = {|
   ID: 0,
   MTIME: 1,
-  VISITED: 2,
-  DEPENDENCIES: 3,
+  SIZE: 2,
+  VISITED: 3,
+  DEPENDENCIES: 4,
   PATH: 0,
   TYPE: 1,
   MODULE: 0,
@@ -72,4 +74,4 @@ export type HType = {|
   NATIVE_PLATFORM: 'native',
 |};
 
-export type HTypeValue = 0 | 1 | 2 | 3 | 'g';
+export type HTypeValue = $Values<HType>;

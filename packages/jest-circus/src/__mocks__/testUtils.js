@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree. An additional grant
@@ -21,7 +21,7 @@ const CIRCUS_PATH = require.resolve('../../build/index');
 const CIRCUS_RUN_PATH = require.resolve('../../build/run');
 const CIRCUS_STATE_PATH = require.resolve('../../build/state');
 const TEST_EVENT_HANDLER_PATH = require.resolve('./testEventHandler');
-const BABEL_REGISTER_PATH = require.resolve('babel-register');
+const BABEL_REGISTER_PATH = require.resolve('@babel/register');
 
 skipSuiteOnWindows();
 

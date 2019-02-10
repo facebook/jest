@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,7 +10,7 @@
 import type {Context} from 'types/Context';
 import type {Glob, GlobalConfig, Path} from 'types/Config';
 import type {Test} from 'types/TestRunner';
-import type {ChangedFilesPromise} from 'types/ChangedFiles';
+import type {ChangedFilesInfo} from 'types/ChangedFiles';
 
 import path from 'path';
 import micromatch from 'micromatch';
@@ -19,11 +19,12 @@ import testPathPatternToRegExp from './testPathPatternToRegexp';
 import {escapePathForRegex} from 'jest-regex-util';
 import {replaceRootDirInPath} from 'jest-config';
 import {buildSnapshotResolver} from 'jest-snapshot';
+import {replacePathSepForGlob} from 'jest-util';
 
 type SearchResult = {|
   noSCM?: boolean,
   stats?: {[key: string]: number},
-  collectCoverageFrom?: Array<string>,
+  collectCoverageFrom?: Set<string>,
   tests: Array<Test>,
   total?: number,
 |};
@@ -48,7 +49,8 @@ const globsToMatcher = (globs: ?Array<Glob>) => {
     return () => true;
   }
 
-  return path => micromatch([path], globs, {dot: true}).length > 0;
+  return path =>
+    micromatch.some(replacePathSepForGlob(path), globs, {dot: true});
 };
 
 const regexToMatcher = (testRegex: Array<string>) => {
@@ -156,29 +158,55 @@ export default class SearchSource {
       buildSnapshotResolver(this._context.config),
     );
 
-    const tests = toTests(
-      this._context,
-      dependencyResolver.resolveInverse(
-        allPaths,
-        this.isTestFilePath.bind(this),
-        {
-          skipNodeResolution: this._context.config.skipNodeResolution,
-        },
-      ),
-    );
-    let collectCoverageFrom;
-
-    // If we are collecting coverage, also return collectCoverageFrom patterns
-    if (collectCoverage) {
-      collectCoverageFrom = Array.from(allPaths).map(filename => {
-        filename = replaceRootDirInPath(this._context.config.rootDir, filename);
-        return path.isAbsolute(filename)
-          ? path.relative(this._context.config.rootDir, filename)
-          : filename;
-      });
+    if (!collectCoverage) {
+      return {
+        tests: toTests(
+          this._context,
+          dependencyResolver.resolveInverse(
+            allPaths,
+            this.isTestFilePath.bind(this),
+            {skipNodeResolution: this._context.config.skipNodeResolution},
+          ),
+        ),
+      };
     }
 
-    return {collectCoverageFrom, tests};
+    const testModulesMap = dependencyResolver.resolveInverseModuleMap(
+      allPaths,
+      this.isTestFilePath.bind(this),
+      {skipNodeResolution: this._context.config.skipNodeResolution},
+    );
+
+    const allPathsAbsolute = Array.from(allPaths).map(p => path.resolve(p));
+
+    const collectCoverageFrom = new Set();
+
+    testModulesMap.forEach(testModule => {
+      if (!testModule.dependencies) {
+        return;
+      }
+
+      testModule.dependencies
+        .filter(p => allPathsAbsolute.includes(p))
+        .map(filename => {
+          filename = replaceRootDirInPath(
+            this._context.config.rootDir,
+            filename,
+          );
+          return path.isAbsolute(filename)
+            ? path.relative(this._context.config.rootDir, filename)
+            : filename;
+        })
+        .forEach(filename => collectCoverageFrom.add(filename));
+    });
+
+    return {
+      collectCoverageFrom,
+      tests: toTests(
+        this._context,
+        testModulesMap.map(testModule => testModule.file),
+      ),
+    };
   }
 
   findTestsByPaths(paths: Array<Path>): SearchResult {
@@ -186,7 +214,7 @@ export default class SearchSource {
       tests: toTests(
         this._context,
         paths
-          .map(p => path.resolve(process.cwd(), p))
+          .map(p => path.resolve(this._context.config.cwd, p))
           .filter(this.isTestFilePath.bind(this)),
       ),
     };
@@ -197,17 +225,19 @@ export default class SearchSource {
     collectCoverage: boolean,
   ): SearchResult {
     if (Array.isArray(paths) && paths.length) {
-      const resolvedPaths = paths.map(p => path.resolve(process.cwd(), p));
+      const resolvedPaths = paths.map(p =>
+        path.resolve(this._context.config.cwd, p),
+      );
       return this.findRelatedTests(new Set(resolvedPaths), collectCoverage);
     }
     return {tests: []};
   }
 
-  async findTestRelatedToChangedFiles(
-    changedFilesPromise: ChangedFilesPromise,
+  findTestRelatedToChangedFiles(
+    changedFilesInfo: ChangedFilesInfo,
     collectCoverage: boolean,
   ) {
-    const {repos, changedFiles} = await changedFilesPromise;
+    const {repos, changedFiles} = changedFilesInfo;
     // no SCM (git/hg/...) is found in any of the roots.
     const noSCM = Object.keys(repos).every(scm => repos[scm].size === 0);
     return noSCM
@@ -217,42 +247,38 @@ export default class SearchSource {
 
   _getTestPaths(
     globalConfig: GlobalConfig,
-    changedFilesPromise: ?ChangedFilesPromise,
-  ): Promise<SearchResult> {
+    changedFiles: ?ChangedFilesInfo,
+  ): SearchResult {
     const paths = globalConfig.nonFlagArgs;
 
     if (globalConfig.onlyChanged) {
-      if (!changedFilesPromise) {
-        throw new Error('This promise must be present when running with -o.');
+      if (!changedFiles) {
+        throw new Error('Changed files must be set when running with -o.');
       }
 
       return this.findTestRelatedToChangedFiles(
-        changedFilesPromise,
+        changedFiles,
         globalConfig.collectCoverage,
       );
     } else if (globalConfig.runTestsByPath && paths && paths.length) {
-      return Promise.resolve(this.findTestsByPaths(paths));
+      return this.findTestsByPaths(paths);
     } else if (globalConfig.findRelatedTests && paths && paths.length) {
-      return Promise.resolve(
-        this.findRelatedTestsFromPattern(paths, globalConfig.collectCoverage),
+      return this.findRelatedTestsFromPattern(
+        paths,
+        globalConfig.collectCoverage,
       );
     } else if (globalConfig.testPathPattern != null) {
-      return Promise.resolve(
-        this.findMatchingTests(globalConfig.testPathPattern),
-      );
+      return this.findMatchingTests(globalConfig.testPathPattern);
     } else {
-      return Promise.resolve({tests: []});
+      return {tests: []};
     }
   }
 
   async getTestPaths(
     globalConfig: GlobalConfig,
-    changedFilesPromise: ?ChangedFilesPromise,
+    changedFiles: ?ChangedFilesInfo,
   ): Promise<SearchResult> {
-    const searchResult = await this._getTestPaths(
-      globalConfig,
-      changedFilesPromise,
-    );
+    const searchResult = this._getTestPaths(globalConfig, changedFiles);
 
     const filterPath = globalConfig.filter;
 
@@ -273,10 +299,10 @@ export default class SearchSource {
         filterResult.filtered.map(result => result.test),
       );
 
-      // $FlowFixMe: Object.assign with empty object causes troubles to Flow.
-      return Object.assign({}, searchResult, {
+      return {
+        ...searchResult,
         tests: tests.filter(test => filteredSet.has(test.path)),
-      });
+      };
     }
 
     return searchResult;

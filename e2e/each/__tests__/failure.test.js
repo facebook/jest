@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2018-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -53,7 +53,7 @@ describe.each`
   ${'a'} | ${'b'}
   ${'c'} | ${'d'}
 `(
-  'template table describe fails on all rows expected $left == $right',
+  'template table describe fails on all rows expected "$left" == "$right"',
   ({left, right}) => {
     it('fails ', () => {
       expect(left).toBe(right);

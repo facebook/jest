@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`prints message about flag on forceExit 1`] = `
+Force exiting Jest
+
+Have you considered using \`--detectOpenHandles\` to detect async operations that kept running after all tests finished?
+`;
+
+exports[`prints message about flag on slow tests 1`] = `
+Jest did not exit one second after the test run has completed.
+
+This usually means that there are asynchronous operations that weren't stopped in your tests. Consider running Jest with \`--detectOpenHandles\` to troubleshoot this issue.
+`;
+
+exports[`prints out info about open handlers 1`] = `
+Jest has detected the following 1 open handle potentially keeping Jest from exiting:
+
+  ●  GETADDRINFOREQWRAP
+
+       7 | const app = new Server();
+       8 | 
+    >  9 | app.listen({host: 'localhost', port: 0});
+         |     ^
+      10 | 
+
+      at Object.listen (server.js:9:5)
+      at Object.require (__tests__/outside.js:3:1)
+`;
+
+exports[`prints out info about open handlers from inside tests 1`] = `
+Jest has detected the following 1 open handle potentially keeping Jest from exiting:
+
+  ●  Timeout
+
+      2 | 
+      3 | test('something', () => {
+    > 4 |   setTimeout(() => {}, 30000);
+        |   ^
+      5 |   expect(true).toBe(true);
+      6 | });
+      7 | 
+
+      at Object.setTimeout (__tests__/inside.js:4:3)
+`;

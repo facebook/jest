@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`works with custom matchers 1`] = `
+FAIL __tests__/customMatcher.test.js
+  Custom matcher
+    ✓ passes
+    ✓ fails
+    ✕ preserves error stack
+
+  ● Custom matcher › preserves error stack
+
+    qux
+
+      43 |     const bar = () => baz();
+      44 |     const baz = () => {
+    > 45 |       throw Error('qux');
+         |             ^
+      46 |     };
+      47 | 
+      48 |     // This expecation fails due to an error we throw (intentionally)
+
+      at Error (__tests__/customMatcher.test.js:45:13)
+      at baz (__tests__/customMatcher.test.js:43:23)
+      at bar (__tests__/customMatcher.test.js:42:23)
+      at foo (__tests__/customMatcher.test.js:52:7)
+      at Object.callback (__tests__/customMatcher.test.js:11:18)
+      at Object.toCustomMatch (__tests__/customMatcher.test.js:53:8)
+`;

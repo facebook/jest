@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,7 +8,7 @@
 
 import type {Script} from 'vm';
 import type {ProjectConfig} from 'types/Config';
-import type {EnvironmentOptions} from 'types/Environment';
+import type {EnvironmentContext} from 'types/Environment';
 import type {Global} from 'types/Global';
 import type {ModuleMocker} from 'jest-mock';
 
@@ -23,21 +23,14 @@ class JSDOMEnvironment {
   errorEventListener: ?Function;
   moduleMocker: ?ModuleMocker;
 
-  constructor(config: ProjectConfig, options?: EnvironmentOptions = {}) {
-    this.dom = new JSDOM(
-      '<!DOCTYPE html>',
-      Object.assign(
-        {
-          pretendToBeVisual: true,
-          runScripts: 'dangerously',
-          url: config.testURL,
-          virtualConsole: new VirtualConsole().sendTo(
-            options.console || console,
-          ),
-        },
-        config.testEnvironmentOptions,
-      ),
-    );
+  constructor(config: ProjectConfig, options?: EnvironmentContext = {}) {
+    this.dom = new JSDOM('<!DOCTYPE html>', {
+      pretendToBeVisual: true,
+      runScripts: 'dangerously',
+      url: config.testURL,
+      virtualConsole: new VirtualConsole().sendTo(options.console || console),
+      ...config.testEnvironmentOptions,
+    });
     const global = (this.global = this.dom.window.document.defaultView);
     // Node's error-message stack size is limited at 10, but it's pretty useful
     // to see more than that when a test fails.

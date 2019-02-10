@@ -1,8 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`--listTests flag causes tests to be printed in different lines 1`] = `
-"/MOCK_ABOLUTE_PATH/e2e/list-tests/__tests__/dummy.test.js
-/MOCK_ABOLUTE_PATH/e2e/list-tests/__tests__/other.test.js"
-`;
-
-exports[`--listTests flag causes tests to be printed out as JSON when using the --json flag 1`] = `"[\\"/MOCK_ABOLUTE_PATH/e2e/list-tests/__tests__/dummy.test.js\\",\\"/MOCK_ABOLUTE_PATH/e2e/list-tests/__tests__/other.test.js\\"]"`;

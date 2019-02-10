@@ -55,7 +55,7 @@ test('the data is peanut butter', () => {
 });
 ```
 
-Be sure to return the promise - if you omit this `return` statement, your test will complete before `fetchData` completes.
+Be sure to return the promise - if you omit this `return` statement, your test will complete before the promise returned from `fetchData` resolves and then() has a chance to execute the callback.
 
 If you expect a promise to be rejected use the `.catch` method. Make sure to add `expect.assertions` to verify that a certain number of assertions are called. Otherwise a fulfilled promise would not fail the test.
 
@@ -76,7 +76,7 @@ test('the data is peanut butter', () => {
 });
 ```
 
-Be sure to return the assertion—if you omit this `return` statement, your test will complete before `fetchData` completes.
+Be sure to return the assertion—if you omit this `return` statement, your test will complete before the promise returned from `fetchData` is resolved and then() has a chance to execute the callback.
 
 If you expect a promise to be rejected use the `.rejects` matcher. It works analogically to the `.resolves` matcher. If the promise is fulfilled, the test will automatically fail.
 

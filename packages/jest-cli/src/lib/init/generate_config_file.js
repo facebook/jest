@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -33,24 +33,9 @@ const stringifyOption = (
 };
 
 const generateConfigFile = (results: {[string]: boolean}): string => {
-  const {typescript, coverage, clearMocks, environment} = results;
+  const {coverage, clearMocks, environment} = results;
 
   const overrides: Object = {};
-
-  if (typescript) {
-    Object.assign(overrides, {
-      globals: {
-        'ts-jest': {
-          tsConfigFile: 'tsconfig.json',
-        },
-      },
-      moduleFileExtensions: ['ts', 'tsx', 'js'],
-      testMatch: ['**/__tests__/*.+(ts|tsx|js)'],
-      transform: {
-        '^.+\\.(ts|tsx)$': 'ts-jest',
-      },
-    });
-  }
 
   if (coverage) {
     Object.assign(overrides, {

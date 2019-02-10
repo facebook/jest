@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -39,6 +39,7 @@ export function readConfig(
   // read individual configs for every project.
   skipArgvConfigOption?: boolean,
   parentConfigPath: ?Path,
+  projectIndex?: number = Infinity,
 ): {
   configPath: ?Path,
   globalConfig: GlobalConfig,
@@ -86,7 +87,13 @@ export function readConfig(
     rawOptions = readConfigFileAndSetRootDir(configPath);
   }
 
-  const {options, hasDeprecationWarnings} = normalize(rawOptions, argv);
+  const {options, hasDeprecationWarnings} = normalize(
+    rawOptions,
+    argv,
+    configPath,
+    projectIndex,
+  );
+
   const {globalConfig, projectConfig} = groupOptions(options);
   return {
     configPath,
@@ -114,6 +121,7 @@ const groupOptions = (
     enabledTestsMap: options.enabledTestsMap,
     errorOnDeprecated: options.errorOnDeprecated,
     expand: options.expand,
+    extraGlobals: options.extraGlobals,
     filter: options.filter,
     findRelatedTests: options.findRelatedTests,
     forceExit: options.forceExit,
@@ -123,6 +131,7 @@ const groupOptions = (
     lastCommit: options.lastCommit,
     listTests: options.listTests,
     logHeapUsage: options.logHeapUsage,
+    maxConcurrency: options.maxConcurrency,
     maxWorkers: options.maxWorkers,
     noSCM: undefined,
     noStackTrace: options.noStackTrace,
@@ -165,8 +174,11 @@ const groupOptions = (
     detectOpenHandles: options.detectOpenHandles,
     displayName: options.displayName,
     errorOnDeprecated: options.errorOnDeprecated,
+    extraGlobals: options.extraGlobals,
     filter: options.filter,
     forceCoverageMatch: options.forceCoverageMatch,
+    globalSetup: options.globalSetup,
+    globalTeardown: options.globalTeardown,
     globals: options.globals,
     haste: options.haste,
     moduleDirectories: options.moduleDirectories,
@@ -206,7 +218,7 @@ const groupOptions = (
   }),
 });
 
-const ensureNoDuplicateConfigs = (parsedConfigs, projects, rootConfigPath) => {
+const ensureNoDuplicateConfigs = (parsedConfigs, projects) => {
   const configPathMap = new Map();
 
   for (const config of parsedConfigs) {
@@ -282,6 +294,7 @@ export function readConfigs(
       .filter(root => {
         // Ignore globbed files that cannot be `require`d.
         if (
+          typeof root === 'string' &&
           fs.existsSync(root) &&
           !fs.lstatSync(root).isDirectory() &&
           !root.endsWith('.js') &&
@@ -292,9 +305,11 @@ export function readConfigs(
 
         return true;
       })
-      .map(root => readConfig(argv, root, true, configPath));
+      .map((root, projectIndex) =>
+        readConfig(argv, root, true, configPath, projectIndex),
+      );
 
-    ensureNoDuplicateConfigs(parsedConfigs, projects, configPath);
+    ensureNoDuplicateConfigs(parsedConfigs, projects);
     configs = parsedConfigs.map(({projectConfig}) => projectConfig);
     if (!hasDeprecationWarnings) {
       hasDeprecationWarnings = parsedConfigs.some(

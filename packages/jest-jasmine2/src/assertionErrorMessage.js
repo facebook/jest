@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2017-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -7,11 +7,11 @@
  * @flow
  */
 
-import type {DiffOptions} from 'jest-diff/src/diffStrings';
+// TODO: Converted to TS. It's also not exported, but should be imported from `matcher-utils`
+import type {DiffOptions} from 'jest-diff';
 
-import {printReceived, printExpected} from 'jest-matcher-utils';
+import {diff, printReceived, printExpected} from 'jest-matcher-utils';
 import chalk from 'chalk';
-import diff from 'jest-diff';
 
 type AssertionError = {|
   actual: ?string,

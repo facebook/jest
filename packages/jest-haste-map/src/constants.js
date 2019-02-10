@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2014-present, Facebook, Inc. All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -20,9 +20,10 @@ export default {
   /* file map attributes */
   ID: 0,
   MTIME: 1,
-  VISITED: 2,
-  DEPENDENCIES: 3,
-  SHA1: 4,
+  SIZE: 2,
+  VISITED: 3,
+  DEPENDENCIES: 4,
+  SHA1: 5,
 
   /* module map attributes */
   PATH: 0,

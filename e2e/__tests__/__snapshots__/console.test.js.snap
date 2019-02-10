@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`console printing 1`] = `
-"PASS __tests__/console.test.js
+PASS __tests__/console.test.js
   ● Console
 
     console.log __tests__/console.test.js:10
@@ -12,21 +12,18 @@ exports[`console printing 1`] = `
       This is a warning message.
     console.error __tests__/console.test.js:16
       This is an error message.
-
-
-"
 `;
 
 exports[`console printing 2`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
 exports[`console printing with --verbose 1`] = `
-"  console.log __tests__/console.test.js:10
+  console.log __tests__/console.test.js:10
     This is a log message.
 
   console.info __tests__/console.test.js:12
@@ -37,52 +34,44 @@ exports[`console printing with --verbose 1`] = `
 
   console.error __tests__/console.test.js:16
     This is an error message.
-"
+
 `;
 
 exports[`console printing with --verbose 2`] = `
-"PASS __tests__/console.test.js
+PASS __tests__/console.test.js
   ✓ works just fine
-
-"
 `;
 
 exports[`console printing with --verbose 3`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;
 
-exports[`does not print to console with --silent 1`] = `""`;
+exports[`does not print to console with --silent 1`] = ``;
 
-exports[`does not print to console with --silent 2`] = `
-"PASS __tests__/console.test.js
-
-"
-`;
+exports[`does not print to console with --silent 2`] = `PASS __tests__/console.test.js`;
 
 exports[`does not print to console with --silent 3`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
-Time:        <<REPLACED>>"
+Time:        <<REPLACED>>
 `;
 
-exports[`the jsdom console is the same as the test console 1`] = `""`;
+exports[`the jsdom console is the same as the test console 1`] = ``;
 
 exports[`the jsdom console is the same as the test console 2`] = `
-"PASS __tests__/console.test.js
+PASS __tests__/console.test.js
   ✓ can mock console.error calls from jsdom
-
-"
 `;
 
 exports[`the jsdom console is the same as the test console 3`] = `
-"Test Suites: 1 passed, 1 total
+Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites."
+Ran all test suites.
 `;

@@ -1,7 +1,24 @@
-/* Copyright (c) 2014-present, Facebook, Inc. All rights reserved. */
+/* Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved. */
+
+:root {
+  --yellow: #c2a813;
+  --green: #15c213;
+  --red: #c21325;
+  --grey: #aaaaaa;
+  --grey2: #ededed;
+  --grey3: #545454;
+}
+
+.debug * {
+  outline: 1px solid rebeccapurple;
+}
 
 .sponsor-item {
   margin: 10px;
+}
+
+.sponsor-item img {
+  background: #095708;
 }
 
 .sponsor-avatar {
@@ -11,6 +28,7 @@
   border-radius: 50%;
   border: 1px solid white;
   overflow: hidden;
+  object-fit: contain;
 }
 
 .backer-item {
@@ -24,6 +42,7 @@
   border-radius: 50%;
   border: 1px solid white;
   overflow: hidden;
+  object-fit: contain;
 }
 
 .support-button {
@@ -41,4 +60,231 @@
 .support-button:hover {
   background: #99424f;
   color: #ffffff;
+}
+
+.opencollective h3 {
+  display: inline-block;
+  font-weight: normal;
+  color: var(--yellow);
+  letter-spacing: 1px;
+  text-transform: lowercase;
+}
+
+.section-container .blockContent h2 {
+  display: inline-block;
+  font-size: 2rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  padding-left: 10px;
+  margin-top: 1.6rem;
+  letter-spacing: 1px;
+  border-left-width: 8px;
+  border-left-style: solid;
+}
+
+.blockContent > div {
+  margin: 16px 0 0 18px;
+}
+
+.container.intro p {
+  font-size: 1.8rem;
+  font-family: Monaco, Courier, monospace;
+  color: var(--grey3);
+}
+
+.container.intro .wrapper {
+  max-width: 960px;
+}
+.container .wrapper .imageAlignSide p {
+  margin-bottom: 0;
+}
+
+/*  On mobile, show the screenshot under the body */
+@media only screen and (max-width: 780px) {
+  /* Ensure the consistent order of text first, then image */
+  .container .wrapper .imageAlignLeft {
+    flex-flow: row wrap-reverse;
+  }
+
+  /* Makes the image is alway visible and has space to center correctly */
+  .imageAlignSide .blockImage {
+    display: block;
+    max-width: 100%;
+    flex: 0 1 100%;
+    margin: 0;
+  }
+
+  /* Makes sure that it's always centered */
+  .imageAlignSide .blockImage img {
+    margin: auto 0;
+  }
+}
+
+.container.section-container {
+  padding: 20px 0 0 0;
+}
+
+.container.section-container.philosophy {
+  padding: 30px 0;
+}
+
+.blockContent.flex-end {
+  align-self: flex-end;
+}
+
+.section-container .blockImage {
+  overflow: hidden;
+  height: 280px;
+}
+
+.container.features .yellow.blockElement h2,
+.container.features .yellow.blockElement p {
+  text-align: left;
+  margin: 16px 0 0 18px;
+}
+
+.section-container .blockImage img {
+  padding-top: 10px;
+}
+
+.logos {
+  align-items: center;
+}
+
+@media only screen and (min-width: 736px) {
+  /* Medium desktop and up */
+  .container .yellow.blockElement {
+    width: 25%;
+  }
+}
+
+.gridBlock.philosophy > *:first-child,
+.gridBlock.logos > *:first-child {
+  margin-left: 0;
+}
+
+.logos img {
+  max-height: 56px;
+  padding: 10px;
+  width: 56px;
+}
+
+.gridBlock > *:first-child {
+  margin: 0 12px;
+}
+
+.fixedHeaderContainer {
+  background-color: #ffffff;
+}
+
+.headerWrapper img {
+  display: none;
+}
+
+/* Section titles colors */
+.section-container .yellow h2 {
+  font-family: Monaco, Courier, monospace;
+  color: var(--yellow);
+}
+
+.section-container .green h2 {
+  font-family: Monaco, Courier, monospace;
+  color: var(--green);
+}
+
+.section-container .red h2 {
+  font-family: Monaco, Courier, monospace;
+  color: var(--red);
+}
+
+/* Search input background color */
+.reactNavSearchWrapper input#search_input_react {
+  background-color: var(--grey);
+}
+
+/* Logo */
+.headerTitleWithLogo {
+  background-color: var(--green);
+  text-transform: uppercase;
+  color: var(--grey2);
+  padding: 6px 15px;
+}
+
+.container.features {
+  padding: 40px 0;
+}
+
+.features .gridBlock {
+  flex-wrap: nowrap;
+}
+
+.features .gridBlock .fourByGridBlock {
+  flex: initial;
+}
+
+.features h2 {
+  color: var(--yellow);
+  font-size: 20px;
+  text-transform: lowercase;
+  font-family: Monaco, Courier, monospace;
+}
+
+.features .blockElement {
+  margin: 0;
+}
+
+.button.landing {
+  margin: 4px 10px;
+  cursor: pointer;
+}
+
+.container .gridBlock .blockContent p.buttons-wrapper {
+  margin: 8px;
+}
+
+.button.landing.active {
+  background: var(--green);
+  color: #fff;
+}
+
+.navigationSlider .slidingNav ul li a,
+.fixedHeaderContainer header h3 {
+  color: var(--grey3);
+}
+
+div.navigationSlider .slidingNav ul {
+  background: #ffffff;
+}
+
+.navigationSlider .slidingNav ul li a:focus,
+.navigationSlider .slidingNav ul li a:hover,
+.navigationSlider .slidingNav ul li.siteNavGroupActive a {
+  background: #ffffff;
+  color: var(--grey3);
+}
+
+body
+  > div.fixedHeaderContainer
+  > div
+  > header
+  > div
+  > nav
+  > ul
+  > li.siteNavGroupActive.siteNavItemActive
+  > a {
+  background-color: #10910e;
+  color: white;
+}
+
+.hide-small {
+  display: none;
+}
+
+@media only screen and (min-width: 736px) {
+  .show-small {
+    display: none;
+  }
+  .hide-small {
+    display: block;
+  }
 }

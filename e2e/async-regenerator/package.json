@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.2.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
