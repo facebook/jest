@@ -90,6 +90,16 @@ Object {
 }
 `;
 
+exports[`Watch mode flows Pressing "P" enters pattern mode and invalid regexp 1`] = `
+"
+
+
+ pattern › *
+[MOCK - cursorSavePosition]
+[MOCK - cursorTo(12, 5)]
+[MOCK - cursorRestorePosition]"
+`;
+
 exports[`Watch mode flows Pressing "c" clears the filters 1`] = `
 "[MOCK - cursorHide]
 [MOCK - clearScreen]

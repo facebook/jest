@@ -100,7 +100,8 @@
     "test-leak": "yarn jest -i --detectLeaks jest-mock jest-diff jest-repl",
     "test": "yarn typecheck && yarn lint && yarn jest",
     "typecheck": "flow check --include-warnings",
-    "watch": "yarn build && node ./scripts/watch.js"
+    "watch": "yarn build && node ./scripts/watch.js",
+    "mytest": "jest packages/jest-cli/src/__tests__/watch_filename_pattern_mode.test.js"
   },
   "workspaces": [
     "packages/*",
