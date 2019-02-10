@@ -1,5 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Watch mode flows Pressing "P" enters pattern mode (invalid regexp) 1`] = `
+"
+
+
+ pattern › *
+[MOCK - cursorSavePosition]
+[MOCK - cursorTo(12, 5)]
+[MOCK - cursorRestorePosition]"
+`;
+
 exports[`Watch mode flows Pressing "P" enters pattern mode 1`] = `
 "
 
@@ -88,16 +98,6 @@ Object {
   "watch": true,
   "watchAll": false,
 }
-`;
-
-exports[`Watch mode flows Pressing "P" enters pattern mode and invalid regexp 1`] = `
-"
-
-
- pattern › *
-[MOCK - cursorSavePosition]
-[MOCK - cursorTo(12, 5)]
-[MOCK - cursorRestorePosition]"
 `;
 
 exports[`Watch mode flows Pressing "c" clears the filters 1`] = `
