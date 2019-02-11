@@ -9,6 +9,10 @@ import chalk from 'chalk';
 import ansiEscapes from 'ansi-escapes';
 import {specialChars} from 'jest-util';
 import Prompt from './lib/Prompt';
+import {
+  printPatternCaret,
+  printRestoredPatternCaret,
+} from './lib/patternModeHelpers';
 
 const {CLEAR} = specialChars;
 
@@ -20,6 +24,15 @@ const usage = (entity: string) =>
   `\n`;
 
 const usageRows = usage('').split('\n').length;
+
+const isValid = (pattern: string) => {
+  try {
+    const regex = new RegExp(pattern, 'i');
+    return !!regex;
+  } catch (e) {
+    return false;
+  }
+};
 
 export default class PatternPrompt {
   _pipe: NodeJS.WritableStream;
@@ -35,7 +48,11 @@ export default class PatternPrompt {
     this._currentUsageRows = usageRows;
   }
 
-  run(onSuccess: () => void, onCancel: () => void, options?: {header: string}) {
+  run(
+    onSuccess: (pattern: string) => void,
+    onCancel: () => void,
+    options?: {header: string},
+  ) {
     this._pipe.write(ansiEscapes.cursorHide);
     this._pipe.write(CLEAR);
 
@@ -49,7 +66,24 @@ export default class PatternPrompt {
     this._pipe.write(usage(this._entityName));
     this._pipe.write(ansiEscapes.cursorShow);
 
-    this._prompt.enter(this._onChange.bind(this), onSuccess, onCancel);
+    const _onSuccess = this._validation(onSuccess);
+
+    this._prompt.enter(this._onChange.bind(this), _onSuccess, onCancel);
+  }
+
+  _validation(onSuccess: Function) {
+    return (pattern: string) => {
+      const valid = isValid(pattern);
+      if (valid) {
+        onSuccess(pattern);
+      } else {
+        this._pipe.write(
+          '\n' + chalk.red('Please provide valid RegExp') + '\n',
+        );
+        printPatternCaret('', this._pipe);
+        printRestoredPatternCaret(pattern, this._currentUsageRows, this._pipe);
+      }
+    };
   }
 
   protected _onChange() {

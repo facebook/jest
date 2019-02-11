@@ -134,6 +134,26 @@ describe('Watch mode flows', () => {
     // globalConfig is updated with the current pattern
     expect(runJestMock.mock.calls[0][0].globalConfig).toMatchSnapshot();
   });
+  it('Pressing "P" enters pattern mode (invalid regexp)', () => {
+    contexts[0].config = {rootDir: ''};
+    watch(globalConfig, contexts, pipe, hasteMapInstances, stdin);
+
+    // Write a enter pattern mode
+    stdin.emit('p');
+    expect(pipe.write).toBeCalledWith(' pattern › ');
+
+    const assertPattern = hex => {
+      pipe.write.mockReset();
+      stdin.emit(hex);
+      expect(pipe.write.mock.calls.join('\n')).toMatchSnapshot();
+    };
+
+    // Write a pattern
+    ['*'].forEach(assertPattern);
+    runJestMock.mockReset();
+    stdin.emit(KEYS.ENTER);
+    expect(runJestMock).not.toBeCalled();
+  });
 
   it('Pressing "c" clears the filters', async () => {
     contexts[0].config = {rootDir: ''};

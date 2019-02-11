@@ -15,6 +15,57 @@ Pattern Mode Usage
 
 `;
 
+exports[`can press "p" to filter by file name with invalid regexp 1`] = `
+
+Pattern Mode Usage
+ › Press Esc to exit pattern mode.
+ › Press Enter to filter by a filenames regex pattern.
+
+ pattern › 
+ pattern › *
+
+Please provide valid RegExp
+ pattern › 
+ pattern › [
+
+Please provide valid RegExp
+ pattern › 
+ pattern › b
+ pattern › ba
+ pattern › bar
+
+
+
+`;
+
+exports[`can press "p" to filter by file name with invalid regexp: test results 1`] = `
+"PASS __tests__/bar.spec.js
+PASS __tests__/foo.spec.js"
+`;
+
+exports[`can press "p" to filter by file name with invalid regexp: test results 2`] = `
+"PASS __tests__/bar.spec.js
+  ✓ bar 1
+  ✓ bar 2
+"
+`;
+
+exports[`can press "p" to filter by file name with invalid regexp: test summary 1`] = `
+"Test Suites: 2 passed, 2 total
+Tests:       4 passed, 4 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites."
+`;
+
+exports[`can press "p" to filter by file name with invalid regexp: test summary 2`] = `
+"Test Suites: 1 passed, 1 total
+Tests:       2 passed, 2 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /bar/i."
+`;
+
 exports[`can press "p" to filter by file name: test results 1`] = `
 PASS __tests__/bar.spec.js
 PASS __tests__/foo.spec.js

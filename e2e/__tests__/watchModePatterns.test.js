@@ -63,6 +63,28 @@ test('can press "p" to filter by file name', () => {
   expect(status).toBe(0);
 });
 
+test('can press "p" to filter by file name with invalid regexp', () => {
+  const input = [
+    {keys: ['p', '*', '\r', '[', '\r', 'b', 'a', 'r', '\r']},
+    {keys: ['q']},
+  ];
+
+  setupFiles(input);
+  const {status, stdout, stderr} = runJest(DIR, [
+    '--no-watchman',
+    '--watchAll',
+  ]);
+
+  const results = extractSummaries(stderr);
+  expect(stdout).toMatchSnapshot();
+  expect(results).toHaveLength(2);
+  results.forEach(({rest, summary}) => {
+    expect(rest).toMatchSnapshot('test results');
+    expect(summary).toMatchSnapshot('test summary');
+  });
+  expect(status).toBe(0);
+});
+
 test('can press "t" to filter by test name', () => {
   const input = [{keys: ['t', '2', '\r']}, {keys: ['q']}];
   setupFiles(input);
