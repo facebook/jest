@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import addInstanceOfAlias from './addInstanceOfAlias';
 import BufferedConsole from './BufferedConsole';
 import clearLine from './clearLine';
 import CustomConsole from './CustomConsole';
@@ -33,6 +34,7 @@ export = {
   ErrorWithStack,
   FakeTimers,
   NullConsole,
+  addInstanceOfAlias,
   clearLine,
   convertDescriptorToString,
   createDirectory,

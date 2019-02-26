@@ -11,6 +11,7 @@
 
 ### Fixes
 
+- `[jest-util]` Install fix for `instanceof` as part of other globals into test environments ([#5995](https://github.com/facebook/jest/pull/5995))
 - `[jest-cli]` Fix prototype pollution vulnerability in dependency ([#7904](https://github.com/facebook/jest/pull/7904))
 - `[jest-cli]` Refactor `-o` and `--coverage` combined ([#7611](https://github.com/facebook/jest/pull/7611))
 - `[expect]` Fix custom async matcher stack trace ([#7652](https://github.com/facebook/jest/pull/7652))

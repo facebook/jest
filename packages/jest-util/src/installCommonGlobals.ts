@@ -7,6 +7,7 @@
 
 import fs from 'fs';
 import {Config} from '@jest/types';
+import addInstanceOfAlias from './addInstanceOfAlias';
 import createProcessObject from './createProcessObject';
 import deepCyclicCopy from './deepCyclicCopy';
 
@@ -66,6 +67,9 @@ export default function(
   globalObject.Buffer = global.Buffer;
   globalObject.setImmediate = global.setImmediate;
   globalObject.clearImmediate = global.clearImmediate;
+
+  addInstanceOfAlias(globalObject.Array, Array);
+  addInstanceOfAlias(globalObject.Error, Error);
 
   return Object.assign(globalObject, deepCyclicCopy(globals));
 }
