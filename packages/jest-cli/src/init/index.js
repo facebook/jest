@@ -12,6 +12,7 @@ import fs from 'fs';
 import path from 'path';
 import prompts from 'prompts';
 import {sync as realpath} from 'realpath-native';
+import output from '@jest/output';
 import defaultQuestions, {testScriptQuestion} from './questions';
 import {NotFoundPackageJsonError, MalformedPackageJsonError} from './errors';
 import {PACKAGE_JSON, JEST_CONFIG} from './constants';
@@ -65,8 +66,8 @@ export default async (rootDir: string = realpath(process.cwd())) => {
     });
 
     if (!result.continue) {
-      console.log();
-      console.log('Aborting...');
+      output.out('\n');
+      output.out('Aborting...');
       return;
     }
   }
@@ -80,8 +81,8 @@ export default async (rootDir: string = realpath(process.cwd())) => {
   }
 
   // Start the init process
-  console.log();
-  console.log(
+  output.out('\n');
+  output.out(
     chalk.underline(
       `The following questions will help Jest to create a suitable configuration for your project\n`,
     ),
@@ -96,8 +97,8 @@ export default async (rootDir: string = realpath(process.cwd())) => {
   });
 
   if (promptAborted) {
-    console.log();
-    console.log('Aborting...');
+    output.out('\n');
+    output.out('Aborting...');
     return;
   }
 
@@ -111,16 +112,14 @@ export default async (rootDir: string = realpath(process.cwd())) => {
 
     fs.writeFileSync(projectPackageJsonPath, modifiedPackageJson);
 
-    console.log('');
-    console.log(`✏️  Modified ${chalk.cyan(projectPackageJsonPath)}`);
+    output.out('\n');
+    output.out(`✏️  Modified ${chalk.cyan(projectPackageJsonPath)}`);
   }
 
   const generatedConfig = generateConfigFile(results);
 
   fs.writeFileSync(jestConfigPath, generatedConfig);
 
-  console.log('');
-  console.log(
-    `📝  Configuration file created at ${chalk.cyan(jestConfigPath)}`,
-  );
+  output.out('\n');
+  output.out(`📝  Configuration file created at ${chalk.cyan(jestConfigPath)}`);
 };

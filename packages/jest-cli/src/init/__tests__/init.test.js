@@ -18,25 +18,21 @@ jest.mock('../../../../jest-config/build/getCacheDirectory', () => () =>
   '/tmp/jest',
 );
 jest.mock('path', () => ({...jest.requireActual('path'), sep: '/'}));
+jest.mock('@jest/output', () => ({log: jest.fn()}));
 
 const resolveFromFixture = relativePath =>
   path.resolve(__dirname, 'fixtures', relativePath);
 
 const writeFileSync = fs.writeFileSync;
-const consoleLog = console.log;
 
 describe('init', () => {
   beforeEach(() => {
-    // $FlowFixMe mock console.log to reduce noise from the tests
-    console.log = jest.fn();
     // $FlowFixMe mock
     fs.writeFileSync = jest.fn();
   });
 
   afterEach(() => {
     jest.clearAllMocks();
-    // $FlowFixMe
-    console.log = consoleLog;
     // $FlowFixMe mock
     fs.writeFileSync = writeFileSync;
   });

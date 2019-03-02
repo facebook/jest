@@ -12,6 +12,7 @@ import type {Argv} from 'types/Argv';
 import type {GlobalConfig, Path} from 'types/Config';
 
 import path from 'path';
+import output from '@jest/output';
 import {clearLine} from 'jest-util';
 import {validateCLIOptions} from 'jest-validate';
 import {deprecationEntries} from 'jest-config';
@@ -40,9 +41,8 @@ export async function run(maybeArgv?: Argv, project?: Path) {
     const {results, globalConfig} = await runCLI(argv, projects);
     readResultsAndExit(results, globalConfig);
   } catch (error) {
-    clearLine(process.stderr);
-    clearLine(process.stdout);
-    console.error(chalk.red(error.stack));
+    output.clearLine(output.err, output.out);
+    output.err(chalk.red(error.stack));
     exit(1);
     throw error;
   }
@@ -118,7 +118,7 @@ const readResultsAndExit = (
 
   if (globalConfig.forceExit) {
     if (!globalConfig.detectOpenHandles) {
-      console.error(
+      output.err(
         chalk.red.bold('Force exiting Jest\n\n') +
           chalk.red(
             'Have you considered using `--detectOpenHandles` to detect ' +
@@ -130,7 +130,7 @@ const readResultsAndExit = (
     exit(code);
   } else if (!globalConfig.detectOpenHandles) {
     setTimeout(() => {
-      console.error(
+      output.err(
         chalk.red.bold(
           'Jest did not exit one second after the test run has completed.\n\n',
         ) +
