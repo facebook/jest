@@ -44,12 +44,12 @@ export const makeDescribe = (
   }
 
   return {
-    children: [],
-    hooks: [],
+    children: new Array(),
+    hooks: new Array(),
     mode: _mode,
     name: convertDescriptorToString(name),
     parent,
-    tests: [],
+    tests: new Array(),
   };
 };
 
@@ -63,7 +63,7 @@ export const makeTest = (
 ): TestEntry => ({
   asyncError,
   duration: null,
-  errors: [],
+  errors: new Array(),
   fn,
   invocations: 0,
   mode,
@@ -95,8 +95,8 @@ export const getAllHooksForDescribe = (describe: DescribeBlock) => {
     beforeAll: Array<Hook>;
     afterAll: Array<Hook>;
   } = {
-    afterAll: [],
-    beforeAll: [],
+    afterAll: new Array(),
+    beforeAll: new Array(),
   };
 
   if (hasEnabledTest(describe)) {
@@ -119,11 +119,11 @@ export const getEachHooksForTest = (test: TestEntry) => {
   const result: {
     beforeEach: Array<Hook>;
     afterEach: Array<Hook>;
-  } = {afterEach: [], beforeEach: []};
+  } = {afterEach: new Array(), beforeEach: new Array()};
   let block: DescribeBlock | undefined | null = test.parent;
 
   do {
-    const beforeEachForCurrentBlock = [];
+    const beforeEachForCurrentBlock = new Array();
     for (const hook of block.hooks) {
       switch (hook.type) {
         case 'beforeEach':
@@ -136,7 +136,10 @@ export const getEachHooksForTest = (test: TestEntry) => {
     }
     // 'beforeEach' hooks are executed from top to bottom, the opposite of the
     // way we traversed it.
-    result.beforeEach = [...beforeEachForCurrentBlock, ...result.beforeEach];
+    result.beforeEach = new Array(
+      ...beforeEachForCurrentBlock,
+      ...result.beforeEach,
+    );
   } while ((block = block.parent));
   return result;
 };
@@ -260,9 +263,9 @@ export const makeRunResult = (
 
 const makeTestResults = (describeBlock: DescribeBlock): TestResults => {
   const {includeTestLocationInResult} = getState();
-  let testResults: TestResults = [];
+  let testResults: TestResults = new Array();
   for (const test of describeBlock.tests) {
-    const testPath = [];
+    const testPath = new Array();
     let parent: TestEntry | DescribeBlock = test;
     do {
       testPath.unshift(parent.name);
@@ -310,7 +313,7 @@ const makeTestResults = (describeBlock: DescribeBlock): TestResults => {
 // Return a string that identifies the test (concat of parent describe block
 // names + test title)
 export const getTestID = (test: TestEntry) => {
-  const titles = [];
+  const titles = new Array();
   let parent: TestEntry | DescribeBlock = test;
   do {
     titles.unshift(parent.name);
@@ -354,7 +357,7 @@ export const addErrorToEachTestUnderDescribe = (
   asyncError: Exception,
 ) => {
   for (const test of describeBlock.tests) {
-    test.errors.push([error, asyncError]);
+    test.errors.push(new Array(error, asyncError));
   }
 
   for (const child of describeBlock.children) {

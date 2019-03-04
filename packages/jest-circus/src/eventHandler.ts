@@ -111,10 +111,10 @@ const eventHandler: EventHandler = (event, state): void => {
       } else if (type === 'afterAll') {
         // Attaching `afterAll` errors to each test makes execution flow
         // too complicated, so we'll consider them to be global.
-        state.unhandledErrors.push([error, asyncError]);
+        state.unhandledErrors.push(new Array(error, asyncError));
       } else {
         invariant(test, 'always present for `*Each` hooks');
-        test!.errors.push([error, asyncError]);
+        test!.errors.push(new Array(error, asyncError));
       }
       break;
     }
@@ -143,11 +143,11 @@ const eventHandler: EventHandler = (event, state): void => {
         error,
         test: {asyncError},
       } = event;
-      event.test.errors.push([error, asyncError]);
+      event.test.errors.push(new Array(error, asyncError));
       break;
     }
     case 'test_retry': {
-      event.test.errors = [];
+      event.test.errors = new Array();
       break;
     }
     case 'run_start': {

@@ -51,7 +51,9 @@ export default function queueRunner(options: Options) {
       }
     });
 
-    promise = Promise.race([promise, token]);
+    // `new Array` to avoid contaminated array prototypes
+    // $FlowFixMe
+    promise = Promise.race(new Array(promise, token));
 
     if (!timeout) {
       return promise;

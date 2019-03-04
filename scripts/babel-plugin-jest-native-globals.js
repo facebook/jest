@@ -29,6 +29,9 @@ module.exports = ({template}) => {
   const fsExistsFileDeclaration = template(`
     var jestExistsFile = global[Symbol.for('jest-native-exists-file')] || fs.existsSync;
   `);
+  const arrayDeclaration = template(`
+    var Array = global[Symbol.for('jest-native-array')] || Array;
+  `);
 
   return {
     name: 'jest-native-globals',
@@ -115,6 +118,15 @@ module.exports = ({template}) => {
 
             path.parentPath.replaceWithSourceString('jestExistsFile');
           }
+        }
+        if (path.node.name === 'Array' && !state.jestInjectedArray) {
+          state.jestInjectedArray = true;
+          path
+            .findParent(p => p.isProgram())
+            .unshiftContainer('body', arrayDeclaration());
+          path
+            .findParent(p => p.isProgram())
+            .unshiftContainer('body', symbolDeclaration());
         }
       },
     },

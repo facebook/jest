@@ -46,6 +46,11 @@ export default function(
       value: fs.existsSync.bind(fs),
       writable: false,
     },
+    [symbol.for('jest-native-array')]: {
+      enumerable: false,
+      value: Array.bind(Array),
+      writable: false,
+    },
     'jest-symbol-do-not-touch': {
       enumerable: false,
       value: symbol,

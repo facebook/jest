@@ -29,7 +29,7 @@ const INITIAL_STATE: State = {
   rootDescribeBlock: ROOT_DESCRIBE_BLOCK,
   testNamePattern: null,
   testTimeout: 5000,
-  unhandledErrors: [],
+  unhandledErrors: new Array(),
 };
 
 global[STATE_SYM] = INITIAL_STATE;

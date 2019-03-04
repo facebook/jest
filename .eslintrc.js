@@ -102,6 +102,12 @@ module.exports = {
         'import/no-extraneous-dependencies': 0,
       },
     },
+    {
+      files: ['packages/jest-jasmine2/**', 'packages/jest-circus/**'],
+      rules: {
+        'no-array-constructor': 0,
+      },
+    },
   ],
   parser: 'babel-eslint',
   plugins: ['markdown', 'import', 'prettier'],
