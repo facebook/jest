@@ -5,20 +5,32 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import path from 'path';
 import micromatch from 'micromatch';
+import {sync as realpath} from 'realpath-native';
 import {replacePathSepForGlob} from 'jest-util';
 import {Config} from '@jest/types';
-import {FileData} from './types';
+import {FileData, LinkData} from './types';
 import * as fastPath from './lib/fast_path';
 import H from './constants';
 
 export default class HasteFS {
   private readonly _rootDir: Config.Path;
   private readonly _files: FileData;
+  private readonly _links: LinkData;
 
-  constructor({rootDir, files}: {rootDir: Config.Path; files: FileData}) {
+  constructor({
+    rootDir,
+    files,
+    links,
+  }: {
+    rootDir: Config.Path;
+    files: FileData;
+    links: LinkData;
+  }) {
     this._rootDir = rootDir;
     this._files = files;
+    this._links = links;
   }
 
   getModuleName(file: Config.Path): string | null {
@@ -43,6 +55,20 @@ export default class HasteFS {
 
   exists(file: Config.Path): boolean {
     return this._getFileData(file) != null;
+  }
+
+  follow(file: Config.Path): Config.Path {
+    const name = fastPath.relative(this._rootDir, file);
+    const link = this._links.get(name);
+    if (!link) {
+      return file;
+    }
+    if (!link[0]) {
+      const target = realpath(file);
+      link[0] = fastPath.relative(this._rootDir, target);
+      return target;
+    }
+    return path.join(this._rootDir, link[0]);
   }
 
   getAllFiles(): Array<Config.Path> {

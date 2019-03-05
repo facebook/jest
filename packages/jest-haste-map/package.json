@@ -18,6 +18,7 @@
     "jest-util": "^24.0.0",
     "jest-worker": "^24.0.0",
     "micromatch": "^3.1.10",
+    "realpath-native": "^1.0.0",
     "sane": "^3.0.0"
   },
   "devDependencies": {

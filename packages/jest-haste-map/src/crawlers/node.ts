@@ -159,6 +159,7 @@ export = function nodeCrawl(
         }
       });
       data.files = files;
+      data.links = new Map(); // TODO: support symlinks
       resolve(data);
     };
 

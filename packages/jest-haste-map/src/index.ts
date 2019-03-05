@@ -173,6 +173,8 @@ const getWhiteList = (list: Array<string> | undefined): RegExp | null => {
  * type HasteMap = {
  *   clocks: WatchmanClocks,
  *   files: {[filepath: string]: FileMetaData},
+ *   links: {[filepath: string]: LinkMetaData},
+ *   roots: string[],
  *   map: {[id: string]: ModuleMapItem},
  *   mocks: {[id: string]: string},
  * }
@@ -345,6 +347,7 @@ class HasteMap extends EventEmitter {
           const rootDir = this._options.rootDir;
           const hasteFS = new HasteFS({
             files: hasteMap.files,
+            links: hasteMap.links,
             rootDir,
           });
           const moduleMap = new HasteModuleMap({
@@ -778,7 +781,7 @@ class HasteMap extends EventEmitter {
     this._options.throwOnModuleCollision = false;
     this._options.retainAllFiles = true;
 
-    const Watcher: sane.Watcher =
+    const Watcher: typeof sane.NodeWatcher =
       canUseWatchman && this._options.useWatchman
         ? WatchmanWatcher
         : os.platform() === 'darwin'
@@ -794,8 +797,7 @@ class HasteMap extends EventEmitter {
     let mustCopy = true;
 
     const createWatcher = (root: Config.Path): Promise<Watcher> => {
-      // @ts-ignore: TODO how? "Cannot use 'new' with an expression whose type lacks a call or construct signature."
-      const watcher = new Watcher(root, {
+      const watcher = new Watcher(path.resolve(rootDir, root), {
         dot: false,
         glob: extensions.map(extension => '**/*.' + extension),
         ignored: ignorePattern,
@@ -822,6 +824,7 @@ class HasteMap extends EventEmitter {
           eventsQueue,
           hasteFS: new HasteFS({
             files: hasteMap.files,
+            links: hasteMap.links,
             rootDir,
           }),
           moduleMap: new HasteModuleMap({
@@ -874,6 +877,8 @@ class HasteMap extends EventEmitter {
               clocks: new Map(hasteMap.clocks),
               duplicates: new Map(hasteMap.duplicates),
               files: new Map(hasteMap.files),
+              links: new Map(hasteMap.links),
+              roots: [...hasteMap.roots],
               map: new Map(hasteMap.map),
               mocks: new Map(hasteMap.mocks),
             };
@@ -964,11 +969,9 @@ class HasteMap extends EventEmitter {
     };
 
     this._changeInterval = setInterval(emitChange, CHANGE_INTERVAL);
-    return Promise.all(this._options.roots.map(createWatcher)).then(
-      watchers => {
-        this._watchers = watchers;
-      },
-    );
+    return Promise.all(hasteMap.roots.map(createWatcher)).then(watchers => {
+      this._watchers = watchers;
+    });
   }
 
   /**
@@ -1086,6 +1089,8 @@ class HasteMap extends EventEmitter {
       clocks: new Map(),
       duplicates: new Map(),
       files: new Map(),
+      links: new Map(),
+      roots: [],
       map: new Map(),
       mocks: new Map(),
     };
