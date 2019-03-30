@@ -91,7 +91,7 @@ export type AggregatedResultWithoutCoverage = {
 };
 
 export type AggregatedResult = AggregatedResultWithoutCoverage & {
-  coverageMap?: CoverageMap | null;
+  coverageMap?: CoverageMap | {[key: string]: {[key: string]: unknown}};
 };
 
 export type Suite = {
@@ -146,7 +146,10 @@ export type FormattedTestResult = {
 };
 
 export type FormattedTestResults = {
-  coverageMap?: CoverageMap | null | undefined;
+  coverageMap?:
+    | CoverageMap
+    | {[key: string]: {[key: string]: unknown}}
+    | undefined;
   numFailedTests: number;
   numFailedTestSuites: number;
   numPassedTests: number;

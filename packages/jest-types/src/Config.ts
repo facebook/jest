@@ -312,6 +312,7 @@ export type GlobalConfig = {
   findRelatedTests: boolean;
   forceExit: boolean;
   json: boolean;
+  jsonLines: boolean;
   globalSetup: string | null | undefined;
   globalTeardown: string | null | undefined;
   lastCommit: boolean;
@@ -446,6 +447,7 @@ export type Argv = Arguments<
     haste: string;
     init: boolean;
     json: boolean;
+    jsonLines: boolean;
     lastCommit: boolean;
     logHeapUsage: boolean;
     maxWorkers: number;

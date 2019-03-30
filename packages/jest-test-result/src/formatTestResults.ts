@@ -16,7 +16,7 @@ import {
   TestResult,
 } from './types';
 
-const formatTestResult = (
+export const formatTestResult = (
   testResult: TestResult,
   codeCoverageFormatter?: CodeCoverageFormatter,
   reporter?: CodeCoverageReporter,

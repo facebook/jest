@@ -191,7 +191,7 @@ Generate a basic configuration file. Based on your project, Jest will ask you a 
 
 ### `--json`
 
-Prints the test results in JSON. This mode will send all other test output and user messages to stderr.
+Prints the test results as JSON. This mode will send all other console output to stderr.
 
 ### `--outputFile=<filename>`
 

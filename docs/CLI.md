@@ -190,7 +190,13 @@ Generate a basic configuration file. Based on your project, Jest will ask you a 
 
 ### `--json`
 
-Prints the test results in JSON. This mode will send all other test output and user messages to stderr.
+Prints the test results as JSON. This mode will send all other console output to stderr.
+
+### `--jsonLines`
+
+Prints the test results as JSON lines. This mode will send all other console output to stderr.
+
+This format is ideal for handling very large test suites, where creating or consuming a single very large JSON object with all results and coverage data may cause memory issues.
 
 ### `--outputFile=<filename>`
 

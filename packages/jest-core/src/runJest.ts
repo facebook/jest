@@ -9,7 +9,6 @@ import path from 'path';
 import chalk from 'chalk';
 import {sync as realpath} from 'realpath-native';
 import {CustomConsole} from '@jest/console';
-import {formatTestResults} from 'jest-util';
 import exit from 'exit';
 import fs from 'graceful-fs';
 import {JestHook, JestHookEmitter} from 'jest-watcher';
@@ -19,6 +18,8 @@ import {Config} from '@jest/types';
 import {
   AggregatedResult,
   makeEmptyAggregatedTestResult,
+  formatTestResult,
+  formatTestResults,
 } from '@jest/test-result';
 import {ChangedFiles, ChangedFilesPromise} from 'jest-changed-files';
 import getNoTestsFoundMessage from './getNoTestsFoundMessage';
@@ -69,20 +70,40 @@ const getTestPaths = async (
 
 type ProcessResultOptions = Pick<
   Config.GlobalConfig,
-  'json' | 'outputFile' | 'testResultsProcessor'
+  'json' | 'jsonLines' | 'outputFile' | 'testResultsProcessor'
 > & {
   collectHandles?: () => Array<Error>;
   onComplete?: (result: AggregatedResult) => void;
   outputStream: NodeJS.WritableStream;
 };
 
-const processResults = (
+const stdoutWriteBuffered = (data: string) =>
+  new Promise<void>(resolve => {
+    if (!process.stdout.write(data)) {
+      process.stdout.once('drain', resolve);
+    } else {
+      process.nextTick(resolve);
+    }
+  });
+
+const getOutputFilePaths = (outputFile: string) => {
+  const cwd = realpath(process.cwd());
+  const absoluteOutputFile = path.resolve(cwd, outputFile);
+  const relativeOutputFile = path.relative(cwd, absoluteOutputFile);
+  return {
+    absoluteOutputFile,
+    relativeOutputFile,
+  };
+};
+
+const processResults = async (
   runResults: AggregatedResult,
   options: ProcessResultOptions,
 ) => {
   const {
     outputFile,
     json: isJSON,
+    jsonLines: isJSONLines,
     onComplete,
     outputStream,
     testResultsProcessor,
@@ -98,14 +119,73 @@ const processResults = (
   if (testResultsProcessor) {
     runResults = require(testResultsProcessor)(runResults);
   }
-  if (isJSON) {
+  if (isJSONLines) {
+    let writeLine: (line: string) => Promise<void>;
+    let onWriteFinished: (() => void) | undefined = undefined;
     if (outputFile) {
-      const cwd = realpath(process.cwd());
-      const filePath = path.resolve(cwd, outputFile);
+      const {absoluteOutputFile, relativeOutputFile} = getOutputFilePaths(
+        outputFile,
+      );
+      fs.writeFileSync(absoluteOutputFile, '');
+      writeLine = line =>
+        new Promise<void>((resolve, reject) =>
+          fs.appendFile(absoluteOutputFile, line + '\n', {}, err => {
+            if (err) {
+              reject(err);
+              return;
+            }
+            resolve();
+          }),
+        );
+      onWriteFinished = () => {
+        outputStream.write(
+          `Test results written as JSON lines to: ${relativeOutputFile}\n`,
+        );
+      };
+    } else {
+      writeLine = line => stdoutWriteBuffered(line + '\n');
+    }
 
-      fs.writeFileSync(filePath, JSON.stringify(formatTestResults(runResults)));
+    await writeLine(
+      JSON.stringify({
+        runResults: {
+          ...runResults,
+          coverageMap: undefined,
+          testResults: undefined,
+        },
+      }),
+    );
+    for (const testResult of runResults.testResults) {
+      await writeLine(
+        JSON.stringify({testResults: formatTestResult(testResult)}),
+      );
+    }
+    if (runResults.coverageMap) {
+      const coverageMap: {[key: string]: unknown} =
+        typeof runResults.coverageMap.toJSON === 'function'
+          ? runResults.coverageMap.toJSON()
+          : runResults.coverageMap;
+      const coverageMapFiles = Object.keys(coverageMap);
+      for (const coverageMapFile of coverageMapFiles) {
+        await writeLine(
+          JSON.stringify({coverageMap: coverageMap[coverageMapFile]}),
+        );
+      }
+    }
+    if (onWriteFinished) {
+      onWriteFinished();
+    }
+  } else if (isJSON) {
+    if (outputFile) {
+      const {absoluteOutputFile, relativeOutputFile} = getOutputFilePaths(
+        outputFile,
+      );
+      fs.writeFileSync(
+        absoluteOutputFile,
+        JSON.stringify(formatTestResults(runResults)),
+      );
       outputStream.write(
-        `Test results written to: ${path.relative(cwd, filePath)}\n`,
+        `Test results written as JSON to: ${relativeOutputFile}\n`,
       );
     } else {
       process.stdout.write(JSON.stringify(formatTestResults(runResults)));
@@ -183,7 +263,11 @@ export default (async function runJest({
 
   if (globalConfig.listTests) {
     const testsPaths = Array.from(new Set(allTests.map(test => test.path)));
-    if (globalConfig.json) {
+    if (globalConfig.jsonLines) {
+      for (const testPath of testsPaths) {
+        console.log(JSON.stringify({testPath}));
+      }
+    } else if (globalConfig.json) {
       console.log(JSON.stringify(testsPaths));
     } else {
       console.log(testsPaths.join('\n'));
@@ -253,9 +337,10 @@ export default (async function runJest({
     await runGlobalHook({allTests, globalConfig, moduleName: 'globalTeardown'});
   }
 
-  return processResults(results, {
+  return await processResults(results, {
     collectHandles,
     json: globalConfig.json,
+    jsonLines: globalConfig.jsonLines,
     onComplete,
     outputFile: globalConfig.outputFile,
     outputStream,

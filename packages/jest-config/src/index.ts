@@ -123,6 +123,7 @@ const groupOptions = (
     globalSetup: options.globalSetup,
     globalTeardown: options.globalTeardown,
     json: options.json,
+    jsonLines: options.jsonLines,
     lastCommit: options.lastCommit,
     listTests: options.listTests,
     logHeapUsage: options.logHeapUsage,

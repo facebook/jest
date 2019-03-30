@@ -301,8 +301,15 @@ export const options = {
   json: {
     default: undefined,
     description:
-      'Prints the test results in JSON. This mode will send all ' +
-      'other test output and user messages to stderr.',
+      'Prints the test results as JSON. This mode will send all other ' +
+      'console output to stderr.',
+    type: 'boolean' as 'boolean',
+  },
+  jsonLines: {
+    default: undefined,
+    description:
+      'Prints the test results as JSON lines. This mode will send all other ' +
+      'console output to stderr.',
     type: 'boolean' as 'boolean',
   },
   lastCommit: {

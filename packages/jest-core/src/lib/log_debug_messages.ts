@@ -19,5 +19,9 @@ export default function logDebugMessages(
     globalConfig,
     version: VERSION,
   };
-  outputStream.write(JSON.stringify(output, null, '  ') + '\n');
+
+  // Write to single line if using JSON lines format. Otherwise, pretty print.
+  outputStream.write(
+    JSON.stringify(output, null, !globalConfig.jsonLines ? '  ' : '') + '\n',
+  );
 }

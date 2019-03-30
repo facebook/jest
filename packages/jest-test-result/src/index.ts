@@ -5,7 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-export {default as formatTestResults} from './formatTestResults';
+export {
+  default as formatTestResults,
+  formatTestResult,
+} from './formatTestResults';
 export {
   addResult,
   buildFailureTestResult,
@@ -23,3 +26,4 @@ export {
   Suite,
   TestResult,
 } from './types';
+export {CoverageMap} from 'istanbul-lib-coverage';
