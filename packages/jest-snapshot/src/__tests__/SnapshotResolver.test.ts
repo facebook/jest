@@ -3,7 +3,7 @@
 import path from 'path';
 import {Config} from '@jest/types';
 
-import {buildSnapshotResolver, SnapshotResolver} from '../snapshot_resolver';
+import {buildSnapshotResolver, SnapshotResolver} from '../SnapshotResolver';
 
 describe('defaults', () => {
   let snapshotResolver: SnapshotResolver;

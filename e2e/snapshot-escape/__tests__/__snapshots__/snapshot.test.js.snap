@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`escape strings 1`] = `"one: \\\\'"`;
+
+exports[`escape strings two 1`] = `"two: '\\""`;

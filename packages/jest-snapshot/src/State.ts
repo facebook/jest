@@ -17,7 +17,7 @@ import {
   testNameToKey,
   unescape,
 } from './utils';
-import {saveInlineSnapshots, InlineSnapshot} from './inline_snapshots';
+import {saveInlineSnapshots, InlineSnapshot} from './InlineSnapshots';
 import {SnapshotData} from './types';
 
 export type SnapshotStateOptions = {

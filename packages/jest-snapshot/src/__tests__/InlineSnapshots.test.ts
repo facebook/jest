@@ -14,7 +14,7 @@ import prettier from 'prettier';
 import babelTraverse from '@babel/traverse';
 import {Frame} from 'jest-message-util';
 
-import {saveInlineSnapshots} from '../inline_snapshots';
+import {saveInlineSnapshots} from '../InlineSnapshots';
 
 const writeFileSync = fs.writeFileSync;
 const readFileSync = fs.readFileSync;

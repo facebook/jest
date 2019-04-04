@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import jestSnapshot from '../';
+import jestSnapshot from '..';
 
 const {toThrowErrorMatchingSnapshot} = jestSnapshot;
 
