@@ -43,7 +43,8 @@ class TestNamePatternPlugin extends BaseWatchPlugin {
 
       testNamePatternPrompt.run(
         (value: string) => {
-          updateConfigAndRun({mode: 'watch', testNamePattern: value});
+          const mode = globalConfig.watch ? 'watch' : 'watchAll';
+          updateConfigAndRun({mode, testNamePattern: value});
           res();
         },
         rej,

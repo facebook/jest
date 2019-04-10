@@ -8,6 +8,7 @@
 
 - `[jest-snapshot]` Inline snapshots: do not indent empty lines ([#8277](https://github.com/facebook/jest/pull/8277))
 - `[jest-core]` Make `detectOpenHandles` imply `runInBand` ([#8283](https://github.com/facebook/jest/pull/8283))
+- `[jest-core]` Pattern filtering for `watchAll` ([#8296](https://github.com/facebook/jest/pull/8296))
 
 ### Chore & Maintenance
 
