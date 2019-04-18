@@ -115,7 +115,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await connection.close();
-  await db.close();
 });
 
 it('should aggregate docs from collection', async () => {
