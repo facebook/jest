@@ -573,7 +573,7 @@ const calcIgnorePatternRegExp = (config: Config.ProjectConfig) => {
     !config.transformIgnorePatterns ||
     config.transformIgnorePatterns.length === 0
   ) {
-    return;
+    return undefined;
   }
 
   return new RegExp(config.transformIgnorePatterns.join('|'));
@@ -581,7 +581,7 @@ const calcIgnorePatternRegExp = (config: Config.ProjectConfig) => {
 
 const calcTransformRegExp = (config: Config.ProjectConfig) => {
   if (!config.transform.length) {
-    return;
+    return undefined;
   }
 
   const transformRegexp: Array<[RegExp, string]> = [];
