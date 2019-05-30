@@ -150,7 +150,7 @@ test('should fetch users', () => {
   // or you could use the following depending on your use case:
   // axios.get.mockImplementation(() => Promise.resolve(resp))
 
-  return Users.all().then(resp => expect(resp.data).toEqual(users));
+  return Users.all().then(resp => expect(resp).toEqual(users));
 });
 ```
 
