@@ -232,6 +232,9 @@ async function runTestInternal(
     globalConfig.coverageProvider === 'v8' &&
     typeof environment.getVmContext === 'function';
 
+  // Node's error-message stack size is limited at 10, but it's pretty useful
+  // to see more than that when a test fails.
+  Error.stackTraceLimit = 100;
   try {
     await environment.setup();
 

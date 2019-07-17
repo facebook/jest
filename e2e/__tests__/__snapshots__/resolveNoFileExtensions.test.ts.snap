@@ -39,4 +39,5 @@ FAIL __tests__/test.js
 
       at Resolver.resolveModule (../../packages/jest-resolve/build/index.js:307:11)
       at Object.require (index.js:8:18)
+      at Object.require (__tests__/test.js:8:11)
 `;

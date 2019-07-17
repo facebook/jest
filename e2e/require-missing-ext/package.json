@@ -1,0 +1,11 @@
+{
+  "jest": {
+    "moduleFileExtensions": [
+      "js"
+    ],
+    "testEnvironment": "node"
+  },
+  "dependencies": {
+    "discord.js": "11.5.1"
+  }
+}
