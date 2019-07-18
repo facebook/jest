@@ -101,6 +101,7 @@ export default ({
 
   patchJasmine();
   const {expand, updateSnapshot} = globalConfig;
+  const {prettyFormatSnapshotConfig} = config;
   const snapshotResolver = buildSnapshotResolver(config);
   const snapshotPath = snapshotResolver.resolveSnapshotPath(testPath);
   const snapshotState = new SnapshotState(snapshotPath, {
@@ -108,6 +109,7 @@ export default ({
     getBabelTraverse: () => require('@babel/traverse').default,
     getPrettier: () =>
       config.prettierPath ? require(config.prettierPath) : null,
+    prettyFormatSnapshotConfig,
     updateSnapshot,
   });
   setState({snapshotState, testPath});

@@ -42,6 +42,10 @@ const defaultConfig = {
   notifyMode: 'failure-change',
   preset: null,
   prettierPath: 'prettier',
+  prettyFormatSnapshotConfig: {
+    escapeRegex: true,
+    printFunctionName: false,
+  },
   resetMocks: false,
   resetModules: false,
   restoreMocks: false,
@@ -101,6 +105,10 @@ const validConfig = {
   notifyMode: 'failure-change',
   preset: 'react-native',
   prettierPath: '<rootDir>/node_modules/prettier',
+  prettyFormatSnapshotConfig: {
+    escapeRegex: true,
+    printFunctionName: false,
+  },
   resetMocks: false,
   resetModules: false,
   restoreMocks: false,
@@ -131,7 +139,7 @@ const validConfig = {
   watchman: true,
 };
 
-const format = (value: string) => require('pretty-format')(value, {min: true});
+const format = (value: string) => require('pretty-format')(value, { min: true });
 
 const deprecatedConfig = {
   preprocessorIgnorePatterns: (config: Object) =>

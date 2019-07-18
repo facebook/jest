@@ -25,6 +25,7 @@ export type SnapshotStateOptions = {
   getPrettier: () => null | any;
   getBabelTraverse: () => Function;
   expand?: boolean;
+  prettyFormatSnapshotConfig?: Config.PrettyFormatSnapshotConfig;
 };
 
 export type SnapshotMatchOptions = {
@@ -48,6 +49,7 @@ export default class SnapshotState {
   private _uncheckedKeys: Set<string>;
   private _getBabelTraverse: () => Function;
   private _getPrettier: () => null | any;
+  private _prettyFormatSnapshotConfig?: Config.PrettyFormatSnapshotConfig;
 
   added: number;
   expand: boolean;
@@ -73,6 +75,7 @@ export default class SnapshotState {
     this.expand = options.expand || false;
     this.added = 0;
     this.matched = 0;
+    this._prettyFormatSnapshotConfig = options.prettyFormatSnapshotConfig;
     this.unmatched = 0;
     this._updateSnapshot = options.updateSnapshot;
     this.updated = 0;
@@ -189,7 +192,7 @@ export default class SnapshotState {
       this._uncheckedKeys.delete(key);
     }
 
-    const receivedSerialized = serialize(received);
+    const receivedSerialized = serialize(received, this._prettyFormatSnapshotConfig);
     const expected = isInline ? inlineSnapshot : this._snapshotData[key];
     const pass = expected === receivedSerialized;
     const hasSnapshot = isInline

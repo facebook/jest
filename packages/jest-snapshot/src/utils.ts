@@ -128,16 +128,31 @@ export const getSnapshotData = (
 const addExtraLineBreaks = (string: string): string =>
   string.includes('\n') ? `\n${string}\n` : string;
 
-export const serialize = (data: string): string =>
-  addExtraLineBreaks(
+export const serialize = (
+  data: string,
+  config?: Config.PrettyFormatSnapshotConfig,
+): string => {
+  let escapeRegex = true;
+  let printFunctionName = false;
+
+  if (config && config.escapeRegex) {
+    escapeRegex = config.escapeRegex;
+  }
+
+  if (config && config.printFunctionName) {
+    printFunctionName = config.printFunctionName;
+  }
+
+  return addExtraLineBreaks(
     normalizeNewlines(
       prettyFormat(data, {
-        escapeRegex: true,
+        escapeRegex,
         plugins: getSerializers(),
-        printFunctionName: false,
+        printFunctionName,
       }),
     ),
   );
+}
 
 // unescape double quotes
 export const unescape = (data: string): string => data.replace(/\\(")/g, '$1');

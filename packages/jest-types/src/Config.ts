@@ -24,6 +24,11 @@ export type HasteConfig = {
 export type ReporterConfig = [string, Record<string, unknown>];
 export type TransformerConfig = [string, Record<string, unknown>];
 
+export type PrettyFormatSnapshotConfig = {
+  escapeRegex?: boolean;
+  printFunctionName?: boolean;
+};
+
 export type ConfigGlobals = Record<string, any>;
 
 export type DefaultOptions = {
@@ -392,6 +397,7 @@ export type ProjectConfig = {
   modulePaths: Array<string>;
   name: string;
   prettierPath: string;
+  prettyFormatSnapshotConfig: PrettyFormatSnapshotConfig;
   resetMocks: boolean;
   resetModules: boolean;
   resolver: Path | null | undefined;
