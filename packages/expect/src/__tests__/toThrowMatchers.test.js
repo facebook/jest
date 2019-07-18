@@ -90,6 +90,43 @@ class customError extends Error {
           }).not[toThrow]('Server Error');
         }).toThrowErrorMatchingSnapshot();
       });
+
+      test('returns error', async () => {
+        const expectedError = new Error('apple');
+
+        expect(
+          jestExpect(() => {
+            throw expectedError;
+          })[toThrow]('apple'),
+        ).toEqual(expectedError);
+
+        await expect(
+          jestExpect(
+            (async () => {
+              throw expectedError;
+            })(),
+          ).rejects[toThrow]('apple'),
+        ).resolves.toEqual(expectedError);
+
+        expect(
+          jestExpect(() => {
+            throw expectedError;
+          }).not[toThrow]('banana'),
+        ).toEqual(expectedError);
+
+        await expect(
+          jestExpect(
+            (async () => {
+              throw expectedError;
+            })(),
+          ).rejects.not[toThrow]('banana'),
+        ).resolves.toEqual(expectedError);
+
+        expect(jestExpect(() => {}).not[toThrow]('apple')).toBeUndefined();
+        await expect(
+          jestExpect((async () => {})()).resolves.not[toThrow]('apple'),
+        ).resolves.toBeUndefined();
+      });
     });
 
     describe('regexp', () => {
@@ -141,6 +178,43 @@ class customError extends Error {
             throw 404;
           }).not[toThrow](/^[123456789]\d*/);
         }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('returns error', async () => {
+        const expectedError = new Error('apple');
+
+        expect(
+          jestExpect(() => {
+            throw expectedError;
+          })[toThrow](/apple/),
+        ).toEqual(expectedError);
+
+        await expect(
+          jestExpect(
+            (async () => {
+              throw expectedError;
+            })(),
+          ).rejects[toThrow](/apple/),
+        ).resolves.toEqual(expectedError);
+
+        expect(
+          jestExpect(() => {
+            throw expectedError;
+          }).not[toThrow](/banana/),
+        ).toEqual(expectedError);
+
+        await expect(
+          jestExpect(
+            (async () => {
+              throw expectedError;
+            })(),
+          ).rejects.not[toThrow](/banana/),
+        ).resolves.toEqual(expectedError);
+
+        expect(jestExpect(() => {}).not[toThrow](/apple/)).toBeUndefined();
+        await expect(
+          jestExpect((async () => {})()).resolves.not[toThrow](/apple/),
+        ).resolves.toBeUndefined();
       });
     });
 
@@ -221,6 +295,29 @@ class customError extends Error {
             throw new SubSubErr('apple');
           }).not[toThrow](Err);
         }).toThrowErrorMatchingSnapshot();
+      });
+
+      test('returns error', async () => {
+        const error = new Err();
+
+        expect(
+          jestExpect(() => {
+            throw error;
+          })[toThrow](Err),
+        ).toEqual(error);
+
+        await expect(
+          jestExpect(
+            (async () => {
+              throw error;
+            })(),
+          ).rejects[toThrow](Err),
+        ).resolves.toEqual(error);
+
+        expect(jestExpect(() => {}).not[toThrow](Err)).toBeUndefined();
+        await expect(
+          jestExpect((async () => {})()).resolves.not[toThrow](Err),
+        ).resolves.toBeUndefined();
       });
     });
 

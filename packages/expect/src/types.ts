@@ -12,6 +12,7 @@ import {INTERNAL_MATCHER_FLAG} from './jestMatchersObject';
 export type SyncExpectationResult = {
   pass: boolean;
   message: () => string;
+  value: any;
 };
 
 export type AsyncExpectationResult = Promise<SyncExpectationResult>;
@@ -23,8 +24,8 @@ export type RawMatcherFn = {
   [INTERNAL_MATCHER_FLAG]?: boolean;
 };
 
-export type ThrowingMatcherFn = (actual: any) => void;
-export type PromiseMatcherFn = (actual: any) => Promise<void>;
+export type ThrowingMatcherFn = (actual: any) => any;
+export type PromiseMatcherFn = (actual: any) => Promise<any>;
 
 export type Tester = (a: any, b: any) => boolean | undefined;
 

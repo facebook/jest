@@ -171,7 +171,9 @@ const toThrowExpectedRegExp = (
             formatStack(thrown)
           : formatReceived('Received value:   ', thrown, 'value'));
 
-  return {message, pass};
+  const value = thrown !== null ? thrown.value : undefined;
+
+  return {message, pass, value};
 };
 
 type AsymmetricMatcher = {
@@ -210,7 +212,9 @@ const toThrowExpectedAsymmetric = (
             formatStack(thrown)
           : formatReceived('Thrown value: ', thrown, 'value'));
 
-  return {message, pass};
+  const value = thrown !== null ? thrown.value : undefined;
+
+  return {message, pass, value};
 };
 
 const toThrowExpectedObject = (
@@ -249,7 +253,9 @@ const toThrowExpectedObject = (
           : formatExpected('Expected message: ', expected.message) +
             formatReceived('Received value:   ', thrown, 'value'));
 
-  return {message, pass};
+  const value = thrown !== null ? thrown.value : undefined;
+
+  return {message, pass, value};
 };
 
 const toThrowExpectedClass = (
@@ -299,7 +305,9 @@ const toThrowExpectedClass = (
                 formatStack(thrown)
               : formatReceived('Received value: ', thrown, 'value')));
 
-  return {message, pass};
+  const value = thrown !== null ? thrown.value : undefined;
+
+  return {message, pass, value};
 };
 
 const toThrowExpectedString = (
@@ -334,7 +342,9 @@ const toThrowExpectedString = (
             formatStack(thrown)
           : formatReceived('Received value:     ', thrown, 'value'));
 
-  return {message, pass};
+  const value = thrown !== null ? thrown.value : undefined;
+
+  return {message, pass, value};
 };
 
 const toThrow = (
@@ -358,7 +368,9 @@ const toThrow = (
         '\n\n' +
         DID_NOT_THROW;
 
-  return {message, pass};
+  const value = thrown !== null ? thrown.value : undefined;
+
+  return {message, pass, value};
 };
 
 const formatExpected = (label: string, expected: unknown) =>

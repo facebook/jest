@@ -295,6 +295,8 @@ const makeThrowingMatcher = (
           getState().suppressedErrors.push(error);
         }
       }
+
+      return result.value;
     };
 
     const handlError = (error: Error) => {
