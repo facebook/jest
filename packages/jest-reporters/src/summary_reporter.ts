@@ -55,7 +55,7 @@ export default class SummaryReporter extends BaseReporter {
   private _globalConfig: Config.GlobalConfig;
 
   constructor(globalConfig: Config.GlobalConfig) {
-    super();
+    super(globalConfig);
     this._globalConfig = globalConfig;
     this._estimatedTime = 0;
   }
@@ -67,7 +67,12 @@ export default class SummaryReporter extends BaseReporter {
   // when hundreds of tests are failing.
   private _write(string: string) {
     for (let i = 0; i < string.length; i++) {
-      process.stderr.write(string.charAt(i));
+      const char = string.charAt(i);
+      if (this._globalConfig.useStderr) {
+        process.stderr.write(char);
+      } else {
+        process.stdout.write(char);
+      }
     }
   }
 

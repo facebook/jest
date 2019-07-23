@@ -38,7 +38,7 @@ export default class CoverageReporter extends BaseReporter {
     globalConfig: Config.GlobalConfig,
     options?: CoverageReporterOptions,
   ) {
-    super();
+    super(globalConfig);
     this._coverageMap = istanbulCoverage.createCoverageMap({});
     this._globalConfig = globalConfig;
     this._sourceMapStore = libSourceMaps.createSourceMapStore();
@@ -143,9 +143,14 @@ export default class CoverageReporter extends BaseReporter {
     }
 
     if (isInteractive) {
-      process.stderr.write(
-        RUNNING_TEST_COLOR('Running coverage on untested files...'),
+      const message = RUNNING_TEST_COLOR(
+        'Running coverage on untested files...',
       );
+      if (this._globalConfig.useStderr) {
+        process.stderr.write(message);
+      } else {
+        process.stdout.write(message);
+      }
     }
 
     let worker: CoverageWorker | Worker;

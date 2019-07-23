@@ -28,7 +28,7 @@ export default class NotifyReporter extends BaseReporter {
     startRun: (globalConfig: Config.GlobalConfig) => any,
     context: TestSchedulerContext,
   ) {
-    super();
+    super(globalConfig);
     this._globalConfig = globalConfig;
     this._startRun = startRun;
     this._context = context;

@@ -26,6 +26,7 @@
 - `[jest-core]` Fix incorrect `passWithNoTests` warning ([#8595](https://github.com/facebook/jest/pull/8595))
 - `[jest-snapshots]` Fix test retries that contain snapshots ([#8629](https://github.com/facebook/jest/pull/8629))
 - `[jest-mock]` Fix incorrect assignments when restoring mocks in instances where they originally didn't exist ([#8631](https://github.com/facebook/jest/pull/8631))
+- `[jest-reporters]` Make reporters respect `useStderr` option and write to `stdout` by default ([#6583](https://github.com/facebook/jest/pull/6583))
 
 ### Chore & Maintenance
 
