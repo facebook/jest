@@ -28,7 +28,10 @@ export default (
   }));
 };
 
-const convertRowToTable = (row: Global.Row, headings: Headings): Global.Table =>
+export const convertRowToTable = (
+  row: Global.Row,
+  headings: Headings,
+): Global.Table =>
   Array.from({length: row.length / headings.length}).map((_, index) =>
     row.slice(
       index * headings.length,

@@ -21,6 +21,7 @@
 - `[@jest/core, @jest/test-sequencer]` Support async sort in custom `testSequencer` ([#8642](https://github.com/facebook/jest/pull/8642))
 - `[jest-runtime, @jest/fake-timers]` Add `jest.advanceTimersToNextTimer` ([#8713](https://github.com/facebook/jest/pull/8713))
 - `[@jest-transform]` Extract transforming require logic within `jest-core` into `@jest-transform` ([#8756](https://github.com/facebook/jest/pull/8756))
+- `[jest-each]` Enable comments inside `.each` template literal table ([#8717](https://github.com/facebook/jest/pull/8717))
 
 ### Fixes
 

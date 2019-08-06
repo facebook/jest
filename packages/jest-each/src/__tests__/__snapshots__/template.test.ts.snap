@@ -1,9 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`jest-each .describe comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .describe comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .describe comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .describe throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .describe throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .describe throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -39,10 +57,28 @@ exports[`jest-each .describe throws error when there are no arguments for given 
 "
 `;
 
+exports[`jest-each .describe.only comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .describe.only comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .describe.only comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .describe.only throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .describe.only throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .describe.only throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -78,10 +114,28 @@ exports[`jest-each .describe.only throws error when there are no arguments for g
 "
 `;
 
+exports[`jest-each .fdescribe comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .fdescribe comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .fdescribe comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .fdescribe throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .fdescribe throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .fdescribe throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -117,10 +171,28 @@ exports[`jest-each .fdescribe throws error when there are no arguments for given
 "
 `;
 
+exports[`jest-each .fit comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .fit comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .fit comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .fit throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .fit throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .fit throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -156,10 +228,28 @@ exports[`jest-each .fit throws error when there are no arguments for given headi
 "
 `;
 
+exports[`jest-each .it comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .it comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .it comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .it throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .it throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .it throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -195,10 +285,28 @@ exports[`jest-each .it throws error when there are no arguments for given headin
 "
 `;
 
+exports[`jest-each .it.only comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .it.only comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .it.only comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .it.only throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .it.only throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .it.only throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -234,10 +342,28 @@ exports[`jest-each .it.only throws error when there are no arguments for given h
 "
 `;
 
+exports[`jest-each .test comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .test comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .test comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .test throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .test throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .test throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:
@@ -273,10 +399,28 @@ exports[`jest-each .test throws error when there are no arguments for given head
 "
 `;
 
+exports[`jest-each .test.only comments throws error part of data is commented out 1`] = `
+"Not enough arguments supplied for given headings:
+<green>a | b | expected</>
+
+Received:
+<red>Array [</>
+<red>  0,</>
+<red>]</>
+
+Missing <red>1</> argument"
+`;
+
+exports[`jest-each .test.only comments throws syntax error when closing multiline comment was never closed 1`] = `"Unexpected trailing token /*"`;
+
+exports[`jest-each .test.only comments throws syntax error when closing multiline comment was never opened 1`] = `"Unexpected token */"`;
+
 exports[`jest-each .test.only throws an error when called with an empty string 1`] = `
 "Error: \`.each\` called with an empty Tagged Template Literal of table data.
 "
 `;
+
+exports[`jest-each .test.only throws error when headings are missing 1`] = `"Headings are required"`;
 
 exports[`jest-each .test.only throws error when there are fewer arguments than headings over multiple rows 1`] = `
 "Not enough arguments supplied for given headings:

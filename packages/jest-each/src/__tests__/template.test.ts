@@ -100,6 +100,23 @@ describe('jest-each', () => {
         expect(testCallBack).not.toHaveBeenCalled();
       });
 
+      test('throws error when headings are missing', () => {
+        const globalTestMocks = getGlobalTestMocks();
+        const eachObject = each.withGlobal(globalTestMocks)`
+          ${0} | ${1} | ${1}
+        `;
+        const testFunction = get(eachObject, keyPath);
+        const testCallBack = jest.fn();
+        testFunction('this will blow up :(', testCallBack);
+
+        const globalMock = get(globalTestMocks, keyPath);
+
+        expect(() =>
+          globalMock.mock.calls[0][1](),
+        ).toThrowErrorMatchingSnapshot();
+        expect(testCallBack).not.toHaveBeenCalled();
+      });
+
       test('throws an error when called with an empty string', () => {
         const globalTestMocks = getGlobalTestMocks();
         const eachObject = each.withGlobal(globalTestMocks)`   `;
@@ -131,6 +148,25 @@ describe('jest-each', () => {
           expectFunction,
           undefined,
         );
+      });
+
+      test('calls multiple with single heading', () => {
+        const globalTestMocks = getGlobalTestMocks();
+        const eachObject = each.withGlobal(globalTestMocks)`
+          a
+          ${0}
+          ${1}
+          ${2}
+        `;
+        const testFunction = get(eachObject, keyPath);
+        testFunction('expected: a=$a', noop);
+
+        const globalMock = get(globalTestMocks, keyPath);
+        expect(globalMock.mock.calls).toEqual([
+          ['expected: a=0', expectFunction, undefined],
+          ['expected: a=1', expectFunction, undefined],
+          ['expected: a=2', expectFunction, undefined],
+        ]);
       });
 
       test('calls global with given title when multiple tests cases exist', () => {
@@ -307,6 +343,192 @@ describe('jest-each', () => {
           expect.any(Function),
           undefined,
         );
+      });
+
+      describe('comments', () => {
+        test('removes commented out tests and allow spaces between', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(globalTestMocks)`
+          a    | b    | expected // is ignored
+
+          /* first section */
+          /* ${5} | ${5} | ${0} */
+          ${1} | ${1} | ${2} /* stuff at end */
+          /* ${5} | ${5} | ${1} /* ignores third comment */ */
+          
+          /* ${5} | ${5} | ${2} /* multi-line comments */
+          ${5} | ${5} | ${3}
+          ${5} | ${5} | ${4} */
+          
+
+
+          // second section
+          // ${5} | ${5} | ${5} // ignored
+          ${2} | ${2} | ${4} // ignore trailing
+        `;
+          const testFunction = get(eachObject, keyPath);
+          testFunction('expected string: a=$a, b=$b, expected=$expected', noop);
+
+          const globalMock = get(globalTestMocks, keyPath);
+          expect(globalMock.mock.calls).toEqual([
+            [
+              'expected string: a=1, b=1, expected=2',
+              expect.any(Function),
+              undefined,
+            ],
+            [
+              'expected string: a=2, b=2, expected=4',
+              expect.any(Function),
+              undefined,
+            ],
+          ]);
+        });
+
+        test('removes comments with windows new line characters "\\r\\n"', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(
+            globalTestMocks,
+          )`\r\na    | b    | expected\r\n// ${1} | ${1} | ${0}\r\n${1} | ${1} | ${2}\r\n/* ${1} | ${1} | ${5} */\r\n${2} | ${2} | ${4}\r\n`;
+          const testFunction = get(eachObject, keyPath);
+          testFunction('expected string: a=$a, b=$b, expected=$expected', noop);
+
+          const globalMock = get(globalTestMocks, keyPath);
+          expect(globalMock.mock.calls).toEqual([
+            [
+              'expected string: a=1, b=1, expected=2',
+              expect.any(Function),
+              undefined,
+            ],
+            [
+              'expected string: a=2, b=2, expected=4',
+              expect.any(Function),
+              undefined,
+            ],
+          ]);
+        });
+
+        test('comments with single header', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(globalTestMocks)`
+          a // ignore trailing
+
+          /* first section */
+          /* ${0} */
+          ${1} /* ignore trailing */
+          
+          ${2} // ignore end
+          // second section
+          // ${3}
+          ${4}
+        `;
+          const testFunction = get(eachObject, keyPath);
+          testFunction('expected: a=$a', noop);
+
+          const globalMock = get(globalTestMocks, keyPath);
+          expect(globalMock.mock.calls).toEqual([
+            ['expected: a=1', expect.any(Function), undefined],
+            ['expected: a=2', expect.any(Function), undefined],
+            ['expected: a=4', expect.any(Function), undefined],
+          ]);
+        });
+
+        test('various comment patterns', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(globalTestMocks)`
+            /* upper */
+            /*
+              //
+              /* // second */
+              /* third // */
+              /* ignore */
+              / * / * /
+            */
+            
+            a | b | /* inline */ | expected
+            // first section ||/* end
+            
+            ${1} | ${1} /*line ignore*/| ${2} // ignore
+            //|| ${0} | ${0} | ${1}
+            /*||*/ ${2} |/* inline */ ${2} | ${4}
+            ${3} | ${3} | ${6}
+          `;
+
+          const testFunction = get(eachObject, keyPath);
+          testFunction('expected string: a=$a, b=$b, expected=$expected', noop);
+
+          const globalMock = get(globalTestMocks, keyPath);
+          expect(globalMock.mock.calls).toEqual([
+            [
+              'expected string: a=1, b=1, expected=2',
+              expect.any(Function),
+              undefined,
+            ],
+            [
+              'expected string: a=2, b=2, expected=4',
+              expect.any(Function),
+              undefined,
+            ],
+            [
+              'expected string: a=3, b=3, expected=6',
+              expect.any(Function),
+              undefined,
+            ],
+          ]);
+        });
+
+        test('throws error part of data is commented out', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(globalTestMocks)`
+          a    | b  | expected
+          ${0} | // ${1} | ${1}
+        `;
+          const testFunction = get(eachObject, keyPath);
+          const testCallBack = jest.fn();
+          testFunction('this will blow up :(', testCallBack);
+
+          const globalMock = get(globalTestMocks, keyPath);
+
+          expect(() =>
+            globalMock.mock.calls[0][1](),
+          ).toThrowErrorMatchingSnapshot();
+          expect(testCallBack).not.toHaveBeenCalled();
+        });
+
+        test('throws syntax error when closing multiline comment was never opened', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(globalTestMocks)`
+          a    | b  | expected */
+          ${0} | ${1} | ${1}
+        `;
+          const testFunction = get(eachObject, keyPath);
+          const testCallBack = jest.fn();
+          testFunction('this will blow up :(', testCallBack);
+
+          const globalMock = get(globalTestMocks, keyPath);
+
+          expect(() =>
+            globalMock.mock.calls[0][1](),
+          ).toThrowErrorMatchingSnapshot();
+          expect(testCallBack).not.toHaveBeenCalled();
+        });
+
+        test('throws syntax error when closing multiline comment was never closed', () => {
+          const globalTestMocks = getGlobalTestMocks();
+          const eachObject = each.withGlobal(globalTestMocks)`
+          a    | b  | expected
+          ${0} | ${1} | ${1} /*
+        `;
+          const testFunction = get(eachObject, keyPath);
+          const testCallBack = jest.fn();
+          testFunction('this will blow up :(', testCallBack);
+
+          const globalMock = get(globalTestMocks, keyPath);
+
+          expect(() =>
+            globalMock.mock.calls[0][1](),
+          ).toThrowErrorMatchingSnapshot();
+          expect(testCallBack).not.toHaveBeenCalled();
+        });
       });
     });
   });

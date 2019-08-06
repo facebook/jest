@@ -54,6 +54,11 @@ export const validateTemplateTableHeadings = (
   headings: Array<string>,
   data: TemplateData,
 ) => {
+  const missingHeadings = headings.length === 0;
+  if (missingHeadings === true) {
+    throw new Error('Headings are required');
+  }
+
   const missingData = data.length % headings.length;
 
   if (missingData > 0) {
