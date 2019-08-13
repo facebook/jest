@@ -39,8 +39,7 @@ describe('check', () => {
 
   it('raises an exception if findRelatedTests is specified with no file paths', () => {
     const argv = {
-      _: [] as Array<string>,
-      findRelatedTests: true,
+      findRelatedTests: [],
     } as Config.Argv;
     expect(() => check(argv)).toThrow(
       'The --findRelatedTests option requires file paths to be specified',
@@ -69,11 +68,9 @@ describe('check', () => {
 
 describe('buildArgv', () => {
   it('should return only camelcased args ', () => {
-    // @ts-ignore
     const mockProcessArgv = jest
       .spyOn(process.argv, 'slice')
       .mockImplementation(() => ['--clear-mocks']);
-    // @ts-ignore
     const actual = buildArgv(null);
     expect(actual).not.toHaveProperty('clear-mocks');
     expect(actual).toHaveProperty('clearMocks', true);

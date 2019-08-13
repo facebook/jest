@@ -34,7 +34,7 @@ describe('--findRelatedTests flag', () => {
     const {stderr} = runJest(DIR, ['--findRelatedTests', 'a.js']);
     expect(stderr).toMatch('PASS __tests__/test.test.js');
 
-    const summaryMsg = 'Ran all test suites related to files matching /a.js/i.';
+    const summaryMsg = 'Ran all test suites.';
     expect(stderr).toMatch(summaryMsg);
   });
 
@@ -87,7 +87,7 @@ describe('--findRelatedTests flag', () => {
     expect(stderr).toMatch('PASS __tests__/test.test.js');
     expect(stderr).not.toMatch('PASS __tests__/test-skip-deps.test.js');
 
-    const summaryMsg = 'Ran all test suites related to files matching /a.js/i.';
+    const summaryMsg = 'Ran all test suites.';
     expect(stderr).toMatch(summaryMsg);
   });
 
@@ -188,6 +188,43 @@ describe('--findRelatedTests flag', () => {
     ({stdout, stderr} = runJest(DIR, ['--findRelatedTests', 'b.js']));
 
     // Neither a.js or b.js should be in the report
+    expect(stdout).toMatch('No tests found');
+    expect(stderr).toBe('');
+  });
+
+  test('exclude tests that do not match --testPathPattern flag', () => {
+    writeFiles(DIR, {
+      '.watchmanconfig': '',
+      '__tests__/a.test.js': `
+        require('../a');
+        test('a', () => expect(1).toBe(1));
+      `,
+      '__tests__/b.test.js': `
+        require('../b');
+        test('b', () => expect(1).toBe(1));
+      `,
+      'a.js': 'module.exports = {}',
+      'b.js': 'module.exports = {}',
+      'package.json': JSON.stringify({
+        jest: {
+          collectCoverage: true,
+          collectCoverageFrom: ['b.js', 'a.js'],
+          testEnvironment: 'node',
+        },
+      }),
+    });
+
+    /* eslint-disable prefer-const */
+    let stdout;
+    let stderr;
+    ({stdout, stderr} = runJest(
+      DIR,
+      ['--findRelatedTests', 'a.js', 'b.js', '--testPathPattern', 'xyz'],
+      {
+        stripAnsi: true,
+      },
+    ));
+
     expect(stdout).toMatch('No tests found');
     expect(stderr).toBe('');
   });

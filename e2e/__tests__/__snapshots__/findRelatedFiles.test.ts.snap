@@ -5,7 +5,7 @@ Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites related to files matching /a.js|b.js/i.
+Ran all test suites.
 `;
 
 exports[`--findRelatedTests flag coverage configuration is applied correctly 2`] = `
@@ -50,7 +50,7 @@ Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
-Ran all test suites related to files matching /a.js/i.
+Ran all test suites.
 `;
 
 exports[`--findRelatedTests flag generates coverage report for filename 5`] = `

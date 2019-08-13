@@ -965,14 +965,26 @@ export default function normalize(
     );
   }
 
+  if (newOptions.findRelatedTests && newOptions.findRelatedTests.length > 0) {
+    newOptions.findRelatedTests = newOptions.findRelatedTests.filter(Boolean);
+  }
+
+  if (argv.findRelatedTests && argv.findRelatedTests.length > 0) {
+    argv.findRelatedTests = argv.findRelatedTests.filter(Boolean);
+  }
+
   // If collectCoverage is enabled while using --findRelatedTests we need to
   // avoid having false negatives in the generated coverage report.
   // The following: `--findRelatedTests '/rootDir/file1.js' --coverage`
   // Is transformed to: `--findRelatedTests '/rootDir/file1.js' --coverage --collectCoverageFrom 'file1.js'`
   // where arguments to `--collectCoverageFrom` should be globs (or relative
   // paths to the rootDir)
-  if (newOptions.collectCoverage && argv.findRelatedTests) {
-    let collectCoverageFrom = argv._.map(filename => {
+  if (
+    newOptions.collectCoverage &&
+    argv.findRelatedTests &&
+    argv.findRelatedTests.length > 0
+  ) {
+    let collectCoverageFrom = argv.findRelatedTests.map(filename => {
       filename = replaceRootDirInPath(options.rootDir, filename);
       return path.isAbsolute(filename)
         ? path.relative(options.rootDir, filename)

@@ -195,9 +195,10 @@ export default class SummaryReporter extends BaseReporter {
     globalConfig: Config.GlobalConfig,
   ) {
     const getMatchingTestsInfo = () => {
-      const prefix = globalConfig.findRelatedTests
-        ? ' related to files matching '
-        : ' matching ';
+      const prefix =
+        globalConfig.findRelatedTests.length > 0
+          ? ' related to files matching '
+          : ' matching ';
 
       return (
         chalk.dim(prefix) +

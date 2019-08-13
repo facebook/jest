@@ -99,6 +99,7 @@ exports[`--showConfig outputs config info and exits 1`] = `
     "errorOnDeprecated": false,
     "expand": false,
     "filter": null,
+    "findRelatedTests": [],
     "globalSetup": null,
     "globalTeardown": null,
     "json": false,

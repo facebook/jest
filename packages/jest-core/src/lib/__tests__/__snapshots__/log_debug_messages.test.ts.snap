@@ -82,7 +82,7 @@ exports[`prints the config object 1`] = `
     "expand": false,
     "extraGlobals": [],
     "filter": null,
-    "findRelatedTests": false,
+    "findRelatedTests": [],
     "forceExit": false,
     "globalSetup": null,
     "globalTeardown": null,

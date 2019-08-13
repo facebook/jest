@@ -32,7 +32,7 @@ export const check = (argv: Config.Argv) => {
     }
   }
 
-  if (argv.findRelatedTests && argv._.length === 0) {
+  if (argv.findRelatedTests && argv.findRelatedTests.length === 0) {
     throw new Error(
       'The --findRelatedTests option requires file paths to be specified.\n' +
         'Example usage: jest --findRelatedTests ./src/source.js ' +
@@ -268,7 +268,7 @@ export const options = {
       'Find related tests for a list of source files that were ' +
       'passed in as arguments. Useful for pre-commit hook integration to run ' +
       'the minimal amount of tests necessary.',
-    type: 'boolean' as 'boolean',
+    type: 'array' as 'array',
   },
   forceExit: {
     default: undefined,

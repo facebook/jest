@@ -248,12 +248,11 @@ describe('findRelatedTests', () => {
         rootDir: '/root/path/foo/',
       },
       {
-        _: [
+        findRelatedTests: [
           `/root/path/${sourceFile}`,
           sourceFile,
           `<rootDir>/bar/${sourceFile}`,
         ],
-        findRelatedTests: true,
       },
     );
 

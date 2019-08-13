@@ -28,7 +28,7 @@ export type SearchResult = {
 
 export type TestSelectionConfig = {
   input?: string;
-  findRelatedTests?: boolean;
+  findRelatedTests?: Array<string>;
   onlyChanged?: boolean;
   paths?: Array<Config.Path>;
   shouldTreatInputAsPattern?: boolean;
@@ -265,11 +265,19 @@ export default class SearchSource {
       );
     } else if (globalConfig.runTestsByPath && paths && paths.length) {
       return this.findTestsByPaths(paths);
-    } else if (globalConfig.findRelatedTests && paths && paths.length) {
-      return this.findRelatedTestsFromPattern(
-        paths,
+    } else if (globalConfig.findRelatedTests.length > 0) {
+      const relatedTests = this.findRelatedTestsFromPattern(
+        globalConfig.findRelatedTests,
         globalConfig.collectCoverage,
       );
+      if (globalConfig.testPathPattern != null) {
+        return this._filterTestPathsWithStats(
+          relatedTests.tests,
+          globalConfig.testPathPattern,
+        );
+      } else {
+        return relatedTests;
+      }
     } else if (globalConfig.testPathPattern != null) {
       return this.findMatchingTests(globalConfig.testPathPattern);
     } else {
