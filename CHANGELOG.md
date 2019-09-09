@@ -24,6 +24,7 @@
 
 ### Fixes
 
+- `[jest-validate]` Allow --testURL as a CLI option ([#8908](https://github.com/facebook/jest/pull/8908))
 - `[expect]` Display expectedDiff more carefully in toBeCloseTo ([#8389](https://github.com/facebook/jest/pull/8389))
 - `[jest-diff]` Do not inverse format if line consists of one change ([#8903](https://github.com/facebook/jest/pull/8903))
 - `[jest-fake-timers]` `getTimerCount` will not include cancelled immediates ([#8764](https://github.com/facebook/jest/pull/8764))

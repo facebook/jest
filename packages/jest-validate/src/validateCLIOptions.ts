@@ -80,6 +80,7 @@ export default function validateCLIOptions(
   const unrecognizedOptions = Object.keys(argv).filter(
     arg =>
       !allowedOptions.has(camelcase(arg)) &&
+      !allowedOptions.has(arg) &&
       (!rawArgv.length || rawArgv.includes(arg)),
     [],
   );
