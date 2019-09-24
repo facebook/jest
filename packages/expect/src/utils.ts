@@ -16,6 +16,7 @@ import {
 
 type GetPath = {
   hasEndProp?: boolean;
+  endPropIsDefined?: boolean;
   lastTraversedObject: unknown;
   traversedPath: Array<string>;
   value?: unknown;
@@ -84,8 +85,8 @@ export const getPath = (
       // Does object have the property with an undefined value?
       // Although primitive values support bracket notation (above)
       // they would throw TypeError for in operator (below).
-      result.hasEndProp =
-        newObject !== undefined || (!isPrimitive(object) && prop in object);
+      result.endPropIsDefined = !isPrimitive(object) && prop in object;
+      result.hasEndProp = newObject !== undefined || result.endPropIsDefined;
 
       if (!result.hasEndProp) {
         result.traversedPath.shift();

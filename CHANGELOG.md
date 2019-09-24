@@ -25,6 +25,7 @@
 
 ### Fixes
 
+- `[expect]` [**BREAKING**] Fix false positives when looking for undefined prop ([#8786](https://github.com/facebook/jest/issues/8786))
 - `[expect]` Display expectedDiff more carefully in toBeCloseTo ([#8389](https://github.com/facebook/jest/pull/8389))
 - `[jest-core]` Don't include unref'd timers in --detectOpenHandles results ([#8941](https://github.com/facebook/jest/pull/8941))
 - `[jest-diff]` Do not inverse format if line consists of one change ([#8903](https://github.com/facebook/jest/pull/8903))

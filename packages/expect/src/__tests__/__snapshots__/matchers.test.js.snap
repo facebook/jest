@@ -3083,6 +3083,16 @@ Expected value: <green>undefined</>
 Received value: <red>3</>"
 `;
 
+exports[`.toHaveProperty() {pass: false} expect({"a": {}}).toHaveProperty('a.b', undefined) 1`] = `
+"<dim>expect(</><red>received</><dim>).</>toHaveProperty<dim>(</><green>path</><dim>, </><green>value</><dim>)</>
+
+Expected path: <green>\\"a.b\\"</>
+Received path: <red>\\"a\\"</>
+
+Expected value: <green>undefined</>
+Received value: <red>{}</>"
+`;
+
 exports[`.toHaveProperty() {pass: false} expect({"a": 1}).toHaveProperty('a.b.c.d') 1`] = `
 "<dim>expect(</><red>received</><dim>).</>toHaveProperty<dim>(</><green>path</><dim>)</>
 
@@ -3337,18 +3347,6 @@ exports[`.toHaveProperty() {pass: true} expect({"a": {"b": undefined}}).toHavePr
 Expected path: <green>\\"a.b\\"</>
 
 Expected value: not <green>undefined</>"
-`;
-
-exports[`.toHaveProperty() {pass: true} expect({"a": {}}).toHaveProperty('a.b', undefined) 1`] = `
-"<dim>expect(</><red>received</><dim>).</>not<dim>.</>toHaveProperty<dim>(</><green>path</><dim>, </><green>value</><dim>)</>
-
-Expected path: <green>\\"a.b\\"</>
-Received path: <red>\\"a\\"</>
-
-Expected value: not <green>undefined</>
-Received value:     <red>{}</>
-
-<dim>Because a positive assertion passes for expected value undefined if the property does not exist, this negative assertion fails unless the property does exist and has a defined value</>"
 `;
 
 exports[`.toHaveProperty() {pass: true} expect({"a": 0}).toHaveProperty('a') 1`] = `

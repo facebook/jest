@@ -730,37 +730,15 @@ const matchers: MatchersObject = {
     }
 
     const result = getPath(received, expectedPath);
-    const {lastTraversedObject, hasEndProp} = result;
+    const {lastTraversedObject, endPropIsDefined, hasEndProp, value} = result;
     const receivedPath = result.traversedPath;
     const hasCompletePath = receivedPath.length === expectedPathLength;
     const receivedValue = hasCompletePath ? result.value : lastTraversedObject;
 
-    const pass = hasValue
-      ? equals(result.value, expectedValue, [iterableEquality])
-      : Boolean(hasEndProp); // theoretically undefined if empty path
-    // Remove type cast if we rewrite getPath as iterative algorithm.
-
-    // Delete this unique report if future breaking change
-    // removes the edge case that expected value undefined
-    // also matches absence of a property with the key path.
-    if (pass && !hasCompletePath) {
-      const message = () =>
-        matcherHint(matcherName, undefined, expectedArgument, options) +
-        '\n\n' +
-        `Expected path: ${printExpected(expectedPath)}\n` +
-        `Received path: ${printReceived(
-          expectedPathType === 'array' || receivedPath.length === 0
-            ? receivedPath
-            : receivedPath.join('.'),
-        )}\n\n` +
-        `Expected value: not ${printExpected(expectedValue)}\n` +
-        `Received value:     ${printReceived(receivedValue)}\n\n` +
-        DIM_COLOR(
-          'Because a positive assertion passes for expected value undefined if the property does not exist, this negative assertion fails unless the property does exist and has a defined value',
-        );
-
-      return {message, pass};
-    }
+    const pass =
+      hasValue && endPropIsDefined
+        ? equals(value, expectedValue, [iterableEquality])
+        : Boolean(hasEndProp);
 
     const message = pass
       ? () =>
