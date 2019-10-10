@@ -176,3 +176,5 @@ module.exports = {
 ```
 
 However, there are some [caveats](https://babeljs.io/docs/en/next/babel-plugin-transform-typescript.html#caveats) to using TypeScript with Babel. Because TypeScript support in Babel is just transpilation, Jest will not type-check your tests as they are ran. If you want that, you can use [ts-jest](https://github.com/kulshekhar/ts-jest).
+
+In addition, Jest will not transpile a module or its dependencies when it is passed into a [jest-worker](https://github.com/facebook/jest/tree/master/packages/jest-worker).
