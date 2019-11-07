@@ -11736,7 +11736,7 @@ fsevents@^1.2.7:
     jest-runtime: ^26.4.2
     jest-util: ^26.3.0
     jest-worker: ^26.3.0
-    source-map-support: ^0.5.6
+    source-map-support: 0.5.14
     throat: ^5.0.0
   languageName: unknown
   linkType: soft
@@ -17659,6 +17659,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"source-map-support@npm:0.5.14":
+  version: 0.5.14
+  resolution: "source-map-support@npm:0.5.14"
+  dependencies:
+    buffer-from: ^1.0.0
+    source-map: ^0.6.0
+  checksum: ac11b459eb0fd18b6b6852807cc6f66d89fe8e66a4e26144737b8ca7c2c5c018c4d971f1b25cbcff4c6fdee060655eca6e53bb2a4f0a14daffd2d24918393916
+  languageName: node
+  linkType: hard
+
 "source-map-support@npm:^0.5.16":
   version: 0.5.19
   resolution: "source-map-support@npm:0.5.19"
@@ -17666,16 +17676,6 @@ fsevents@^1.2.7:
     buffer-from: ^1.0.0
     source-map: ^0.6.0
   checksum: 59d4efaae97755155b078413ecba63517e3ef054cc7ab767bbd30e6f3054be2ae8e8f5cce7eef53b7eb93e98fe27a58dd8f5e7abfb13144ba420ddaf5267bbb2
-  languageName: node
-  linkType: hard
-
-"source-map-support@npm:^0.5.6":
-  version: 0.5.13
-  resolution: "source-map-support@npm:0.5.13"
-  dependencies:
-    buffer-from: ^1.0.0
-    source-map: ^0.6.0
-  checksum: e4877c5d653fcce19d8f1d0b697cd6f435632cb26275699b580fc7bb6d3146bb49aceee2cb9b3159fd66747ce34e8dd9b348b9aecdae22bcc41c5e841e901dfa
   languageName: node
   linkType: hard
 
