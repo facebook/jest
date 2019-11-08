@@ -28,7 +28,7 @@
     "jest-runtime": "^26.4.2",
     "jest-util": "^26.3.0",
     "jest-worker": "^26.3.0",
-    "source-map-support": "0.5.14",
+    "source-map-support": "^0.5.6",
     "throat": "^5.0.0"
   },
   "devDependencies": {
