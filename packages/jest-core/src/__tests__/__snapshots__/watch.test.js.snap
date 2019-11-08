@@ -57,7 +57,7 @@ exports[`Watch mode flows makes watch plugin initialization errors look nice 1`]
 
     initialization error
 
-      at Object.<anonymous> (__fixtures__/watch_plugin_throws.js:8:7)
+      at Object.from (__fixtures__/watch_plugin_throws.js:8:7)
 ]
 `;
 
