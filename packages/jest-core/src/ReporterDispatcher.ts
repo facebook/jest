@@ -5,7 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import {AggregatedResult, TestResult} from '@jest/test-result';
+import {
+  AggregatedResult,
+  TestCase,
+  TestCaseResult,
+  TestResult,
+} from '@jest/test-result';
 import {Test} from 'jest-runner';
 import {Context} from 'jest-runtime';
 import {Reporter, ReporterOnStartOptions} from '@jest/reporters';
@@ -27,14 +32,17 @@ export default class ReporterDispatcher {
     );
   }
 
-  async onTestResult(
+  async onTestFileResult(
     test: Test,
     testResult: TestResult,
     results: AggregatedResult,
   ) {
     for (const reporter of this._reporters) {
-      reporter.onTestResult &&
-        (await reporter.onTestResult(test, testResult, results));
+      if (reporter.onTestFileResult) {
+        await reporter.onTestFileResult(test, testResult, results);
+      } else if (reporter.onTestResult) {
+        await reporter.onTestResult(test, testResult, results);
+      }
     }
 
     // Release memory if unused later.
@@ -43,15 +51,30 @@ export default class ReporterDispatcher {
     testResult.console = undefined;
   }
 
-  async onTestStart(test: Test) {
+  async onTestFileStart(test: Test) {
     for (const reporter of this._reporters) {
-      reporter.onTestStart && (await reporter.onTestStart(test));
+      if (reporter.onTestFileStart) {
+        await reporter.onTestFileStart(test);
+      } else if (reporter.onTestStart) {
+        await reporter.onTestStart(test);
+      }
     }
   }
 
   async onRunStart(results: AggregatedResult, options: ReporterOnStartOptions) {
     for (const reporter of this._reporters) {
       reporter.onRunStart && (await reporter.onRunStart(results, options));
+    }
+  }
+
+  async onTestCaseResult(
+    test: Test,
+    testCase: TestCase,
+    testCaseResult: TestCaseResult,
+  ) {
+    for (const reporter of this._reporters) {
+      reporter.onTestCaseResult &&
+        (await reporter.onTestCaseResult(test, testCase, testCaseResult));
     }
   }
 

@@ -6,7 +6,12 @@
  */
 
 import {Config} from '@jest/types';
-import {AggregatedResult, TestResult} from '@jest/test-result';
+import {
+  AggregatedResult,
+  TestCase,
+  TestCaseResult,
+  TestResult,
+} from '@jest/test-result';
 import {clearLine, isInteractive} from 'jest-util';
 import {getConsoleOutput} from '@jest/console';
 import chalk from 'chalk';
@@ -128,6 +133,14 @@ export default class DefaultReporter extends BaseReporter {
 
   onTestStart(test: Test) {
     this._status.testStarted(test.path, test.context.config);
+  }
+
+  onTestCaseResult(
+    test: Test,
+    _testCase: TestCase,
+    testCaseResult: TestCaseResult,
+  ) {
+    this._status.addTestCaseResult(test, testCaseResult);
   }
 
   onRunComplete() {

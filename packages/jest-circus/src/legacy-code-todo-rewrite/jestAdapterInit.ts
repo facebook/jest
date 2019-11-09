@@ -30,6 +30,7 @@ import {
 } from '../state';
 import {getTestID} from '../utils';
 import run from '../run';
+import testCaseReportHandler from '../testCaseReportHandler';
 import globals from '..';
 
 type Process = NodeJS.Process;
@@ -43,6 +44,7 @@ export const initialize = ({
   localRequire,
   parentProcess,
   testPath,
+  sendMessageToJest,
 }: {
   config: Config.ProjectConfig;
   environment: JestEnvironment;
@@ -52,6 +54,7 @@ export const initialize = ({
   localRequire: (path: Config.Path) => any;
   testPath: Config.Path;
   parentProcess: Process;
+  sendMessageToJest?: Function;
 }) => {
   if (globalConfig.testTimeout) {
     getRunnerState().testTimeout = globalConfig.testTimeout;
@@ -138,6 +141,9 @@ export const initialize = ({
   setState({snapshotState, testPath});
 
   addEventHandler(handleSnapshotStateAfterRetry(snapshotState));
+  if (sendMessageToJest) {
+    addEventHandler(testCaseReportHandler(testPath, sendMessageToJest));
+  }
 
   // Return it back to the outer scope (test runner outside the VM).
   return {globals, snapshotState};

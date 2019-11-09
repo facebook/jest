@@ -6,10 +6,10 @@
  */
 
 import {Config} from '@jest/types';
-import {AggregatedResult, TestResult} from '@jest/test-result';
+import {AggregatedResult, TestCaseResult, TestResult} from '@jest/test-result';
 import chalk from 'chalk';
 import stringLength = require('string-length');
-import {ReporterOnStartOptions} from './types';
+import {ReporterOnStartOptions, Test} from './types';
 import {
   getSummary,
   printDisplayName,
@@ -56,7 +56,6 @@ class CurrentTestList {
     return this._array;
   }
 }
-
 /**
  * A class that generates the CLI status of currently running tests
  * and also provides an ANSI escape sequence to remove status lines
@@ -66,6 +65,10 @@ export default class Status {
   private _cache: {content: string; clear: string} | null;
   private _callback?: () => void;
   private _currentTests: CurrentTestList;
+  private _currentTestCases: Array<{
+    test: Test;
+    testCaseResult: TestCaseResult;
+  }>;
   private _done: boolean;
   private _emitScheduled: boolean;
   private _estimatedTime: number;
@@ -76,6 +79,7 @@ export default class Status {
   constructor() {
     this._cache = null;
     this._currentTests = new CurrentTestList();
+    this._currentTestCases = [];
     this._done = false;
     this._emitScheduled = false;
     this._estimatedTime = 0;
@@ -103,6 +107,15 @@ export default class Status {
     this._emit();
   }
 
+  addTestCaseResult(test: Test, testCaseResult: TestCaseResult) {
+    this._currentTestCases.push({test, testCaseResult});
+    if (!this._showStatus) {
+      this._emit();
+    } else {
+      this._debouncedEmit();
+    }
+  }
+
   testStarted(testPath: Config.Path, config: Config.ProjectConfig) {
     this._currentTests.add(testPath, config);
     if (!this._showStatus) {
@@ -120,6 +133,9 @@ export default class Status {
     const {testFilePath} = testResult;
     this._aggregatedResults = aggregatedResults;
     this._currentTests.delete(testFilePath);
+    this._currentTestCases = this._currentTestCases.filter(({test}) =>
+      _config === test.context.config ? test.path !== testFilePath : true,
+    );
     this._debouncedEmit();
   }
 
@@ -156,6 +172,7 @@ export default class Status {
       content +=
         '\n' +
         getSummary(this._aggregatedResults, {
+          currentTestCases: this._currentTestCases,
           estimatedTime: this._estimatedTime,
           roundTime: true,
           width,

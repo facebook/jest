@@ -49,6 +49,7 @@ describe('Farm', () => {
       [1, true, 'foo', [42]],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
   });
 
@@ -67,12 +68,15 @@ describe('Farm', () => {
       [1, true, 'foo', [42]],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
       2,
       1, // second worker
       [1, true, 'foo1', [43]],
       expect.any(Function),
+      expect.any(Function),
+
       expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
@@ -81,11 +85,13 @@ describe('Farm', () => {
       [1, true, 'foo2', [44]],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
       4,
       3, // fourth worker
       [1, true, 'foo3', [45]],
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function),
     );
@@ -108,6 +114,7 @@ describe('Farm', () => {
       1,
       0, // first worker
       [1, true, 'foo', [42]],
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function),
     );
@@ -146,6 +153,7 @@ describe('Farm', () => {
       [1, true, 'foo', [42]],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
       2,
@@ -153,11 +161,13 @@ describe('Farm', () => {
       [1, true, 'foo1', [43]],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
       3,
       0, // first worker again
       [1, true, 'foo2', [44]],
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function),
     );
@@ -220,11 +230,13 @@ describe('Farm', () => {
       [1, true, 'car', ['plane']],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
       2,
       0, // first worker
       [1, true, 'foo', ['bar']],
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function),
     );
@@ -261,11 +273,13 @@ describe('Farm', () => {
       [1, true, 'car', ['plane']],
       expect.any(Function),
       expect.any(Function),
+      expect.any(Function),
     );
     expect(callback).toHaveBeenNthCalledWith(
       2,
       0, // first worker
       [1, true, 'foo', ['bar']],
+      expect.any(Function),
       expect.any(Function),
       expect.any(Function),
     );

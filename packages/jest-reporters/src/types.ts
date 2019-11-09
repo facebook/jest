@@ -9,6 +9,8 @@ import {Config} from '@jest/types';
 import {
   AggregatedResult,
   SerializableError,
+  TestCase,
+  TestCaseResult,
   TestResult,
 } from '@jest/test-result';
 import {JestEnvironment as Environment} from '@jest/environment';
@@ -53,16 +55,31 @@ export type OnTestFailure = (
 export type OnTestSuccess = (test: Test, result: TestResult) => Promise<any>;
 
 export interface Reporter {
-  readonly onTestResult: (
+  readonly onTestResult?: (
     test: Test,
     testResult: TestResult,
     aggregatedResult: AggregatedResult,
+  ) => Promise<void> | void;
+  readonly onTestFileResult?: (
+    test: Test,
+    testResult: TestResult,
+    aggregatedResult: AggregatedResult,
+  ) => Promise<void> | void;
+  readonly onTestCaseResult?: (
+    test: Test,
+    testCase: TestCase,
+    testCaseResult: TestCaseResult,
   ) => Promise<void> | void;
   readonly onRunStart: (
     results: AggregatedResult,
     options: ReporterOnStartOptions,
   ) => Promise<void> | void;
-  readonly onTestStart: (test: Test) => Promise<void> | void;
+  readonly onTestStart?: (test: Test) => Promise<void> | void;
+  readonly onTestFileStart?: (test: Test) => Promise<void> | void;
+  readonly onTestCaseStart?: (
+    test: Test,
+    testCase: TestCase,
+  ) => Promise<void> | void;
   readonly onRunComplete: (
     contexts: Set<Context>,
     results: AggregatedResult,
@@ -71,6 +88,7 @@ export interface Reporter {
 }
 
 export type SummaryOptions = {
+  currentTestCases?: Array<{test: Test; testCaseResult: TestCaseResult}>;
   estimatedTime?: number;
   roundTime?: boolean;
   width?: number;

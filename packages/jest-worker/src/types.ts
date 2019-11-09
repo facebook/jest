@@ -19,6 +19,7 @@ export const CHILD_MESSAGE_END: 2 = 2;
 export const PARENT_MESSAGE_OK: 0 = 0;
 export const PARENT_MESSAGE_CLIENT_ERROR: 1 = 1;
 export const PARENT_MESSAGE_SETUP_ERROR: 2 = 2;
+export const PARENT_MESSAGE_CUSTOM: -1 = -1;
 
 export type PARENT_MESSAGE_ERROR =
   | typeof PARENT_MESSAGE_CLIENT_ERROR
@@ -34,6 +35,7 @@ export interface WorkerPoolInterface {
     request: ChildMessage,
     onStart: OnStart,
     onEnd: OnEnd,
+    onCustomMessage: OnCustomMessage,
   ): void;
   end(): Promise<PoolExitResult>;
 }
@@ -43,6 +45,7 @@ export interface WorkerInterface {
     request: ChildMessage,
     onProcessStart: OnStart,
     onProcessEnd: OnEnd,
+    onCustomMessage: OnCustomMessage,
   ): void;
   waitForExit(): Promise<void>;
   forceExit(): void;
@@ -55,6 +58,10 @@ export interface WorkerInterface {
 export type PoolExitResult = {
   forceExited: boolean;
 };
+
+export interface PromiseWithCustomMessage<T> extends Promise<T> {
+  onCustomMessage?: (listener: OnCustomMessage) => () => void;
+}
 
 // Option objects.
 
@@ -128,6 +135,11 @@ export type ChildMessage =
 
 // Messages passed from the children to the parent.
 
+export type ParentMessageCustom = [
+  typeof PARENT_MESSAGE_CUSTOM, // type
+  unknown, // result
+];
+
 export type ParentMessageOk = [
   typeof PARENT_MESSAGE_OK, // type
   unknown, // result
@@ -141,17 +153,22 @@ export type ParentMessageError = [
   unknown, // extra
 ];
 
-export type ParentMessage = ParentMessageOk | ParentMessageError;
+export type ParentMessage =
+  | ParentMessageOk
+  | ParentMessageError
+  | ParentMessageCustom;
 
 // Queue types.
 
 export type OnStart = (worker: WorkerInterface) => void;
 export type OnEnd = (err: Error | null, result: unknown) => void;
+export type OnCustomMessage = (message: unknown) => void;
 
 export type QueueChildMessage = {
   request: ChildMessage;
   onStart: OnStart;
   onEnd: OnEnd;
+  onCustomMessage: OnCustomMessage;
 };
 
 export type QueueItem = {

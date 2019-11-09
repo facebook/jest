@@ -71,6 +71,7 @@ describe('WorkerPool', () => {
       {foo: 'bar'},
       onStart,
       onEnd,
+      undefined,
     );
   });
 
@@ -100,6 +101,7 @@ describe('WorkerPool', () => {
       {foo: 'bar'},
       onStart,
       onEnd,
+      undefined,
     );
   });
 
@@ -128,6 +130,7 @@ describe('WorkerPool', () => {
       {foo: 'bar'},
       onStart,
       onEnd,
+      undefined,
     );
   });
 });

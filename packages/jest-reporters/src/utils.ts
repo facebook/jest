@@ -7,11 +7,11 @@
 
 import * as path from 'path';
 import {Config} from '@jest/types';
-import {AggregatedResult} from '@jest/test-result';
+import {AggregatedResult, TestCaseResult} from '@jest/test-result';
 import chalk from 'chalk';
 import slash = require('slash');
 import {pluralize} from 'jest-util';
-import {SummaryOptions} from './types';
+import {SummaryOptions, Test} from './types';
 
 const PROGRESS_BAR_WIDTH = 40;
 
@@ -94,6 +94,31 @@ export const relativePath = (
   return {basename, dirname};
 };
 
+const getValuesCurrentTestCases = (
+  currentTestCases: Array<{test: Test; testCaseResult: TestCaseResult}> = [],
+) => {
+  let numFailingTests = 0;
+  let numPassingTests = 0;
+  let numPendingTests = 0;
+  let numTodoTests = 0;
+  let numTotalTests = 0;
+  currentTestCases.forEach(({testCaseResult: {status}}) => {
+    numFailingTests += status === 'failed' ? 1 : 0;
+    numPassingTests += status === 'passed' ? 1 : 0;
+    numPendingTests += status === 'skipped' ? 1 : 0;
+    numTodoTests += status === 'todo' ? 1 : 0;
+    numTotalTests += 1;
+  });
+
+  return {
+    numFailingTests,
+    numPassingTests,
+    numPendingTests,
+    numTodoTests,
+    numTotalTests,
+  };
+};
+
 export const getSummary = (
   aggregatedResults: AggregatedResult,
   options?: SummaryOptions,
@@ -102,6 +127,11 @@ export const getSummary = (
   if (options && options.roundTime) {
     runTime = Math.floor(runTime);
   }
+
+  const valuesForCurrentTestCases = getValuesCurrentTestCases(
+    options ? options.currentTestCases : [],
+  );
+  // console.log(aggregatedQuickStats.numPassingTests);
 
   const estimatedTime = (options && options.estimatedTime) || 0;
   const snapshotResults = aggregatedResults.snapshot;
@@ -139,11 +169,27 @@ export const getSummary = (
 
   const tests =
     chalk.bold('Tests:       ') +
-    (testsFailed ? chalk.bold.red(`${testsFailed} failed`) + ', ' : '') +
-    (testsPending ? chalk.bold.yellow(`${testsPending} skipped`) + ', ' : '') +
-    (testsTodo ? chalk.bold.magenta(`${testsTodo} todo`) + ', ' : '') +
-    (testsPassed ? chalk.bold.green(`${testsPassed} passed`) + ', ' : '') +
-    `${testsTotal} total`;
+    (testsFailed
+      ? chalk.bold.red(
+          `${testsFailed + valuesForCurrentTestCases.numFailingTests} failed`,
+        ) + ', '
+      : '') +
+    (testsPending
+      ? chalk.bold.yellow(
+          `${testsPending + valuesForCurrentTestCases.numPendingTests} skipped`,
+        ) + ', '
+      : '') +
+    (testsTodo
+      ? chalk.bold.magenta(
+          `${testsTodo + valuesForCurrentTestCases.numTodoTests} todo`,
+        ) + ', '
+      : '') +
+    (testsPassed
+      ? chalk.bold.green(
+          `${testsPassed + valuesForCurrentTestCases.numPassingTests} passed`,
+        ) + ', '
+      : '') +
+    `${testsTotal + valuesForCurrentTestCases.numTotalTests} total`;
 
   const snapshots =
     chalk.bold('Snapshots:   ') +

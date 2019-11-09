@@ -13,6 +13,7 @@ import exit = require('exit');
 import {separateMessageFromStack} from 'jest-message-util';
 import Runtime = require('jest-runtime');
 import Resolver = require('jest-resolve');
+import {messageParent} from 'jest-worker';
 import {ErrorWithCode, TestRunnerSerializedContext} from './types';
 import runTest from './runTest';
 
@@ -74,6 +75,10 @@ export function setup(setupData: {
   }
 }
 
+const sendMessageToJest = (eventName: string, args: Array<any>) => {
+  messageParent([eventName, args]);
+};
+
 export async function worker({
   config,
   globalConfig,
@@ -86,6 +91,7 @@ export async function worker({
       globalConfig,
       config,
       getResolver(config),
+      sendMessageToJest,
       context && {
         ...context,
         changedFiles: context.changedFiles && new Set(context.changedFiles),

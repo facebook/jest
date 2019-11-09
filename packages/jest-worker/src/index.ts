@@ -11,9 +11,11 @@ import Farm from './Farm';
 import {
   FarmOptions,
   PoolExitResult,
+  PromiseWithCustomMessage,
   WorkerPoolInterface,
   WorkerPoolOptions,
 } from './types';
+import _messageParent from './workers/messageParent';
 
 function getExposedMethods(
   workerPath: string,
@@ -146,3 +148,6 @@ export default class JestWorker {
     return this._workerPool.end();
   }
 }
+
+export {PromiseWithCustomMessage};
+export const messageParent = _messageParent;
