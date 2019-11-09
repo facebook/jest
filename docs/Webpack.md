@@ -3,11 +3,11 @@ id: webpack
 title: Using with webpack
 ---
 
-Jest can be used in projects that use [webpack](https://webpack.js.org/) to manage assets, styles, and compilation. webpack _does_ offer some unique challenges over other tools because it integrates directly with your application to allow managing stylesheets, assets like images and fonts, along with the expansive ecosystem of compile-to-JavaScript languages and tools.
+Jest can be used in projects that use [webpack](https://webpack.js.org/) to manage assets, styles, and compilation. webpack _does_ offer some unique benefits over other tools because it integrates directly with your application to allow you the ability to manage assets like images, fonts, and stylesheets, and a host of compile-to-JavaScript languages and tools as part of webpack's expansive ecosystem. 
 
 ## A webpack example
 
-Let's start with a common sort of webpack config file and translate it to a Jest setup.
+Let us demonstrate how to configure Jest so that it can be used with webpack. We'll start with an example webpack `.config` file.
 
 ```js
 // webpack.config.js
@@ -40,7 +40,7 @@ If you have JavaScript files that are transformed by Babel, you can [enable supp
 
 ### Handling Static Assets
 
-Next, let's configure Jest to gracefully handle asset files such as stylesheets and images. Usually, these files aren't particularly useful in tests so we can safely mock them out. However, if you are using CSS Modules then it's better to mock a proxy for your className lookups.
+Next, let's configure Jest to handle asset files such as stylesheets and images.
 
 ```json
 // package.json
@@ -53,8 +53,7 @@ Next, let's configure Jest to gracefully handle asset files such as stylesheets 
   }
 }
 ```
-
-And the mock files themselves:
+Usually, asset files aren't useful in tests, so we can safely mock them out like so:
 
 ```js
 // __mocks__/styleMock.js
@@ -70,13 +69,14 @@ module.exports = 'test-file-stub';
 
 ### Mocking CSS Modules
 
+If you are using CSS Modules then it's better to mock a proxy for your className lookups.
 You can use an [ES6 Proxy](https://github.com/keyanzhang/identity-obj-proxy) to mock [CSS Modules](https://github.com/css-modules/css-modules):
 
 ```bash
 yarn add --dev identity-obj-proxy
 ```
 
-Then all your className lookups on the styles object will be returned as-is (e.g., `styles.foobar === 'foobar'`). This is pretty handy for React [Snapshot Testing](SnapshotTesting.md).
+As a result, all of your className lookups on the styles object will be returned as-is (e.g., `styles.foobar === 'foobar'`). This is pretty handy for React [Snapshot Testing](SnapshotTesting.md).
 
 ```json
 // package.json (for CSS Modules)
@@ -92,7 +92,7 @@ Then all your className lookups on the styles object will be returned as-is (e.g
 
 > Notice that Proxy is enabled in Node 6 by default. If you are not on Node 6 yet, make sure you invoke Jest using `node --harmony_proxies node_modules/.bin/jest`.
 
-If `moduleNameMapper` cannot fulfill your requirements, you can use Jest's [`transform`](Configuration.md#transform-object-string-string) config option to specify how assets are transformed. For example, a transformer that returns the basename of a file (such that `require('logo.jpg');` returns `'logo'`) can be written as:
+If `moduleNameMapper` cannot fulfill your requirements, you can use Jest's [`transform`](Configuration.md#transform-object-string-string) config option to specify how assets are transformed. For example, a transformer that returns the basename of a file can be written as:
 
 ```js
 // fileTransformer.js
