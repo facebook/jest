@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {PassThrough} from 'stream';
 import deepCyclicCopy from './deepCyclicCopy';
 
 const BLACKLIST = new Set(['env', 'mainModule', '_events']);
@@ -79,6 +80,18 @@ function createProcessEnv(): NodeJS.ProcessEnv {
   return Object.assign(proxy, process.env);
 }
 
+function overrideProcessStream(
+  newProcess: NodeJS.Process,
+  streamName: 'stdout' | 'stderr',
+) {
+  const newStream = new PassThrough();
+  Object.defineProperty(newProcess, streamName, {
+    ...Object.getOwnPropertyDescriptor(newProcess, streamName),
+    get: () => newStream,
+  });
+  newProcess[streamName].isTTY = newProcess[streamName].isTTY;
+}
+
 export default function() {
   const process = require('process');
   const newProcess = deepCyclicCopy(process, {
@@ -111,6 +124,9 @@ export default function() {
 
   newProcess.env = createProcessEnv();
   newProcess.send = () => {};
+
+  overrideProcessStream(newProcess, 'stdout');
+  overrideProcessStream(newProcess, 'stderr');
 
   return newProcess;
 }

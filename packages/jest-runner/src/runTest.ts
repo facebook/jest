@@ -191,31 +191,41 @@ async function runTestInternal(
   // For runtime errors
   sourcemapSupport.install(sourcemapOptions);
 
-  if (
-    environment.global &&
-    environment.global.process &&
-    environment.global.process.exit
-  ) {
-    const realExit = environment.global.process.exit;
+  const globalProcess = environment.global && environment.global.process;
 
-    environment.global.process.exit = function exit(...args: Array<any>) {
-      const error = new ErrorWithStack(
-        `process.exit called with "${args.join(', ')}"`,
-        exit,
+  if (globalProcess) {
+    if (globalProcess.exit) {
+      const realExit = environment.global.process.exit;
+
+      environment.global.process.exit = function exit(...args: Array<any>) {
+        const error = new ErrorWithStack(
+          `process.exit called with "${args.join(', ')}"`,
+          exit,
+        );
+
+        const formattedError = formatExecError(
+          error,
+          config,
+          {noStackTrace: false},
+          undefined,
+          true,
+        );
+
+        process.stderr.write(formattedError);
+
+        return realExit(...args);
+      };
+    }
+
+    if (globalProcess.stderr) {
+      globalProcess.stderr.pipe(process.stderr);
+    }
+
+    if (globalProcess.stdout) {
+      globalProcess.stdout.pipe(
+        globalConfig.useStderr ? process.stderr : process.stdout,
       );
-
-      const formattedError = formatExecError(
-        error,
-        config,
-        {noStackTrace: false},
-        undefined,
-        true,
-      );
-
-      process.stderr.write(formattedError);
-
-      return realExit(...args);
-    };
+    }
   }
 
   try {
