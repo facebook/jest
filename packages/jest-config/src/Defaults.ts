@@ -31,6 +31,8 @@ const defaultOptions: Config.DefaultOptions = {
   expand: false,
   filter: null,
   forceCoverageMatch: [],
+  freezeCoreModules: false,
+  freezeCoreModulesWhitelist: ['crypto'],
   globalSetup: null,
   globalTeardown: null,
   globals: {},

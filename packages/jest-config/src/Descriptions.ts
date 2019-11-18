@@ -31,6 +31,10 @@ const descriptions: {[key in keyof Config.InitialOptions]: string} = {
     'Make calling deprecated APIs throw helpful error messages',
   forceCoverageMatch:
     'Force coverage collection from ignored files using an array of glob patterns',
+  freezeCoreModules:
+    "Prevents overriding node's core module methods so to prevent memory leaks",
+  freezeCoreModulesWhitelist:
+    'Array of node core modules which will not be frozen',
   globalSetup:
     'A path to a module which exports an async function that is triggered once before all test suites',
   globalTeardown:

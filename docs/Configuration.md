@@ -367,6 +367,22 @@ You can collect coverage from those files with setting `forceCoverageMatch`.
 }
 ```
 
+### `freezeCoreModules` [boolean]
+
+Default: `false`
+
+Prevents overriding node's core module methods so to prevent memory leaks.
+
+Attempt to override such a property will fail silently.
+
+Running with [`verbose`](#verbose-boolean) flag will enable informative print outs.
+
+### `freezeCoreModulesWhitelist` [Array<string>]
+
+Default: `['crypto']`
+
+Array of node core modules which will not be frozen.
+
 ### `globals` [object]
 
 Default: `{}`

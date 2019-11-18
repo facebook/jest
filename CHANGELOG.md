@@ -2,6 +2,7 @@
 
 ### Features
 
+- `[jest-config]` Add `freezeCoreModules` configuration option to mitigate memory leaks described in the following issues: [#6399](https://github.com/facebook/jest/issues/6399), [#6814](https://github.com/facebook/jest/issues/6814) ([#8331](https://github.com/facebook/jest/pull/8331))
 - `[babel-plugin-jest-hoist]` Show codeframe on static hoisting issues ([#8865](https://github.com/facebook/jest/pull/8865))
 - `[babel-plugin-jest-hoist]` Add `BigInt` to `WHITELISTED_IDENTIFIERS` ([#8382](https://github.com/facebook/jest/pull/8382))
 - `[babel-preset-jest]` Add `@babel/plugin-syntax-bigint` ([#8382](https://github.com/facebook/jest/pull/8382))

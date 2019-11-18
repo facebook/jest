@@ -19,6 +19,10 @@ exports[`--showConfig outputs config info and exits 1`] = `
       "errorOnDeprecated": false,
       "filter": null,
       "forceCoverageMatch": [],
+      "freezeCoreModules": false,
+      "freezeCoreModulesWhitelist": [
+        "crypto"
+      ],
       "globalSetup": null,
       "globalTeardown": null,
       "globals": {},
@@ -78,6 +82,7 @@ exports[`--showConfig outputs config info and exits 1`] = `
       "transformIgnorePatterns": [
         "/node_modules/"
       ],
+      "verbose": null,
       "watchPathIgnorePatterns": []
     }
   ],

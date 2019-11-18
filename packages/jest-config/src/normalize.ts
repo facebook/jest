@@ -847,6 +847,8 @@ export default function normalize(
       case 'findRelatedTests':
       case 'forceCoverageMatch':
       case 'forceExit':
+      case 'freezeCoreModules':
+      case 'freezeCoreModulesWhitelist':
       case 'lastCommit':
       case 'listTests':
       case 'logHeapUsage':

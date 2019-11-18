@@ -48,6 +48,8 @@ const initialOptions: Config.InitialOptions = {
   filter: '<rootDir>/filter.js',
   forceCoverageMatch: ['**/*.t.js'],
   forceExit: false,
+  freezeCoreModules: false,
+  freezeCoreModulesWhitelist: ['crypto'],
   globalSetup: 'setup.js',
   globalTeardown: 'teardown.js',
   globals: {__DEV__: true},

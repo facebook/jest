@@ -81,6 +81,8 @@ const DEFAULT_PROJECT_CONFIG: Config.ProjectConfig = {
   extraGlobals: [],
   filter: null,
   forceCoverageMatch: [],
+  freezeCoreModules: false,
+  freezeCoreModulesWhitelist: ['crypto'],
   globalSetup: null,
   globalTeardown: null,
   globals: {},
@@ -120,6 +122,7 @@ const DEFAULT_PROJECT_CONFIG: Config.ProjectConfig = {
   transform: [],
   transformIgnorePatterns: [],
   unmockedModulePathPatterns: null,
+  verbose: false,
   watchPathIgnorePatterns: [],
 };
 

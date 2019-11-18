@@ -18,7 +18,7 @@ import jestMock = require('jest-mock');
 import HasteMap = require('jest-haste-map');
 import {formatStackTrace, separateMessageFromStack} from 'jest-message-util';
 import Resolver = require('jest-resolve');
-import {createDirectory, deepCyclicCopy} from 'jest-util';
+import {ErrorWithStack, createDirectory, deepCyclicCopy} from 'jest-util';
 import {escapePathForRegex} from 'jest-regex-util';
 import Snapshot = require('jest-snapshot');
 import {
@@ -84,6 +84,7 @@ class Runtime {
 
   private _cacheFS: CacheFS;
   private _config: Config.ProjectConfig;
+  private _coreModulesProxyCache: {[moduleName: string]: any};
   private _coverageOptions: ShouldInstrumentOptions;
   private _currentlyExecutingModulePath: string;
   private _environment: JestEnvironment;
@@ -125,6 +126,7 @@ class Runtime {
       collectCoverageFrom: [],
       collectCoverageOnlyFrom: null,
     };
+    this._coreModulesProxyCache = Object.create(null);
     this._currentlyExecutingModulePath = '';
     this._environment = environment;
     this._explicitShouldMock = Object.create(null);
@@ -770,7 +772,46 @@ class Runtime {
       return this._environment.global.process;
     }
 
-    return require(moduleName);
+    const module = require(moduleName);
+
+    if (
+      !this._config.freezeCoreModules ||
+      this._config.freezeCoreModulesWhitelist.includes(moduleName)
+    ) {
+      return module;
+    }
+
+    if (this._coreModulesProxyCache[moduleName]) {
+      return this._coreModulesProxyCache[moduleName];
+    }
+
+    const set = (
+      target: object,
+      property: PropertyKey,
+      value: any,
+      receiver: any,
+    ) => {
+      if (typeof value !== 'function' || value._isMockFunction) {
+        return Reflect.set(target, property, value, receiver);
+      }
+
+      if (this._config.verbose) {
+        console.warn(
+          new ErrorWithStack(
+            `Trying to override method '${property.toString()}' of a frozen core module '${moduleName}'`,
+            set,
+          ),
+        );
+      }
+
+      return true;
+    };
+
+    const proxy = new Proxy(module, {set});
+
+    this._coreModulesProxyCache[moduleName] = proxy;
+
+    return proxy;
   }
 
   private _generateMock(from: Config.Path, moduleName: string) {

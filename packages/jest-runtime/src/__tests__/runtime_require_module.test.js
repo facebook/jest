@@ -184,6 +184,54 @@ describe('Runtime requireModule', () => {
       }).not.toThrow();
     }));
 
+  it('prevents overriding core module methods when `config.freezeCoreModules` is set', () =>
+    createRuntime(__filename, {freezeCoreModules: true}).then(runtime => {
+      const fs = runtime.requireModule(runtime.__mockRootPath, 'fs');
+      const originalFsClose = fs.close;
+
+      fs.close = () => {};
+
+      expect(fs.close).toBe(originalFsClose);
+    }));
+
+  it('allows mocking core module methods when `config.freezeCoreModules` is set', () =>
+    createRuntime(__filename, {freezeCoreModules: true}).then(runtime => {
+      const root = runtime.requireModule(runtime.__mockRootPath);
+      const fs = runtime.requireModule(runtime.__mockRootPath, 'fs');
+      let mockImplementationCalled = false;
+      const spy = root.jest.spyOn(fs, 'close').mockImplementation(() => {
+        mockImplementationCalled = true;
+      });
+
+      fs.close();
+
+      expect(mockImplementationCalled).toBe(true);
+      expect(spy).toHaveBeenCalled();
+    }));
+
+  it('allows overriding `crypto` core module methods by default', () =>
+    createRuntime(__filename, {freezeCoreModules: true}).then(runtime => {
+      const crypto = runtime.requireModule(runtime.__mockRootPath, 'crypto');
+      const cryptoRandomBytesOverride = () => {};
+
+      crypto.randomBytes = cryptoRandomBytesOverride;
+
+      expect(crypto.randomBytes).toBe(cryptoRandomBytesOverride);
+    }));
+
+  it('allows overriding core module methods when module is in `config.freezeCoreModulesWhitelist`', () =>
+    createRuntime(__filename, {
+      freezeCoreModules: true,
+      freezeCoreModulesWhitelist: ['fs'],
+    }).then(runtime => {
+      const fs = runtime.requireModule(runtime.__mockRootPath, 'fs');
+      const fsCloseOverride = () => {};
+
+      fs.close = fsCloseOverride;
+
+      expect(fs.close).toBe(fsCloseOverride);
+    }));
+
   it('finds and loads JSON files without file extension', () =>
     createRuntime(__filename).then(runtime => {
       const exports = runtime.requireModule(

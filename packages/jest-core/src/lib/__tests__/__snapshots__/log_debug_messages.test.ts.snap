@@ -16,6 +16,10 @@ exports[`prints the config object 1`] = `
     "extraGlobals": [],
     "filter": null,
     "forceCoverageMatch": [],
+    "freezeCoreModules": false,
+    "freezeCoreModulesWhitelist": [
+      "crypto"
+    ],
     "globalSetup": null,
     "globalTeardown": null,
     "globals": {},
@@ -61,6 +65,7 @@ exports[`prints the config object 1`] = `
     "transform": [],
     "transformIgnorePatterns": [],
     "unmockedModulePathPatterns": null,
+    "verbose": false,
     "watchPathIgnorePatterns": []
   },
   "globalConfig": {
