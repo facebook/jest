@@ -52,6 +52,7 @@
 - `[jest-core]` Limit number of workers when creating haste maps in projects ([#9259](https://github.com/facebook/jest/pull/9259))
 - `[jest-diff]` Do not inverse format if line consists of one change ([#8903](https://github.com/facebook/jest/pull/8903))
 - `[jest-diff]` Rename some new options and change their default values ([#9077](https://github.com/facebook/jest/pull/9077))
+- `[jest-docblock]` Fix for docblock not being found when the docblock was not at the top of the file ([#9084](https://github.com/facebook/jest/pull/9084))
 - `[jest-fake-timers]` `getTimerCount` will not include cancelled immediates ([#8764](https://github.com/facebook/jest/pull/8764))
 - `[jest-leak-detector]` [**BREAKING**] Use `weak-napi` instead of `weak` package ([#8686](https://github.com/facebook/jest/pull/8686))
 - `[jest-mock]` Fix for mockReturnValue overriding mockImplementationOnce ([#8398](https://github.com/facebook/jest/pull/8398))
