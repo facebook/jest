@@ -55,7 +55,7 @@ export function readConfig(
         'Jest: Cannot use configuration as an object without a file path.',
       );
     }
-  } else if (isJSONString(argv.config)) {
+  } else if (!skipArgvConfigOption && isJSONString(argv.config)) {
     // A JSON string was passed to `--config` argument and we can parse it
     // and use as is.
     let config;

@@ -46,6 +46,7 @@
 
 ### Fixes
 
+- `[jest-config]` skip argv config option on projects if JSON config ([#9096](https://github.com/facebook/jest/pull/9096))
 - `[expect]` Display `expectedDiff` more carefully in `toBeCloseTo` ([#8389](https://github.com/facebook/jest/pull/8389))
 - `[expect]` Avoid incorrect difference for subset when `toMatchObject` fails ([#9005](https://github.com/facebook/jest/pull/9005))
 - `[expect]` Consider all RegExp flags for equality ([#9167](https://github.com/facebook/jest/pull/9167))
