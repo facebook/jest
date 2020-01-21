@@ -18,7 +18,7 @@ module.exports = {
     '!**/__tests__/**',
     '!**/build/**',
     '!**/vendor/**',
-    '!e2e/**',
+    '!e2e/**'
   ],
   modulePathIgnorePatterns: [
     'examples/.*',

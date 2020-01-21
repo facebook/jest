@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Get yarn cache
         id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -33,11 +33,16 @@ jobs:
         run: node scripts/build.js
       - name: run tsc
         run: yarn build:ts
-      - name: run eslint
-        run: yarn lint
+      - name: run eslint & prettier
+        uses: samuelmeuli/lint-action@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          auto_fix: true
+          eslint: true
+          eslint_extensions: js,jsx,ts,tsx,md
+          prettier: true
+          prettier_extensions: md,yml,yaml
       - name: run eslint on browser builds
         run: yarn lint-es5-build
-      - name: run prettier
-        run: yarn lint:prettier:ci
       - name: check copyright headers
         run: yarn check-copyright-headers
