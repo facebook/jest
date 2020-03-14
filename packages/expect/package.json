@@ -11,6 +11,7 @@
   "types": "build/index.d.ts",
   "browser": "build-es5/index.js",
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.8.7",
     "@jest/types": "^25.1.0",
     "ansi-styles": "^4.0.0",
     "jest-get-type": "^25.1.0",

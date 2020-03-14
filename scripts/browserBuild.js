@@ -17,7 +17,20 @@ const babelEs5Options = {
   // Dont load other config files
   babelrc: false,
   configFile: false,
-  overrides: transformOptions.overrides,
+  overrides: transformOptions.overrides.concat(
+    // `ansi-styles@4.x` uses Object.entries which is not supported in IE11
+    // we could transpile every node_modules but
+    // 1. It causes `$ is not a function` deep inside core-js. reason unknown
+    // 2. We keep the bundle smaller.
+    //    Transpiling with `transform-runtime` results in 537kB unminified vs
+    //    308kB unminified with just this override
+    {
+      plugins: [
+        [require.resolve('@babel/plugin-transform-runtime'), {corejs: 3}],
+      ],
+      test: /node_modules\/ansi-styles\//,
+    }
+  ),
   plugins: ['@babel/plugin-transform-strict-mode'],
   presets: [
     [

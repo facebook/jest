@@ -13,9 +13,10 @@
   "browser": "build-es5/index.js",
   "author": "James Kyle <me@thejameskyle.com>",
   "dependencies": {
+    "@babel/runtime-corejs3": "^7.8.7",
     "@jest/types": "^25.1.0",
     "ansi-regex": "^5.0.0",
-    "ansi-styles": "^4.0.0",
+    "ansi-styles": "^4.2.1",
     "react-is": "^16.12.0"
   },
   "devDependencies": {
