@@ -49,7 +49,7 @@ export const resolve = (
     );
   }
   /// can cast as string since nulls will be thrown
-  return module as string;
+  return module?.path as string;
 };
 
 export const escapeGlobCharacters = (path: Config.Path): Config.Glob =>
@@ -139,7 +139,7 @@ export const resolveWithPrefix = (
     resolver: resolver || undefined,
   });
   if (module) {
-    return module;
+    return module.path;
   }
 
   try {
@@ -151,7 +151,7 @@ export const resolveWithPrefix = (
     resolver: resolver || undefined,
   });
   if (module) {
-    return module;
+    return module.path;
   }
 
   try {

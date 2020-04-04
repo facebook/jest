@@ -88,36 +88,44 @@ export default class ScriptTransformer {
 
   private _getCacheKey(
     fileData: string,
-    filename: Config.Path,
+    filename: Config.RPth,
     instrument: boolean,
   ): string {
     const configString = this._cache.configString;
-    const transformer = this._getTransformer(filename);
+    const transformer = this._getTransformer(filename.path);
 
     if (transformer && typeof transformer.getCacheKey === 'function') {
-      return createHash('md5')
-        .update(
-          transformer.getCacheKey(fileData, filename, configString, {
-            config: this._config,
-            instrument,
-            rootDir: this._config.rootDir,
-          }),
-        )
-        .update(CACHE_VERSION)
-        .digest('hex');
+      return (
+        createHash('md5')
+          .update(
+            transformer.getCacheKey(fileData, filename.path, configString, {
+              config: this._config,
+              instrument,
+              rootDir: this._config.rootDir,
+            }),
+          )
+          .update(CACHE_VERSION)
+          // required for the query string support
+          .update(filename.id)
+          .digest('hex')
+      );
     } else {
-      return createHash('md5')
-        .update(fileData)
-        .update(configString)
-        .update(instrument ? 'instrument' : '')
-        .update(filename)
-        .update(CACHE_VERSION)
-        .digest('hex');
+      return (
+        createHash('md5')
+          .update(fileData)
+          .update(configString)
+          .update(instrument ? 'instrument' : '')
+          .update(filename.path)
+          // required for the query string support
+          .update(filename.id)
+          .update(CACHE_VERSION)
+          .digest('hex')
+      );
     }
   }
 
   private _getFileCachePath(
-    filename: Config.Path,
+    filename: Config.RPth,
     content: string,
     instrument: boolean,
   ): Config.Path {
@@ -131,7 +139,7 @@ export default class ScriptTransformer {
     // directory with many files.
     const cacheDir = path.join(baseCacheDir, cacheKey[0] + cacheKey[1]);
     const cacheFilenamePrefix = path
-      .basename(filename, path.extname(filename))
+      .basename(filename.path, path.extname(filename.path))
       .replace(/\W/g, '');
     const cachePath = slash(
       path.join(cacheDir, cacheFilenamePrefix + '_' + cacheKey),
@@ -242,13 +250,13 @@ export default class ScriptTransformer {
   }
 
   transformSource(
-    filepath: Config.Path,
+    filepath: Config.RPth,
     content: string,
     instrument: boolean,
   ): TransformResult {
-    const filename = this._getRealPath(filepath);
+    const filename = this._getRealPath(filepath.path);
     const transform = this._getTransformer(filename);
-    const cacheFilePath = this._getFileCachePath(filename, content, instrument);
+    const cacheFilePath = this._getFileCachePath(filepath, content, instrument);
     let sourceMapPath: Config.Path | null = cacheFilePath + '.map';
     // Ignore cache if `config.cache` is set (--no-cache)
     let code = this._config.cache ? readCodeCacheFile(cacheFilePath) : null;
@@ -345,7 +353,7 @@ export default class ScriptTransformer {
   }
 
   private _transformAndBuildScript(
-    filename: Config.Path,
+    filename: Config.RPth,
     options: Options | null,
     instrument: boolean,
     fileSource?: string,
@@ -353,7 +361,7 @@ export default class ScriptTransformer {
     const isInternalModule = !!(options && options.isInternalModule);
     const isCoreModule = !!(options && options.isCoreModule);
     const content = stripShebang(
-      fileSource || fs.readFileSync(filename, 'utf8'),
+      fileSource || fs.readFileSync(filename.path, 'utf8'),
     );
 
     let code = content;
@@ -363,7 +371,7 @@ export default class ScriptTransformer {
     const willTransform =
       !isInternalModule &&
       !isCoreModule &&
-      (this.shouldTransform(filename) || instrument);
+      (this.shouldTransform(filename.path) || instrument);
 
     try {
       if (willTransform) {
@@ -390,7 +398,7 @@ export default class ScriptTransformer {
   }
 
   transform(
-    filename: Config.Path,
+    filename: Config.RPth,
     options: Options,
     fileSource?: string,
   ): TransformResult {
@@ -400,7 +408,7 @@ export default class ScriptTransformer {
     if (!options.isCoreModule) {
       instrument =
         options.coverageProvider === 'babel' &&
-        shouldInstrument(filename, options, this._config);
+        shouldInstrument(filename.path, options, this._config);
       scriptCacheKey = getScriptCacheKey(filename, instrument);
       const result = this._cache.transformedFiles.get(scriptCacheKey);
       if (result) {
@@ -434,6 +442,7 @@ export default class ScriptTransformer {
 
     if (willTransform) {
       const {code: transformedJsonSource} = this.transformSource(
+        // @ts-ignore
         filename,
         fileSource,
         false,
@@ -465,6 +474,7 @@ export default class ScriptTransformer {
       (code, filename) => {
         try {
           transforming = true;
+          // @ts-ignore
           return this.transformSource(filename, code, false).code || code;
         } finally {
           transforming = false;
@@ -657,8 +667,8 @@ const readCacheFile = (cachePath: Config.Path): string | null => {
   return fileData;
 };
 
-const getScriptCacheKey = (filename: Config.Path, instrument: boolean) => {
-  const mtime = fs.statSync(filename).mtime;
+const getScriptCacheKey = (filename: Config.RPth, instrument: boolean) => {
+  const mtime = fs.statSync(filename.path).mtime;
   return filename + '_' + mtime.getTime() + (instrument ? '_instrumented' : '');
 };
 

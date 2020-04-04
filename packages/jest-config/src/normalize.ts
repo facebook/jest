@@ -137,12 +137,12 @@ const setupPreset = (
     // Force re-evaluation to support multiple projects
     try {
       if (presetModule) {
-        delete require.cache[require.resolve(presetModule)];
+        delete require.cache[require.resolve(presetModule.path)];
       }
     } catch (e) {}
 
     // @ts-ignore: `presetModule` can be null?
-    preset = require(presetModule);
+    preset = require(presetModule.path);
   } catch (error) {
     if (error instanceof SyntaxError || error instanceof TypeError) {
       throw createConfigError(
@@ -435,7 +435,7 @@ const normalizeReporters = (options: Config.InitialOptionsWithRootDir) => {
             `  Module name: ${reporterPath}`,
         );
       }
-      normalizedReporterConfig[0] = reporter;
+      normalizedReporterConfig[0] = reporter.path;
     }
     return normalizedReporterConfig;
   });

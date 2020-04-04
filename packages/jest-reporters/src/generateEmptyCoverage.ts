@@ -27,7 +27,7 @@ export type CoverageWorkerResult =
 
 export default function (
   source: string,
-  filename: Config.Path,
+  filename: Config.RPth,
   globalConfig: Config.GlobalConfig,
   config: Config.ProjectConfig,
   changedFiles?: Set<Config.Path>,
@@ -40,9 +40,9 @@ export default function (
     coverageProvider: globalConfig.coverageProvider,
   };
   let coverageWorkerResult: CoverageWorkerResult | null = null;
-  if (shouldInstrument(filename, coverageOptions, config)) {
+  if (shouldInstrument(filename.path, coverageOptions, config)) {
     if (coverageOptions.coverageProvider === 'v8') {
-      const stat = fs.statSync(filename);
+      const stat = fs.statSync(filename.path);
       return {
         kind: 'V8Coverage',
         result: {
@@ -60,7 +60,7 @@ export default function (
             },
           ],
           scriptId: '0',
-          url: filename,
+          url: filename.path,
         },
       };
     }

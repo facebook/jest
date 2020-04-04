@@ -55,7 +55,9 @@ type InternalModuleOptions = {
 };
 
 type InitialModule = Partial<Module> &
-  Pick<Module, 'children' | 'exports' | 'filename' | 'id' | 'loaded'>;
+  Pick<Module, 'children' | 'exports' | 'filename' | 'id' | 'loaded'> & {
+    rpth: Config.RPth;
+  };
 type ModuleRegistry = Map<string, InitialModule | Module>;
 type ResolveOptions = Parameters<typeof require.resolve>[1];
 
@@ -352,6 +354,7 @@ class Runtime {
       filename: modulePath,
       id: modulePath,
       loaded: false,
+      rpth: {id: 'InitialModule', path: modulePath},
     };
     moduleRegistry.set(modulePath, localModule);
 
@@ -442,6 +445,7 @@ class Runtime {
         filename: modulePath,
         id: modulePath,
         loaded: false,
+        rpth: {id: 'InitialModule', path: modulePath},
       };
 
       this._loadModule(
@@ -671,8 +675,8 @@ class Runtime {
     this._moduleMocker.clearAllMocks();
   }
 
-  private _resolveModule(from: Config.Path, to?: string) {
-    return to ? this._resolver.resolveModule(from, to) : from;
+  private _resolveModule(from: Config.Path, to?: string): string {
+    return to ? this._resolver.resolveModule(from, to).path : from;
   }
 
   private _requireResolve(
@@ -698,7 +702,7 @@ class Runtime {
           {paths: [absolutePath]},
         );
         if (module) {
-          return module;
+          return module.path;
         }
       }
 
@@ -746,7 +750,7 @@ class Runtime {
     localModule: InitialModule,
     options: InternalModuleOptions | undefined,
     moduleRegistry: ModuleRegistry,
-    from: Config.Path | null,
+    from: Config.Path | null, // RPth?
   ) {
     // If the environment was disposed, prevent this module from being executed.
     if (!this._environment.global) {
@@ -775,7 +779,7 @@ class Runtime {
       value: this._createRequireImplementation(localModule, options),
     });
     const transformedFile = this._scriptTransformer.transform(
-      filename,
+      localModule.rpth,
       this._getFullTransformationOptions(options),
       this._cacheFS[filename],
     );
@@ -935,6 +939,7 @@ class Runtime {
         filename,
         id: filename,
         loaded: false,
+        rpth: {id: 'InitialModule', path: filename},
       });
     };
 
@@ -974,7 +979,7 @@ class Runtime {
 
   private _generateMock(from: Config.Path, moduleName: string) {
     const modulePath =
-      this._resolver.resolveStubModuleName(from, moduleName) ||
+      this._resolver.resolveStubModuleName(from, moduleName)?.path ||
       this._resolveModule(from, moduleName);
     if (!(modulePath in this._mockMetaDataCache)) {
       // This allows us to handle circular dependencies while generating an

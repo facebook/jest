@@ -252,6 +252,47 @@ describe('Runtime requireModule', () => {
       expect(hastePackage.isHastePackage).toBe(true);
     }));
 
+  it('supports resolving the same path to multiple modules', () =>
+    createRuntime(__filename, {
+      // using the default resolver as a custom resolver
+      resolver: require.resolve('../__mocks__/resourceQueryResolver.js'),
+    }).then(runtime => {
+      const moduleNoQuery1 = runtime.requireModule(
+        runtime.__mockRootPath,
+        './moduleForResourceQuery.js',
+      );
+      const moduleNoQuery2 = runtime.requireModule(
+        runtime.__mockRootPath,
+        './moduleForResourceQuery.js',
+      );
+      expect(moduleNoQuery1.name).toBe('moduleForResourceQuery');
+      expect(moduleNoQuery1).toBe(moduleNoQuery2);
+
+      const moduleWithQueryA = runtime.requireModule(
+        runtime.__mockRootPath,
+        './moduleForResourceQuery.js?a',
+      );
+      const moduleWithQueryB = runtime.requireModule(
+        runtime.__mockRootPath,
+        './moduleForResourceQuery.js?b',
+      );
+      expect(moduleWithQueryA.name).toBe('moduleForResourceQuery');
+      expect(moduleWithQueryB.name).toBe('moduleForResourceQuery');
+      expect(moduleWithQueryA).not.toBe(moduleWithQueryB);
+
+      const moduleWithSameQuery1 = runtime.requireModule(
+        runtime.__mockRootPath,
+        './moduleForResourceQuery.js?sameQuery',
+      );
+      const moduleWithSameQuery2 = runtime.requireModule(
+        runtime.__mockRootPath,
+        './moduleForResourceQuery.js?sameQuery',
+      );
+      expect(moduleWithSameQuery1.name).toBe('moduleForResourceQuery');
+      expect(moduleWithSameQuery2.name).toBe('moduleForResourceQuery');
+      expect(moduleWithSameQuery1).toBe(moduleWithSameQuery2);
+    }));
+
   it('resolves node modules properly when crawling node_modules', () =>
     // While we are crawling a node module, we shouldn't put package.json
     // files of node modules to resolve to `package.json` but rather resolve

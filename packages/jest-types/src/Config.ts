@@ -12,6 +12,20 @@ import chalk = require('chalk');
 type CoverageProvider = 'babel' | 'v8';
 
 export type Path = string;
+export type PathID = string;
+// Keeping RPth of the same length as Path for now, to keep diffs to minimum
+// will rename it later.
+export type RPth = {
+  // the initial path as it was used before this PR
+  // replace it with other properties:
+  // 1. realpath - full path resolved using smth. like _getRealPath()
+  // 2. filename - just the file name w/o the containing directies
+  // 3. extname - just the extension (to speed up a bit)
+  // 4. dirname - just the dir name (to speed up a bit)
+  readonly path: string;
+  // prob. the real path + the query string
+  readonly id: PathID;
+};
 
 export type Glob = string;
 

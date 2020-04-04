@@ -49,12 +49,18 @@ const nodePaths = NODE_PATH
       .map(p => path.resolve(resolvedCwd, p))
   : undefined;
 
+function parseOutQuery(pathQithQuery: string) {
+  const [path, ...queryParts] = pathQithQuery.split('?');
+  const query = queryParts.join('');
+  return [path, query];
+}
+
 /* eslint-disable-next-line no-redeclare */
 class Resolver {
   private readonly _options: ResolverConfig;
   private readonly _moduleMap: ModuleMap;
   private readonly _moduleIDCache: Map<string, string>;
-  private readonly _moduleNameCache: Map<string, Config.Path>;
+  private readonly _moduleNameCache: Map<string, Config.RPth>;
   private readonly _modulePathCache: Map<string, Array<Config.Path>>;
   private readonly _supportsNativePlatform: boolean;
 
@@ -105,14 +111,15 @@ class Resolver {
   static findNodeModule(
     path: Config.Path,
     options: FindNodeModuleConfig,
-  ): Config.Path | null {
+  ): Config.RPth | null {
     const resolver: typeof defaultResolver = options.resolver
       ? require(options.resolver)
       : defaultResolver;
     const paths = options.paths;
 
     try {
-      return resolver(path, {
+      const [nativePath, query] = parseOutQuery(path);
+      const realpath = resolver(nativePath, {
         basedir: options.basedir,
         browser: options.browser,
         defaultResolver,
@@ -121,6 +128,11 @@ class Resolver {
         paths: paths ? (nodePaths || []).concat(paths) : nodePaths,
         rootDir: options.rootDir,
       });
+
+      return {
+        id: `${realpath}?${query}`,
+        path: realpath,
+      };
     } catch (e) {
       if (options.throwIfNotFound) {
         throw e;
@@ -133,13 +145,12 @@ class Resolver {
     dirname: Config.Path,
     moduleName: string,
     options?: Resolver.ResolveModuleConfig,
-  ): Config.Path | null {
+  ): Config.RPth | null {
     const paths = (options && options.paths) || this._options.modulePaths;
     const moduleDirectory = this._options.moduleDirectories;
     const key = dirname + path.delimiter + moduleName;
     const defaultPlatform = this._options.defaultPlatform;
     const extensions = this._options.extensions.slice();
-    let module;
 
     if (this._supportsNativePlatform) {
       extensions.unshift(
@@ -152,6 +163,8 @@ class Resolver {
       );
     }
 
+    const [nativeName, query] = parseOutQuery(moduleName);
+
     // 1. If we have already resolved this module for this directory name,
     // return a value from the cache.
     const cacheResult = this._moduleNameCache.get(key);
@@ -160,10 +173,14 @@ class Resolver {
     }
 
     // 2. Check if the module is a haste module.
-    module = this.getModule(moduleName);
-    if (module) {
-      this._moduleNameCache.set(key, module);
-      return module;
+    const hasteModule = this.getModule(nativeName);
+    if (hasteModule) {
+      const resolvedPath = {
+        id: `haste:${hasteModule}?${query}`,
+        path: hasteModule,
+      };
+      this._moduleNameCache.set(key, resolvedPath);
+      return resolvedPath;
     }
 
     // 3. Check if the module is a node module and resolve it based on
@@ -189,11 +206,14 @@ class Resolver {
 
     if (!skipResolution) {
       // @ts-ignore: the "pnp" version named isn't in DefinitelyTyped
-      module = resolveNodeModule(moduleName, Boolean(process.versions.pnp));
+      const nodeModule = resolveNodeModule(
+        moduleName,
+        Boolean(process.versions.pnp),
+      );
 
-      if (module) {
-        this._moduleNameCache.set(key, module);
-        return module;
+      if (nodeModule) {
+        this._moduleNameCache.set(key, nodeModule);
+        return nodeModule;
       }
     }
 
@@ -202,15 +222,23 @@ class Resolver {
     const parts = moduleName.split('/');
     const hastePackage = this.getPackage(parts.shift()!);
     if (hastePackage) {
+      const requireResolve = (name: string) => {
+        const path = require.resolve(name);
+        return {
+          id: `haste:${path}?${query}`,
+          path,
+        };
+      };
       try {
-        const module = path.join.apply(
+        const hastePackageModule = path.join.apply(
           path,
           [path.dirname(hastePackage)].concat(parts),
         );
         // try resolving with custom resolver first to support extensions,
         // then fallback to require.resolve
         const resolvedModule =
-          resolveNodeModule(module) || require.resolve(module);
+          resolveNodeModule(hastePackageModule) ||
+          requireResolve(hastePackageModule);
         this._moduleNameCache.set(key, resolvedModule);
         return resolvedModule;
       } catch (ignoredError) {}
@@ -223,7 +251,7 @@ class Resolver {
     from: Config.Path,
     moduleName: string,
     options?: Resolver.ResolveModuleConfig,
-  ): Config.Path {
+  ): Config.RPth {
     const dirname = path.dirname(from);
     const module =
       this.resolveStubModuleName(from, moduleName) ||
@@ -288,7 +316,7 @@ class Resolver {
     } else {
       const moduleName = this.resolveStubModuleName(from, name);
       if (moduleName) {
-        return this.getModule(moduleName) || moduleName;
+        return this.getModule(moduleName.path) || moduleName.path;
       }
     }
     return null;
@@ -373,7 +401,7 @@ class Resolver {
     return virtualMocks[virtualMockPath]
       ? virtualMockPath
       : moduleName
-      ? this.resolveModule(from, moduleName)
+      ? this.resolveModule(from, moduleName).path
       : from;
   }
 
@@ -386,7 +414,7 @@ class Resolver {
   resolveStubModuleName(
     from: Config.Path,
     moduleName: string,
-  ): Config.Path | null {
+  ): Config.RPth | null {
     const dirname = path.dirname(from);
     const paths = this._options.modulePaths;
     const extensions = this._options.extensions.slice();
@@ -407,12 +435,14 @@ class Resolver {
       );
     }
 
+    const [nativeName, query] = parseOutQuery(moduleName);
+
     if (moduleNameMapper) {
       for (const {moduleName: mappedModuleName, regex} of moduleNameMapper) {
-        if (regex.test(moduleName)) {
+        if (regex.test(nativeName)) {
           // Note: once a moduleNameMapper matches the name, it must result
           // in a module, or else an error is thrown.
-          const matches = moduleName.match(regex);
+          const matches = nativeName.match(regex);
           const mapModuleName = matches
             ? (moduleName: string) =>
                 moduleName.replace(
@@ -424,23 +454,31 @@ class Resolver {
           const possibleModuleNames = Array.isArray(mappedModuleName)
             ? mappedModuleName
             : [mappedModuleName];
-          let module: string | null = null;
+          let module: Config.RPth | null = null;
           for (const possibleModuleName of possibleModuleNames) {
             const updatedName = mapModuleName(possibleModuleName);
 
-            module =
-              this.getModule(updatedName) ||
-              Resolver.findNodeModule(updatedName, {
-                basedir: dirname,
-                browser: this._options.browser,
-                extensions,
-                moduleDirectory,
-                paths,
-                resolver,
-                rootDir: this._options.rootDir,
-              });
+            const hasteModule = this.getModule(updatedName);
+            if (hasteModule) {
+              module = {
+                id: `haste:${hasteModule}?${query}`,
+                path: hasteModule,
+              };
+              break;
+            }
 
-            if (module) {
+            const nodeModule = Resolver.findNodeModule(updatedName, {
+              basedir: dirname,
+              browser: this._options.browser,
+              extensions,
+              moduleDirectory,
+              paths,
+              resolver,
+              rootDir: this._options.rootDir,
+            });
+
+            if (nodeModule) {
+              module = nodeModule;
               break;
             }
           }

@@ -37,7 +37,7 @@ export function worker({
 }: CoverageWorkerData): CoverageWorkerResult | null {
   return generateEmptyCoverage(
     fs.readFileSync(path, 'utf8'),
-    path,
+    {id: path, path},
     globalConfig,
     config,
     options && options.changedFiles && new Set(options.changedFiles),
