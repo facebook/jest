@@ -149,8 +149,6 @@ async function runTestInternal(
   const runtime = new Runtime(config, environment, resolver, cacheFS, {
     changedFiles: context && context.changedFiles,
     collectCoverage: globalConfig.collectCoverage,
-    collectCoverageFrom: globalConfig.collectCoverageFrom,
-    collectCoverageOnlyFrom: globalConfig.collectCoverageOnlyFrom,
     coverageProvider: globalConfig.coverageProvider,
   });
 

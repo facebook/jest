@@ -606,11 +606,8 @@ describe('Watch mode flows', () => {
     ${'✖︎'} | ${'changedFilesWithAncestor'}
     ${'✔︎'} | ${'changedSince'}
     ${'✔︎'} | ${'collectCoverage'}
-    ${'✔︎'} | ${'collectCoverageFrom'}
-    ${'✔︎'} | ${'collectCoverageOnlyFrom'}
     ${'✔︎'} | ${'coverageDirectory'}
     ${'✔︎'} | ${'coverageReporters'}
-    ${'✖︎'} | ${'coverageThreshold'}
     ${'✖︎'} | ${'detectLeaks'}
     ${'✖︎'} | ${'detectOpenHandles'}
     ${'✖︎'} | ${'enabledTestsMap'}

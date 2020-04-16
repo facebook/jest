@@ -80,20 +80,22 @@ describe('shouldInstrument', () => {
     it('should return true when file is in collectCoverageOnlyFrom when provided', () => {
       testShouldInstrument(
         'collect/only/from/here.js',
+        {},
         {
+          ...defaultConfig,
           collectCoverageOnlyFrom: {'collect/only/from/here.js': true},
         },
-        defaultConfig,
       );
     });
 
     it('should return true when filename matches collectCoverageFrom', () => {
       testShouldInstrument(
         'do/collect/coverage.js',
+        {},
         {
+          ...defaultConfig,
           collectCoverageFrom: ['!**/dont/**/*.js', '**/do/**/*.js'],
         },
-        defaultConfig,
       );
     });
 
@@ -170,20 +172,22 @@ describe('shouldInstrument', () => {
     it('when file is not in collectCoverageOnlyFrom when provided', () => {
       testShouldInstrument(
         'source_file.js',
+        {},
         {
+          ...defaultConfig,
           collectCoverageOnlyFrom: {'collect/only/from/here.js': true},
         },
-        defaultConfig,
       );
     });
 
     it('when filename does not match collectCoverageFrom', () => {
       testShouldInstrument(
         'dont/collect/coverage.js',
+        {},
         {
+          ...defaultConfig,
           collectCoverageFrom: ['!**/dont/**/*.js', '**/do/**/*.js'],
         },
-        defaultConfig,
       );
     });
 

@@ -157,8 +157,6 @@ For stability and safety reasons, only part of the global configuration keys can
 - [`bail`](configuration.html#bail-number--boolean)
 - [`changedSince`](cli.html#--changedsince)
 - [`collectCoverage`](configuration.html#collectcoverage-boolean)
-- [`collectCoverageFrom`](configuration.html#collectcoveragefrom-array)
-- [`collectCoverageOnlyFrom`](configuration.html#collectcoverageonlyfrom-array)
 - [`coverageDirectory`](configuration.html#coveragedirectory-string)
 - [`coverageReporters`](configuration.html#coveragereporters-arraystring)
 - [`notify`](configuration.html#notify-boolean)

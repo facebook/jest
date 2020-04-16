@@ -52,8 +52,6 @@ export type AllowedConfigOptions = Partial<
     | 'bail'
     | 'changedSince'
     | 'collectCoverage'
-    | 'collectCoverageFrom'
-    | 'collectCoverageOnlyFrom'
     | 'coverageDirectory'
     | 'coverageReporters'
     | 'notify'

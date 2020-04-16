@@ -35,8 +35,6 @@ export default function (
   const coverageOptions = {
     changedFiles,
     collectCoverage: globalConfig.collectCoverage,
-    collectCoverageFrom: globalConfig.collectCoverageFrom,
-    collectCoverageOnlyFrom: globalConfig.collectCoverageOnlyFrom,
     coverageProvider: globalConfig.coverageProvider,
   };
   let coverageWorkerResult: CoverageWorkerResult | null = null;

@@ -56,14 +56,6 @@ export default (
     newConfig.collectCoverage = options.collectCoverage || false;
   }
 
-  if (options.collectCoverageFrom !== undefined) {
-    newConfig.collectCoverageFrom = options.collectCoverageFrom;
-  }
-
-  if (options.collectCoverageOnlyFrom !== undefined) {
-    newConfig.collectCoverageOnlyFrom = options.collectCoverageOnlyFrom;
-  }
-
   if (options.coverageDirectory !== undefined) {
     newConfig.coverageDirectory = options.coverageDirectory;
   }

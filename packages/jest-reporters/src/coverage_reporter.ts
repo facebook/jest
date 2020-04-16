@@ -100,7 +100,7 @@ export default class CoverageReporter extends BaseReporter {
     aggregatedResults: AggregatedResult,
   ): Promise<void> {
     await this._addUntestedFiles(contexts);
-    const {map, reportContext} = await this._getCoverageResult();
+    const {map, reportContext} = await this._getCoverageResult(contexts);
 
     try {
       const coverageReporters = this._globalConfig.coverageReporters || [];
@@ -133,24 +133,17 @@ export default class CoverageReporter extends BaseReporter {
       );
     }
 
-    // @ts-ignore
-    this._checkThreshold(map);
+    this._checkThresholds(map, contexts);
   }
 
   private async _addUntestedFiles(contexts: Set<Context>): Promise<void> {
     const files: Array<{config: Config.ProjectConfig; path: string}> = [];
 
     contexts.forEach(context => {
-      const config = context.config;
-      if (
-        this._globalConfig.collectCoverageFrom &&
-        this._globalConfig.collectCoverageFrom.length
-      ) {
+      const {config} = context;
+      if (config.collectCoverageFrom && config.collectCoverageFrom.length) {
         context.hasteFS
-          .matchFilesWithGlob(
-            this._globalConfig.collectCoverageFrom,
-            config.rootDir,
-          )
+          .matchFilesWithGlob(config.collectCoverageFrom, config.rootDir)
           .forEach(filePath =>
             files.push({
               config,
@@ -253,9 +246,19 @@ export default class CoverageReporter extends BaseReporter {
     }
   }
 
-  private _checkThreshold(map: istanbulCoverage.CoverageMap) {
-    const {coverageThreshold} = this._globalConfig;
+  private _checkThresholds(
+    map: istanbulCoverage.CoverageMap,
+    contexts: Set<Context>,
+  ) {
+    contexts.forEach(context =>
+      this._checkThresholdForContext(map, context.config.coverageThreshold),
+    );
+  }
 
+  private _checkThresholdForContext(
+    map: istanbulCoverage.CoverageMap,
+    coverageThreshold?: Config.CoverageThreshold,
+  ) {
     if (coverageThreshold) {
       function check(
         name: string,
@@ -444,7 +447,9 @@ export default class CoverageReporter extends BaseReporter {
     }
   }
 
-  private async _getCoverageResult(): Promise<{
+  private async _getCoverageResult(
+    contexts: Set<Context>,
+  ): Promise<{
     map: istanbulCoverage.CoverageMap;
     reportContext: istanbulReport.Context;
   }> {
@@ -506,7 +511,7 @@ export default class CoverageReporter extends BaseReporter {
       const reportContext = istanbulReport.createContext({
         coverageMap: map,
         dir: this._globalConfig.coverageDirectory,
-        watermarks: getWatermarks(this._globalConfig),
+        watermarks: getWatermarks(contexts),
       });
 
       return {map, reportContext};
@@ -521,7 +526,7 @@ export default class CoverageReporter extends BaseReporter {
         dir: this._globalConfig.coverageDirectory,
         // @ts-ignore
         sourceFinder: this._sourceMapStore.sourceFinder,
-        watermarks: getWatermarks(this._globalConfig),
+        watermarks: getWatermarks(contexts),
       },
     );
 

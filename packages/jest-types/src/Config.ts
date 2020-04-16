@@ -226,7 +226,7 @@ export type CoverageThresholdValue = {
   statements?: number;
 };
 
-type CoverageThreshold = {
+export type CoverageThreshold = {
   [path: string]: CoverageThresholdValue;
   global: CoverageThresholdValue;
 };
@@ -236,15 +236,10 @@ export type GlobalConfig = {
   changedSince?: string;
   changedFilesWithAncestor: boolean;
   collectCoverage: boolean;
-  collectCoverageFrom: Array<Glob>;
-  collectCoverageOnlyFrom?: {
-    [key: string]: boolean;
-  };
   coverageDirectory: string;
   coveragePathIgnorePatterns?: Array<string>;
   coverageProvider: CoverageProvider;
   coverageReporters: Array<keyof ReportOptions | [keyof ReportOptions, any]>;
-  coverageThreshold?: CoverageThreshold;
   detectLeaks: boolean;
   detectOpenHandles: boolean;
   enabledTestsMap?: {
@@ -305,7 +300,12 @@ export type ProjectConfig = {
   cache: boolean;
   cacheDirectory: Path;
   clearMocks: boolean;
+  collectCoverageFrom: Array<Glob>;
+  collectCoverageOnlyFrom?: {
+    [key: string]: boolean;
+  };
   coveragePathIgnorePatterns: Array<string>;
+  coverageThreshold?: CoverageThreshold;
   cwd: Path;
   dependencyExtractor?: string;
   detectLeaks: boolean;

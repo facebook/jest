@@ -1,0 +1,12 @@
+{
+  "name": "mul",
+  "private": true,
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "!**.json",
+      "!<rootDir>/coverage/**",
+      "!<rootDir>/index.js"
+    ]
+  }
+}

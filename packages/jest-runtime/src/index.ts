@@ -153,8 +153,6 @@ class Runtime {
     this._coverageOptions = coverageOptions || {
       changedFiles: undefined,
       collectCoverage: false,
-      collectCoverageFrom: [],
-      collectCoverageOnlyFrom: undefined,
       coverageProvider: 'babel',
     };
     this._currentlyExecutingModulePath = '';
@@ -522,7 +520,9 @@ class Runtime {
   ): TransformationOptions {
     return {
       ...options,
-      ...this._coverageOptions,
+      changedFiles: this._coverageOptions.changedFiles,
+      collectCoverage: this._coverageOptions.collectCoverage,
+      coverageProvider: this._coverageOptions.coverageProvider,
     };
   }
 

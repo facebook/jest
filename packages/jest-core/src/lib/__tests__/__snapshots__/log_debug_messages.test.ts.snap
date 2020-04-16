@@ -8,7 +8,12 @@ exports[`prints the config object 1`] = `
     "cache": false,
     "cacheDirectory": "/test_cache_dir/",
     "clearMocks": false,
+    "collectCoverageFrom": [],
+    "collectCoverageOnlyFrom": null,
     "coveragePathIgnorePatterns": [],
+    "coverageThreshold": {
+      "global": {}
+    },
     "cwd": "/test_root_dir/",
     "detectLeaks": false,
     "detectOpenHandles": false,
@@ -68,14 +73,9 @@ exports[`prints the config object 1`] = `
     "changedFilesWithAncestor": false,
     "changedSince": "",
     "collectCoverage": false,
-    "collectCoverageFrom": [],
-    "collectCoverageOnlyFrom": null,
     "coverageDirectory": "coverage",
     "coverageProvider": "babel",
     "coverageReporters": [],
-    "coverageThreshold": {
-      "global": {}
-    },
     "detectLeaks": false,
     "detectOpenHandles": false,
     "enabledTestsMap": null,

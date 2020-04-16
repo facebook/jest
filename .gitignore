@@ -44,3 +44,5 @@ junit.xml
 .yarn/unplugged/
 .yarn/build-state.yml
 e2e/async-regenerator/.yarn/
+
+/.history

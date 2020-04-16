@@ -10,10 +10,7 @@ import type {Config, TransformTypes} from '@jest/types';
 
 export type ShouldInstrumentOptions = Pick<
   Config.GlobalConfig,
-  | 'collectCoverage'
-  | 'collectCoverageFrom'
-  | 'collectCoverageOnlyFrom'
-  | 'coverageProvider'
+  'collectCoverage' | 'coverageProvider'
 > & {
   changedFiles?: Set<Config.Path>;
 };

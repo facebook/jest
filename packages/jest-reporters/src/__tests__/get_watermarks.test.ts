@@ -6,39 +6,70 @@
  */
 
 import getWatermarks from '../get_watermarks';
-import {makeGlobalConfig} from '../../../../TestUtils';
+import {makeProjectConfig} from '../../../../TestUtils';
 
 describe('getWatermarks', () => {
-  test(`that watermarks use thresholds as upper target`, () => {
-    const watermarks = getWatermarks(
-      makeGlobalConfig({
-        coverageThreshold: {
-          global: {
-            branches: 100,
-            functions: 100,
-            lines: 100,
-            statements: 100,
+  describe('when a single context is given', () => {
+    test(`that watermarks use thresholds as upper target`, () => {
+      const context = {
+        config: makeProjectConfig({
+          coverageThreshold: {
+            global: {
+              branches: 100,
+              functions: 100,
+              lines: 100,
+              statements: 100,
+            },
           },
-        },
-      }),
-    );
+        }),
+      };
+      const watermarks = getWatermarks(new Set([context]));
 
-    expect(watermarks).toEqual({
-      branches: [expect.any(Number), 100],
-      functions: [expect.any(Number), 100],
-      lines: [expect.any(Number), 100],
-      statements: [expect.any(Number), 100],
+      expect(watermarks).toEqual({
+        branches: [expect.any(Number), 100],
+        functions: [expect.any(Number), 100],
+        lines: [expect.any(Number), 100],
+        statements: [expect.any(Number), 100],
+      });
     });
   });
 
-  test(`that watermarks are created always created`, () => {
-    const watermarks = getWatermarks(makeGlobalConfig());
+  describe('when no contexts are given', () => {
+    test(`that watermarks are created always created`, () => {
+      const watermarks = getWatermarks(new Set());
 
-    expect(watermarks).toEqual({
-      branches: [expect.any(Number), expect.any(Number)],
-      functions: [expect.any(Number), expect.any(Number)],
-      lines: [expect.any(Number), expect.any(Number)],
-      statements: [expect.any(Number), expect.any(Number)],
+      expect(watermarks).toEqual({
+        branches: [expect.any(Number), expect.any(Number)],
+        functions: [expect.any(Number), expect.any(Number)],
+        lines: [expect.any(Number), expect.any(Number)],
+        statements: [expect.any(Number), expect.any(Number)],
+      });
+    });
+  });
+
+  describe('when multiple contexts are given', () => {
+    test(`that watermarks are created always created`, () => {
+      const context = {
+        config: makeProjectConfig({
+          coverageThreshold: {
+            global: {
+              branches: 100,
+              functions: 100,
+              lines: 100,
+              statements: 100,
+            },
+          },
+        }),
+      };
+
+      const watermarks = getWatermarks(new Set([context, context]));
+
+      expect(watermarks).toEqual({
+        branches: [expect.any(Number), expect.any(Number)],
+        functions: [expect.any(Number), expect.any(Number)],
+        lines: [expect.any(Number), expect.any(Number)],
+        statements: [expect.any(Number), expect.any(Number)],
+      });
     });
   });
 });

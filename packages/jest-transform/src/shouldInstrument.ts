@@ -49,19 +49,19 @@ export default function shouldInstrument(
   if (
     // This configuration field contains an object in the form of:
     // {'path/to/file.js': true}
-    options.collectCoverageOnlyFrom &&
-    !options.collectCoverageOnlyFrom[filename]
+    config.collectCoverageOnlyFrom &&
+    !config.collectCoverageOnlyFrom[filename]
   ) {
     return false;
   }
 
   if (
     // still cover if `only` is specified
-    !options.collectCoverageOnlyFrom &&
-    options.collectCoverageFrom.length &&
+    !config.collectCoverageOnlyFrom &&
+    config.collectCoverageFrom.length &&
     micromatch(
       [replacePathSepForGlob(path.relative(config.rootDir, filename))],
-      options.collectCoverageFrom,
+      config.collectCoverageFrom,
     ).length === 0
   ) {
     return false;

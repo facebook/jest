@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "jest": {
+    "collectCoverage": true,
+    "projects": ["packages/*"]
+  }
+}

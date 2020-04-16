@@ -61,6 +61,7 @@ module.exports = {
     '/packages/jest-worker/src/__performance_tests__',
     '/packages/pretty-format/perf/test.js',
     '/e2e/__tests__/iterator-to-null-test.ts',
+    '/.history',
   ],
   transform: {
     '^.+\\.[jt]sx?$': '<rootDir>/packages/babel-jest',

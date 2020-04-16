@@ -9,6 +9,7 @@ exports[`--showConfig outputs config info and exits 1`] = `
       "cache": false,
       "cacheDirectory": "/tmp/jest",
       "clearMocks": false,
+      "collectCoverageFrom": [],
       "coveragePathIgnorePatterns": [
         "/node_modules/"
       ],
@@ -82,7 +83,6 @@ exports[`--showConfig outputs config info and exits 1`] = `
     "bail": 0,
     "changedFilesWithAncestor": false,
     "collectCoverage": false,
-    "collectCoverageFrom": [],
     "coverageDirectory": "<<REPLACED_ROOT_DIR>>/coverage",
     "coverageProvider": "babel",
     "coverageReporters": [

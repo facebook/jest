@@ -133,19 +133,23 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           global: {
             statements: 100,
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError().message.split('\n')).toHaveLength(1);
       });
@@ -167,15 +171,19 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
-        coverageThreshold: covThreshold,
       },
       {
         maxWorkers: 2,
       },
     );
+    const context = {
+      config: {
+        coverageThreshold: covThreshold,
+      },
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError().message.split('\n')).toHaveLength(5);
       });
@@ -197,15 +205,19 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
-        coverageThreshold: covThreshold,
       },
       {
         maxWorkers: 2,
       },
     );
+    const context = {
+      config: {
+        coverageThreshold: covThreshold,
+      },
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError()).toBeUndefined();
       });
@@ -215,19 +227,23 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           'path-test-files/non_covered_file.js': {
             statements: 100,
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError().message.split('\n')).toHaveLength(1);
       });
@@ -237,19 +253,23 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           './path-test-files/glob-path/': {
             statements: 100,
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError().message.split('\n')).toHaveLength(1);
       });
@@ -259,19 +279,23 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           './path-test-files/glob-path/': {
             statements: 40,
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError()).toBeUndefined();
       });
@@ -281,19 +305,23 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           './path/doesnt/exist': {
             statements: 40,
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError().message.split('\n')).toHaveLength(1);
       });
@@ -305,6 +333,13 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           './path-test-files/': {
             statements: 50,
@@ -314,13 +349,10 @@ describe('onRunComplete', () => {
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError()).toBeUndefined();
       });
@@ -346,15 +378,19 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
-        coverageThreshold: covThreshold,
       },
       {
         maxWorkers: 2,
       },
     );
+    const context = {
+      config: {
+        coverageThreshold: covThreshold,
+      },
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError()).toBeUndefined();
       });
@@ -366,6 +402,13 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           './path-test-files/100pc_coverage_file.js': {
             statements: 100,
@@ -375,15 +418,12 @@ describe('onRunComplete', () => {
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     // 100% coverage file is removed from overall coverage so
     // coverage drops to < 50%
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError().message.split('\n')).toHaveLength(1);
       });
@@ -393,6 +433,13 @@ describe('onRunComplete', () => {
     const testReporter = new CoverageReporter(
       {
         collectCoverage: true,
+      },
+      {
+        maxWorkers: 2,
+      },
+    );
+    const context = {
+      config: {
         coverageThreshold: {
           './path-test-files/': {
             statements: 50,
@@ -408,13 +455,10 @@ describe('onRunComplete', () => {
           },
         },
       },
-      {
-        maxWorkers: 2,
-      },
-    );
+    };
     testReporter.log = jest.fn();
     return testReporter
-      .onRunComplete(new Set(), {}, mockAggResults)
+      .onRunComplete(new Set([context]), {}, mockAggResults)
       .then(() => {
         expect(testReporter.getLastError()).toBeUndefined();
       });

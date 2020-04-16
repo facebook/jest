@@ -2,6 +2,7 @@
 
 ### Features
 
+- `[jest-config]` [**BREAKING**] Move coverage options to project config ([#9633](https://github.com/facebook/jest/pull/9633))
 - `[jest-console]` Add code frame to `console.error` and `console.warn` ([#9741](https://github.com/facebook/jest/pull/9741))
 - `[@jest/globals]` New package so Jest's globals can be explicitly imported ([#9801](https://github.com/facebook/jest/pull/9801))
 

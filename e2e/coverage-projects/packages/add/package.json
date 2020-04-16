@@ -1,0 +1,11 @@
+{
+  "name": "add",
+  "private": true,
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "!**.json",
+      "!<rootDir>/coverage/**"
+    ]
+  }
+}
