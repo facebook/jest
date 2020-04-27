@@ -17,12 +17,16 @@ import type {
   WorkerPoolInterface,
 } from './types';
 
-const canUseWorkerThreads = () => {
+const canUseWorkerThreads: () => boolean = () => {
   try {
     require('worker_threads');
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    if (error.code === 'MODULE_NOT_FOUND') {
+      return false;
+    }
+
+    throw error;
   }
 };
 
