@@ -71,6 +71,7 @@ type MockFunctionState<T, Y extends Array<unknown>> = {
 };
 
 type MockFunctionConfig = {
+  initialImpl: Function | undefined;
   mockImpl: Function | undefined;
   mockName: string;
   specificReturnValues: Array<unknown>;
@@ -105,6 +106,7 @@ interface MockInstance<T, Y extends Array<unknown>> {
   mockClear(): this;
   mockReset(): this;
   mockRestore(): void;
+  mockRestoreInitialImplementation: () => void;
   mockImplementation(fn: (...args: Y) => T): this;
   mockImplementation(fn: () => Promise<T>): this;
   mockImplementationOnce(fn: (...args: Y) => T): this;
@@ -364,7 +366,7 @@ function isReadonlyProp(object: any, prop: string): boolean {
 class ModuleMockerClass {
   private _environmentGlobal: Global;
   private _mockState: WeakMap<Mock<any, any>, MockFunctionState<any, any>>;
-  private _mockConfigRegistry: WeakMap<Function, MockFunctionConfig>;
+  private _mockConfigRegistry: Map<Mock<any, any>, MockFunctionConfig>;
   private _spyState: Set<() => void>;
   private _invocationCallCounter: number;
   ModuleMocker: typeof ModuleMockerClass;
@@ -377,7 +379,7 @@ class ModuleMockerClass {
   constructor(global: Global) {
     this._environmentGlobal = global;
     this._mockState = new WeakMap();
-    this._mockConfigRegistry = new WeakMap();
+    this._mockConfigRegistry = new Map();
     this._spyState = new Set();
     this.ModuleMocker = ModuleMockerClass;
     this._invocationCallCounter = 1;
@@ -454,6 +456,7 @@ class ModuleMockerClass {
 
   private _defaultMockConfig(): MockFunctionConfig {
     return {
+      initialImpl: undefined,
       mockImpl: undefined,
       mockName: 'jest.fn()',
       specificMockImpls: [],
@@ -652,6 +655,16 @@ class ModuleMockerClass {
         return restore ? restore() : undefined;
       };
 
+      f.mockRestoreInitialImplementation = () => {
+        f.mockClear();
+
+        const currentConfig = this._ensureMockConfig(f);
+        const newConfig = this._defaultMockConfig();
+        newConfig.initialImpl = newConfig.mockImpl = currentConfig.initialImpl;
+
+        this._mockConfigRegistry.set(f, newConfig);
+      };
+
       f.mockReturnValueOnce = (value: T) =>
         // next function call will return this value or default return value
         f.mockImplementationOnce(() => value);
@@ -687,6 +700,7 @@ class ModuleMockerClass {
       ): Mock<T, Y> => {
         // next function call will use mock implementation return value
         const mockConfig = this._ensureMockConfig(f);
+        if (!mockConfig.initialImpl) mockConfig.initialImpl = fn;
         mockConfig.mockImpl = fn;
         return f;
       };
@@ -1076,13 +1090,19 @@ class ModuleMockerClass {
   }
 
   resetAllMocks() {
-    this._mockConfigRegistry = new WeakMap();
+    this._mockConfigRegistry = new Map();
     this._mockState = new WeakMap();
   }
 
   restoreAllMocks() {
     this._spyState.forEach(restore => restore());
     this._spyState = new Set();
+  }
+
+  restoreAllInitialMockImplementations() {
+    for (const f of this._mockConfigRegistry.keys()) {
+      f.mockRestoreInitialImplementation();
+    }
   }
 
   private _typeOf(value: any): string {

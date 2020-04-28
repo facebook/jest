@@ -193,6 +193,15 @@ export interface Jest {
    */
   resetModules(): Jest;
   /**
+   * Restores all mocks back to the initial mock implementation (or none if no
+   * implementation has been set) and clears the mock. Equivalent to calling
+   * `.mockRestoreInitialImplementation` on every mocked function.
+   *
+   * Beware that jest.restoreAllInitialMockImplementations() will only restore the
+   * initial mocked implementation, it will not restore the original implementation.
+   */
+  restoreAllInitialMockImplementations(): Jest;
+  /**
    * Restores all mocks back to their original value. Equivalent to calling
    * `.mockRestore` on every mocked function.
    *

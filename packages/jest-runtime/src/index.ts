@@ -833,6 +833,10 @@ class Runtime {
     this._moduleMocker.clearAllMocks();
   }
 
+  restoreAllInitialMockImplementations() {
+    this._moduleMocker.restoreAllInitialMockImplementations();
+  }
+
   private _resolveModule(from: Config.Path, to?: string) {
     return to ? this._resolver.resolveModule(from, to) : from;
   }
@@ -1393,6 +1397,10 @@ class Runtime {
       this.restoreAllMocks();
       return jestObject;
     };
+    const restoreAllInitialMockImplementations = () => {
+      this.restoreAllInitialMockImplementations();
+      return jestObject;
+    };
     const useFakeTimers = () => {
       _getFakeTimers().useFakeTimers();
       return jestObject;
@@ -1468,6 +1476,7 @@ class Runtime {
       resetAllMocks,
       resetModuleRegistry: resetModules,
       resetModules,
+      restoreAllInitialMockImplementations,
       restoreAllMocks,
       retryTimes,
       runAllImmediates: () => _getFakeTimers().runAllImmediates(),

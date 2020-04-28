@@ -536,6 +536,49 @@ describe('moduleMocker', () => {
         expect(fn2()).not.toEqual('abcd');
       });
 
+      it('supports restoring the initial implementation', () => {
+        const fn = moduleMocker.fn();
+        fn.mockImplementation(() => 'initial result');
+
+        const initial = fn();
+        expect(initial).toEqual('initial result');
+
+        fn.mockImplementation(() => 'overridden result');
+        const overridden = fn();
+        expect(overridden).toEqual('overridden result');
+
+        fn.mockRestoreInitialImplementation();
+        const restored = fn();
+        expect(restored).toEqual('initial result');
+      });
+
+      it('supports restoring all initial mock implementations', () => {
+        const fn1 = moduleMocker.fn();
+        fn1.mockImplementation(() => 'fn1-before');
+        expect(fn1(1, 2, 3)).toEqual('fn1-before');
+        expect(fn1).toHaveBeenCalledWith(1, 2, 3);
+
+        fn1.mockImplementation(() => 'fn1-after');
+        expect(fn1('a', 'b', 'c')).toEqual('fn1-after');
+        expect(fn1).toHaveBeenCalledWith('a', 'b', 'c');
+
+        const fn2 = moduleMocker.fn();
+        fn2.mockImplementation(() => 'fn2-before');
+        expect(fn2(3, 2, 1)).toEqual('fn2-before');
+        expect(fn2).toHaveBeenCalledWith(3, 2, 1);
+
+        fn2.mockImplementation(() => 'fn2-after');
+        expect(fn2('a', 'b', 'c')).toEqual('fn2-after');
+        expect(fn2).toHaveBeenCalledWith('a', 'b', 'c');
+
+        moduleMocker.restoreAllInitialMockImplementations();
+        expect(fn1).not.toHaveBeenCalled();
+        expect(fn2).not.toHaveBeenCalled();
+
+        expect(fn1()).toEqual('fn1-before');
+        expect(fn2()).toEqual('fn2-before');
+      });
+
       it('maintains function arity', () => {
         const mockFunctionArity1 = moduleMocker.fn(x => x);
         const mockFunctionArity2 = moduleMocker.fn((x, y) => y);
