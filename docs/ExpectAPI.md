@@ -1208,7 +1208,7 @@ test('throws on octopus', () => {
 });
 ```
 
-> Note: You must wrap the code in a function, otherwise the error will not be caught and the assertion will fail.
+> Note: You must wrap the code in a function, otherwise the error will not be caught and the assertion will fail. Furthermore, `.toThrow` will check that the value thrown is the instance of the Error class, and if not it will not be detected.
 
 You can provide an optional argument to test that a specific error is thrown:
 
