@@ -113,6 +113,7 @@
 - `[babel-jest]` Support passing `supportsDynamicImport` and `supportsStaticESM` ([#9766](https://github.com/facebook/jest/pull/9766))
 - `[babel-preset-jest]` Enable all syntax plugins not enabled by default that works on current version of Node ([#9774](https://github.com/facebook/jest/pull/9774))
 - `[jest-circus]` Enable writing async test event handlers ([#9397](https://github.com/facebook/jest/pull/9397))
+- `[jest-config]` Verify if `testSequencer` exists as `projects` config option ([9767](https://github.com/facebook/jest/pull/9767))
 - `[jest-runtime, @jest/transformer]` Support passing `supportsDynamicImport` and `supportsStaticESM` ([#9597](https://github.com/facebook/jest/pull/9597))
 
 ### Chore & Maintenance

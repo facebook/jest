@@ -1099,6 +1099,8 @@ class CustomSequencer extends Sequencer {
 module.exports = CustomSequencer;
 ```
 
+_Note: testSequencer cannot be used as [projects](#projects-[array<string-|-projectconfig>]) config option._
+
 ### `testTimeout` [number]
 
 Default: `5000`

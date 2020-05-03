@@ -739,7 +739,21 @@ export default function normalize(
         }
         break;
       case 'projects':
-        value = (oldOptions[key] || [])
+        const option = oldOptions[key] || [];
+        if (
+          option.find(
+            project =>
+              typeof project === 'object' && 'testSequencer' in project,
+          )
+        ) {
+          throw createConfigError(
+            `  Option "${chalk.bold('projects')}" cannot contain` +
+              ` option "${chalk.bold('testSequencer')}" as project` +
+              ' configuration.',
+          );
+        }
+
+        value = option
           .map(project =>
             typeof project === 'string'
               ? _replaceRootDirTags(options.rootDir, project)

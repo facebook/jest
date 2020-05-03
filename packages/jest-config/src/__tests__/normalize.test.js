@@ -96,6 +96,23 @@ it('keeps custom project name based on the projects rootDir', () => {
   expect(options.options.projects[0].name).toBe(name);
 });
 
+it('should thrown an error when test testSequencer is defined on projects config level', () => {
+  expect(() =>
+    normalize(
+      {
+        projects: [
+          {
+            name: 'test',
+            testSequencer: './jestSequencer.js',
+          },
+        ],
+        rootDir: '/root/path/foo',
+      },
+      {},
+    ),
+  ).toThrowErrorMatchingSnapshot();
+});
+
 it('keeps custom names based on the rootDir', () => {
   expect(
     normalize(

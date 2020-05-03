@@ -154,6 +154,16 @@ exports[`setupTestFrameworkScriptFile logs an error when \`setupTestFrameworkScr
 <red></>"
 `;
 
+exports[`should thrown an error when test testSequencer is defined on projects config level 1`] = `
+"<red><bold><bold>● </><bold>Validation Error</>:</>
+<red></>
+<red>  Option \\"<bold>projects</>\\" cannot contain option \\"<bold>testSequencer</>\\" as project configuration.</>
+<red></>
+<red>  <bold>Configuration Documentation:</></>
+<red>  https://jestjs.io/docs/configuration.html</>
+<red></>"
+`;
+
 exports[`testEnvironment throws on invalid environment names 1`] = `
 "<red><bold><bold>● </><bold>Validation Error</>:</>
 <red></>
