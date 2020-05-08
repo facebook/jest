@@ -9,7 +9,6 @@ import type {Circus} from '@jest/types';
 import {TEST_TIMEOUT_SYMBOL} from './types';
 
 import {
-  addErrorToEachTestUnderDescribe,
   describeBlockHasTests,
   getTestDuration,
   invariant,
@@ -154,13 +153,8 @@ const eventHandler: Circus.EventHandler = (
     case 'hook_failure': {
       const {test, describeBlock, error, hook} = event;
       const {asyncError, type} = hook;
-
-      if (type === 'beforeAll') {
+      if (type === 'beforeAll' || type === 'afterAll') {
         invariant(describeBlock, 'always present for `*All` hooks');
-        addErrorToEachTestUnderDescribe(describeBlock, error, asyncError);
-      } else if (type === 'afterAll') {
-        // Attaching `afterAll` errors to each test makes execution flow
-        // too complicated, so we'll consider them to be global.
         state.unhandledErrors.push([error, asyncError]);
       } else {
         invariant(test, 'always present for `*Each` hooks');
