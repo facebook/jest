@@ -24,6 +24,7 @@ export {default as DefaultReporter} from './default_reporter';
 export {default as NotifyReporter} from './notify_reporter';
 export {default as SummaryReporter} from './summary_reporter';
 export {default as VerboseReporter} from './verbose_reporter';
+export {default as ReactReporter} from 'jest-react-reporter';
 export type {
   Context,
   Reporter,

@@ -8127,6 +8127,13 @@ jest-pnp-resolver@^1.2.1:
   resolved "https://registry.yarnpkg.com/jest-pnp-resolver/-/jest-pnp-resolver-1.2.1.tgz#ecdae604c077a7fbc70defb6d517c3c1c898923a"
   integrity sha512-pgFw2tm54fzgYvc/OHrnysABEObZCUNFnhjoRjaVOCN8NYc032/gVjPaHD4Aq6ApkSieWtfKAFQtmDKAmhupnQ==
 
+jest-react-reporter@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/jest-react-reporter/-/jest-react-reporter-2.0.1.tgz#650a9343bd986c5653d669c0945032fe041c13cc"
+  integrity sha512-tsTG9CM6KoG0/tVcMqWtZGq8Oz9Rb2AyhZWnFtaiq5p46gzlr/m1AGvzx5u8foMoV2Wj10sXMe+zT9wtJxT/yw==
+  dependencies:
+    "@jest/reporters" "^26.0.1"
+
 jest-regex-util@^25.2.1:
   version "25.2.6"
   resolved "https://registry.yarnpkg.com/jest-regex-util/-/jest-regex-util-25.2.6.tgz#d847d38ba15d2118d3b06390056028d0f2fd3964"

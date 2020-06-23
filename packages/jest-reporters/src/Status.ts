@@ -137,7 +137,7 @@ export default class Status {
       return {clear: '', content: ''};
     }
 
-    const width: number = process.stdout.columns!;
+    const width = process.stdout.columns!;
     let content = '\n';
     this._currentTests.get().forEach(record => {
       if (record) {

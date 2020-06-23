@@ -13,11 +13,9 @@ import TestRunner = require('jest-runner');
 import type {Context} from 'jest-runtime';
 import {
   CoverageReporter,
-  DefaultReporter,
   NotifyReporter,
+  ReactReporter,
   Reporter,
-  SummaryReporter,
-  VerboseReporter,
 } from '@jest/reporters';
 import exit = require('exit');
 import {
@@ -298,11 +296,7 @@ export default class TestScheduler {
   }
 
   private _setupDefaultReporters(collectCoverage: boolean) {
-    this.addReporter(
-      this._globalConfig.verbose
-        ? new VerboseReporter(this._globalConfig)
-        : new DefaultReporter(this._globalConfig),
-    );
+    this.addReporter(new ReactReporter(this._globalConfig));
 
     if (collectCoverage) {
       this.addReporter(
@@ -313,8 +307,6 @@ export default class TestScheduler {
         }),
       );
     }
-
-    this.addReporter(new SummaryReporter(this._globalConfig));
   }
 
   private _addCustomReporters(
