@@ -23,6 +23,7 @@ import exit = require('exit');
 import {
   AggregatedResult,
   SerializableError,
+  TestProgress,
   TestResult,
   addResult,
   buildFailureTestResult,
@@ -147,6 +148,16 @@ export default class TestScheduler {
       await this._dispatcher.onTestResult(test, testResult, aggregatedResults);
     };
 
+    const onTestProgress = async (
+      test: TestRunner.Test,
+      progress: TestProgress,
+    ) => {
+      if (watcher.isInterrupted()) {
+        return;
+      }
+      this._dispatcher.onTestProgress(test, progress);
+    };
+
     const updateSnapshotState = () => {
       contexts.forEach(context => {
         const status = snapshot.cleanup(
@@ -200,6 +211,7 @@ export default class TestScheduler {
             onResult,
             onFailure,
             {
+              onTestProgress,
               serial: runInBand || Boolean(testRunners[runner].isSerial),
             },
           );

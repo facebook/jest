@@ -6,7 +6,11 @@
  */
 
 import type {Config} from '@jest/types';
-import type {AggregatedResult, TestResult} from '@jest/test-result';
+import type {
+  AggregatedResult,
+  TestProgress,
+  TestResult,
+} from '@jest/test-result';
 import {clearLine, isInteractive} from 'jest-util';
 import {getConsoleOutput} from '@jest/console';
 import chalk = require('chalk');
@@ -157,6 +161,10 @@ export default class DefaultReporter extends BaseReporter {
       );
     }
     this.forceFlushBufferedOutput();
+  }
+
+  onTestProgress(test: Test, progress: TestProgress): void {
+    this._status.testProgress(test.path, progress);
   }
 
   testFinished(

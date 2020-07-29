@@ -5,7 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import type {AggregatedResult, TestResult} from '@jest/test-result';
+import type {
+  AggregatedResult,
+  TestProgress,
+  TestResult,
+} from '@jest/test-result';
 import type {Test} from 'jest-runner';
 import type {Context} from 'jest-runtime';
 import type {Reporter, ReporterOnStartOptions} from '@jest/reporters';
@@ -46,6 +50,13 @@ export default class ReporterDispatcher {
   async onTestStart(test: Test): Promise<void> {
     for (const reporter of this._reporters) {
       reporter.onTestStart && (await reporter.onTestStart(test));
+    }
+  }
+
+  async onTestProgress(test: Test, progress: TestProgress): Promise<void> {
+    for (const reporter of this._reporters) {
+      reporter.onTestProgress &&
+        (await reporter.onTestProgress(test, progress));
     }
   }
 

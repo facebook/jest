@@ -6,7 +6,11 @@
  */
 
 import type {Config} from '@jest/types';
-import type {AggregatedResult, TestResult} from '@jest/test-result';
+import type {
+  AggregatedResult,
+  TestProgress,
+  TestResult,
+} from '@jest/test-result';
 import chalk = require('chalk');
 import stringLength = require('string-length');
 import type {ReporterOnStartOptions} from './types';
@@ -77,10 +81,12 @@ export default class Status {
   private _interval?: NodeJS.Timeout;
   private _aggregatedResults?: AggregatedResult;
   private _showStatus: boolean;
+  private _testProgress: Map<Config.Path, TestProgress>;
 
   constructor() {
     this._cache = null;
     this._currentTests = new CurrentTestList();
+    this._testProgress = new Map();
     this._done = false;
     this._emitScheduled = false;
     this._estimatedTime = 0;
@@ -117,6 +123,15 @@ export default class Status {
     }
   }
 
+  testProgress(testPath: Config.Path, progress: TestProgress): void {
+    this._testProgress.set(testPath, progress);
+    if (!this._showStatus) {
+      this._emit();
+    } else {
+      this._debouncedEmit();
+    }
+  }
+
   testFinished(
     _config: Config.ProjectConfig,
     testResult: TestResult,
@@ -142,16 +157,25 @@ export default class Status {
     this._currentTests.get().forEach(record => {
       if (record) {
         const {config, testPath} = record;
-
+        const progress = this._testProgress.get(testPath);
         const projectDisplayName = config.displayName
           ? printDisplayName(config) + ' '
           : '';
         const prefix = RUNNING + projectDisplayName;
-
+        const suffix = progress
+          ? ' ' +
+            chalk.dim(`(${progress.numRanTests}/${progress.numTotalTests})`)
+          : '';
         content +=
           wrapAnsiString(
             prefix +
-              trimAndFormatPath(stringLength(prefix), config, testPath, width),
+              trimAndFormatPath(
+                stringLength(prefix + suffix),
+                config,
+                testPath,
+                width,
+              ) +
+              suffix,
             width,
           ) + '\n';
       }

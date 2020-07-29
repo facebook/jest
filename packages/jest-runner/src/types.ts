@@ -7,7 +7,11 @@
 
 import type {EventEmitter} from 'events';
 import type {Config} from '@jest/types';
-import type {SerializableError, TestResult} from '@jest/test-result';
+import type {
+  SerializableError,
+  TestProgress,
+  TestResult,
+} from '@jest/test-result';
 import type {JestEnvironment} from '@jest/environment';
 import type {FS as HasteFS, ModuleMap} from 'jest-haste-map';
 import type {ResolverType} from 'jest-resolve';
@@ -46,6 +50,7 @@ export type TestFramework = (
 ) => Promise<TestResult>;
 
 export type TestRunnerOptions = {
+  onTestProgress?: (test: Test, progress: TestProgress) => void;
   serial: boolean;
 };
 

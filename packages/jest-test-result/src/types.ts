@@ -116,6 +116,11 @@ export type TestResult = {
   v8Coverage?: V8CoverageResult;
 };
 
+export type TestProgress = {
+  numRanTests: number;
+  numTotalTests: number;
+};
+
 export type FormattedTestResult = {
   message: string;
   name: string;

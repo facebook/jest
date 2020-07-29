@@ -9,6 +9,7 @@ import type {Config} from '@jest/types';
 import type {
   AggregatedResult,
   SerializableError,
+  TestProgress,
   TestResult,
 } from '@jest/test-result';
 import type {FS as HasteFS, ModuleMap} from 'jest-haste-map';
@@ -63,6 +64,10 @@ export interface Reporter {
     options: ReporterOnStartOptions,
   ) => Promise<void> | void;
   readonly onTestStart: (test: Test) => Promise<void> | void;
+  readonly onTestProgress?: (
+    test: Test,
+    progress: TestProgress,
+  ) => Promise<void> | void;
   readonly onRunComplete: (
     contexts: Set<Context>,
     results: AggregatedResult,
