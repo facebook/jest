@@ -1,5 +1,7 @@
 ## master
 
+- `[expect]` Fix `iterableEquality` ignores other properties ([#8359](https://github.com/facebook/jest/pull/8359))
+
 ### Features
 
 - `[jest-core, jest-circus, jest-reporter, jest-runner]` Added support for reporting individual test cases using jest-circus ([#10227](https://github.com/facebook/jest/pull/10227))

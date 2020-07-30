@@ -261,6 +261,12 @@ export const iterableEquality = (
     return false;
   }
 
+  const aEntries = Object.entries(a);
+  const bEntries = Object.entries(b);
+  if (!equals(aEntries, bEntries)) {
+    return false;
+  }
+
   // Remove the first value from the stack of traversed values.
   aStack.pop();
   bStack.pop();

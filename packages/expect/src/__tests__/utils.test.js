@@ -447,6 +447,49 @@ describe('iterableEquality', () => {
     ).toBe(false);
   });
 
+  test('returns true when given iterator within equal objects', () => {
+    const a = {
+      [Symbol.iterator]: () => ({next: () => ({done: true})}),
+      a: [],
+    };
+    const b = {
+      [Symbol.iterator]: () => ({next: () => ({done: true})}),
+      a: [],
+    };
+
+    expect(iterableEquality(a, b)).toBe(true);
+  });
+
+  test('returns false when given iterator within inequal objects', () => {
+    const a = {
+      [Symbol.iterator]: () => ({next: () => ({done: true})}),
+      a: [1],
+    };
+    const b = {
+      [Symbol.iterator]: () => ({next: () => ({done: true})}),
+      a: [],
+    };
+
+    expect(iterableEquality(a, b)).toBe(false);
+  });
+
+  test('returns false when given iterator within inequal nested objects', () => {
+    const a = {
+      [Symbol.iterator]: () => ({next: () => ({done: true})}),
+      a: {
+        b: [1],
+      },
+    };
+    const b = {
+      [Symbol.iterator]: () => ({next: () => ({done: true})}),
+      a: {
+        b: [],
+      },
+    };
+
+    expect(iterableEquality(a, b)).toBe(false);
+  });
+
   test('returns true when given circular Set shape', () => {
     const a1 = new Set();
     const a2 = new Set();
