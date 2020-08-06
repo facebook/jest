@@ -23,7 +23,7 @@ PASS __tests__/console.test.js
          |           ^
       15 | 
       16 |   console.error('This is an error message.');
-      17 | });
+      17 | 
 
       at Object.warn (__tests__/console.test.js:14:11)
 
@@ -34,10 +34,28 @@ PASS __tests__/console.test.js
       15 | 
     > 16 |   console.error('This is an error message.');
          |           ^
-      17 | });
-      18 | 
+      17 | 
+      18 |   process.stdout.write('write directly to stdout');
+      19 | 
 
       at Object.error (__tests__/console.test.js:16:11)
+
+    process.stdout.write
+      write directly to stdout
+
+      at Object.write (__tests__/console.test.js:18:18)
+
+    process.stderr.write
+      write directly to stderr
+
+      18 |   process.stdout.write('write directly to stdout');
+      19 | 
+    > 20 |   process.stderr.write('write directly to stderr');
+         |                  ^
+      21 | });
+      22 | 
+
+      at Object.write (__tests__/console.test.js:20:18)
 `;
 
 exports[`console printing 2`] = `
@@ -68,7 +86,7 @@ exports[`console printing with --verbose 1`] = `
          |           ^
       15 | 
       16 |   console.error('This is an error message.');
-      17 | });
+      17 | 
 
       at Object.warn (__tests__/console.test.js:14:11)
 
@@ -79,11 +97,27 @@ exports[`console printing with --verbose 1`] = `
       15 | 
     > 16 |   console.error('This is an error message.');
          |           ^
-      17 | });
-      18 | 
+      17 | 
+      18 |   process.stdout.write('write directly to stdout');
+      19 | 
 
       at Object.error (__tests__/console.test.js:16:11)
 
+  process.stdout.write
+    write directly to stdout
+
+      at Object.write (__tests__/console.test.js:18:18)
+  process.stderr.write
+    write directly to stderr
+
+      18 |   process.stdout.write('write directly to stdout');
+      19 | 
+    > 20 |   process.stderr.write('write directly to stderr');
+         |                  ^
+      21 | });
+      22 | 
+
+      at Object.write (__tests__/console.test.js:20:18)
 `;
 
 exports[`console printing with --verbose 2`] = `
@@ -166,6 +200,14 @@ exports[`respects --noStackTrace 1`] = `
 
       at Object.error (__tests__/console.test.js:16:11)
 
+  process.stdout.write
+    write directly to stdout
+
+      at Object.write (__tests__/console.test.js:18:18)
+  process.stderr.write
+    write directly to stderr
+
+      at Object.write (__tests__/console.test.js:20:18)
 `;
 
 exports[`respects --noStackTrace 2`] = `
@@ -202,6 +244,14 @@ exports[`respects noStackTrace in config 1`] = `
 
       at Object.error (__tests__/console.test.js:16:11)
 
+  process.stdout.write
+    write directly to stdout
+
+      at Object.write (__tests__/console.test.js:18:18)
+  process.stderr.write
+    write directly to stderr
+
+      at Object.write (__tests__/console.test.js:20:18)
 `;
 
 exports[`respects noStackTrace in config 2`] = `

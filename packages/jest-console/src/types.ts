@@ -7,7 +7,10 @@
 
 export type LogMessage = string;
 
+export type LogApi = 'console' | 'process.stdout' | 'process.stderr';
+
 export type LogEntry = {
+  api: LogApi;
   message: LogMessage;
   origin: string;
   type: LogType;
@@ -33,6 +36,7 @@ export type LogType =
   | 'info'
   | 'log'
   | 'time'
-  | 'warn';
+  | 'warn'
+  | 'write';
 
 export type ConsoleBuffer = Array<LogEntry>;

@@ -9,17 +9,12 @@ import runJest from '../runJest';
 
 jest.mock('@jest/console');
 
-const processErrWriteFn = process.stderr.write;
 describe('runJest', () => {
-  let stderrSpy;
-  beforeEach(async () => {
-    process.exit = jest.fn();
-    process.stderr.write = jest.fn();
-    process.stderr.write.mockReset();
-    stderrSpy = jest.spyOn(process.stderr, 'write');
+  test('when watch is set then print error and exit process', async () => {
+    jest.spyOn(process, 'exit').mockImplementation(() => {});
 
     await runJest({
-      changedFilesPromise: Promise.resolve({repos: {git: {size: 0}}}),
+      changedFilesPromise: Promise.resolve({repos: {git: new Set()}}),
       contexts: [],
       globalConfig: {testSequencer: '@jest/test-sequencer', watch: true},
       onComplete: () => null,
@@ -27,17 +22,9 @@ describe('runJest', () => {
       startRun: {},
       testWatcher: {isInterrupted: () => true},
     });
-  });
 
-  afterEach(() => {
-    process.stderr.write = processErrWriteFn;
-  });
+    await new Promise(process.nextTick);
 
-  test('when watch is set then exit process', () => {
     expect(process.exit).toHaveBeenCalledWith(1);
-  });
-
-  test('when watch is set then an error message is printed', () => {
-    expect(stderrSpy).toHaveBeenCalled();
   });
 });

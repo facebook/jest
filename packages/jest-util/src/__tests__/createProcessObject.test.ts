@@ -6,6 +6,7 @@
  */
 
 import {EventEmitter} from 'events';
+import isStream from 'is-stream';
 
 let createProcessObject;
 
@@ -32,9 +33,9 @@ it('creates a process object that looks like the original one', () => {
     expect(fakeProcess[key]).not.toBe(process[key]);
   });
 
-  // Check that process.stdout/stderr are the same.
-  expect(process.stdout).toBe(fakeProcess.stdout);
-  expect(process.stderr).toBe(fakeProcess.stderr);
+  // Check that process.stdout/stderr are streams.
+  expect(isStream(fakeProcess.stdout)).toBe(true);
+  expect(isStream(fakeProcess.stderr)).toBe(true);
 });
 
 it('fakes require("process") so it is equal to "global.process"', () => {

@@ -14,4 +14,8 @@ test('works just fine', () => {
   console.warn('This is a warning message.');
 
   console.error('This is an error message.');
+
+  process.stdout.write('write directly to stdout');
+
+  process.stderr.write('write directly to stderr');
 });

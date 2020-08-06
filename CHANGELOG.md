@@ -4,6 +4,7 @@
 
 - `[jest-circus, jest-jasmine2]` Include `failureDetails` property in test results ([#9496](https://github.com/facebook/jest/pull/9496))
 - `[jest-each, jest-jasmine, jest-circus]` Add support for .concurrent.each ([#9326](https://github.com/facebook/jest/pull/9326))
+- `[jest-runner]` [**BREAKING**] Intercept `process.stdout` and `process.stderr` in the same way as `console` methods ([#6524](https://github.com/facebook/jest/pull/6524))
 
 ### Fixes
 

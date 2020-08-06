@@ -31,22 +31,21 @@ export default (
   const TITLE_INDENT = verbose ? '  ' : '    ';
   const CONSOLE_INDENT = TITLE_INDENT + '  ';
 
-  const logEntries = buffer.reduce((output, {type, message, origin}) => {
+  const logEntries = buffer.reduce((output, {api, type, message, origin}) => {
     message = message
       .split(/\n/)
       .map(line => CONSOLE_INDENT + line)
       .join('\n');
 
-    let typeMessage = 'console.' + type;
+    let typeMessage = `${api}.${type}`;
     let noStackTrace = true;
     let noCodeFrame = true;
-
     if (type === 'warn') {
       message = chalk.yellow(message);
       typeMessage = chalk.yellow(typeMessage);
       noStackTrace = globalConfig?.noStackTrace ?? false;
       noCodeFrame = false;
-    } else if (type === 'error') {
+    } else if (type === 'error' || api === 'process.stderr') {
       message = chalk.red(message);
       typeMessage = chalk.red(typeMessage);
       noStackTrace = globalConfig?.noStackTrace ?? false;

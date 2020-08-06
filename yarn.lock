@@ -3569,6 +3569,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/readable-stream@npm:^2.3.9":
+  version: 2.3.9
+  resolution: "@types/readable-stream@npm:2.3.9"
+  dependencies:
+    "@types/node": "*"
+    safe-buffer: "*"
+  checksum: f48e49365083aad9efe67689da1053cf099d5d6b26a359e4b60238d286ad5609cb11368cf6ed97376f76418293f1c2c88b4be97cd3f64556c477ee6b2ba4f242
+  languageName: node
+  linkType: hard
+
 "@types/resolve@npm:^1.17.0":
   version: 1.17.0
   resolution: "@types/resolve@npm:1.17.0"
@@ -11467,6 +11477,7 @@ fsevents@^1.2.7:
     "@types/exit": ^0.1.30
     "@types/graceful-fs": ^4.1.2
     "@types/node": "*"
+    "@types/readable-stream": ^2.3.9
     "@types/source-map-support": ^0.5.0
     chalk: ^4.0.0
     emittery: ^0.7.1
@@ -11482,6 +11493,7 @@ fsevents@^1.2.7:
     jest-runtime: ^26.2.2
     jest-util: ^26.2.0
     jest-worker: ^26.2.1
+    readable-stream: ^3.1.1
     source-map-support: ^0.5.6
     throat: ^5.0.0
   languageName: unknown
@@ -11605,6 +11617,7 @@ fsevents@^1.2.7:
     chalk: ^4.0.0
     graceful-fs: ^4.2.4
     is-ci: ^2.0.0
+    is-stream: ^1.1.0
     micromatch: ^4.0.2
   languageName: unknown
   linkType: soft
@@ -16594,6 +16607,13 @@ fsevents@^1.2.7:
   dependencies:
     tslib: ^1.9.0
   checksum: a3882e0374af8aa32459ea9219fdcf24cb5a943cdf35f50da4ded48435ec474647c315b85c3e7b703927a55689e54037538cbd24789548d07b74e4865c4adb78
+  languageName: node
+  linkType: hard
+
+"safe-buffer@npm:*":
+  version: 5.2.1
+  resolution: "safe-buffer@npm:5.2.1"
+  checksum: 0bb57f0d8f9d1fa4fe35ad8a2db1f83a027d48f2822d59ede88fd5cd4ddad83c0b497213feb7a70fbf90597a70c5217f735b0eb1850df40ce9b4ae81dd22b3f9
   languageName: node
   linkType: hard
 

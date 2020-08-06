@@ -12,6 +12,7 @@ import chalk = require('chalk');
 import {ErrorWithStack, formatTime} from 'jest-util';
 import type {
   ConsoleBuffer,
+  LogApi,
   LogCounters,
   LogMessage,
   LogTimers,
@@ -24,11 +25,10 @@ export default class BufferedConsole extends Console {
   private _timers: LogTimers;
   private _groupDepth: number;
 
-  constructor() {
-    const buffer: ConsoleBuffer = [];
+  constructor(buffer: ConsoleBuffer) {
     super({
       write: (message: string) => {
-        BufferedConsole.write(buffer, 'log', message, null);
+        BufferedConsole.write(buffer, 'log', message, null, 'console');
 
         return true;
       },
@@ -44,6 +44,7 @@ export default class BufferedConsole extends Console {
     type: LogType,
     message: LogMessage,
     level?: number | null,
+    api: LogApi = 'console',
   ): ConsoleBuffer {
     const stackLevel = level != null ? level : 2;
     const rawStack = new ErrorWithStack(undefined, BufferedConsole.write).stack;
@@ -57,6 +58,7 @@ export default class BufferedConsole extends Console {
       .join('\n');
 
     buffer.push({
+      api,
       message,
       origin,
       type,
@@ -71,6 +73,7 @@ export default class BufferedConsole extends Console {
       type,
       '  '.repeat(this._groupDepth) + message,
       3,
+      'console',
     );
   }
 

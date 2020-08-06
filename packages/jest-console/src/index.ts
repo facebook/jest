@@ -9,4 +9,4 @@ export {default as BufferedConsole} from './BufferedConsole';
 export {default as CustomConsole} from './CustomConsole';
 export {default as NullConsole} from './NullConsole';
 export {default as getConsoleOutput} from './getConsoleOutput';
-export type {ConsoleBuffer, LogMessage, LogType} from './types';
+export type {ConsoleBuffer, LogApi, LogMessage, LogType} from './types';

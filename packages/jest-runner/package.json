@@ -28,12 +28,14 @@
     "jest-runtime": "^26.2.2",
     "jest-util": "^26.2.0",
     "jest-worker": "^26.2.1",
+    "readable-stream": "^3.1.1",
     "source-map-support": "^0.5.6",
     "throat": "^5.0.0"
   },
   "devDependencies": {
     "@types/exit": "^0.1.30",
     "@types/graceful-fs": "^4.1.2",
+    "@types/readable-stream": "^2.3.9",
     "@types/source-map-support": "^0.5.0",
     "jest-circus": "^26.2.2"
   },

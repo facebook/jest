@@ -10,7 +10,9 @@ import type {Config} from '@jest/types';
 import type {TestResult} from '@jest/test-result';
 import {
   BufferedConsole,
+  ConsoleBuffer,
   CustomConsole,
+  LogApi,
   LogMessage,
   LogType,
   NullConsole,
@@ -27,6 +29,7 @@ import * as docblock from 'jest-docblock';
 import {formatExecError} from 'jest-message-util';
 import sourcemapSupport = require('source-map-support');
 import chalk = require('chalk');
+import {Transform} from 'readable-stream';
 import type {TestFileEvent, TestFramework, TestRunnerContext} from './types';
 
 type RunTestInternalResult = {
@@ -115,25 +118,95 @@ async function runTestInternal(
     : require('jest-runtime');
 
   const consoleOut = globalConfig.useStderr ? process.stderr : process.stdout;
-  const consoleFormatter = (type: LogType, message: LogMessage) =>
+  const consoleFormatter = (
+    type: LogType,
+    message: LogMessage,
+    api: LogApi = 'console',
+    level = 4,
+  ) =>
     getConsoleOutput(
       config.cwd,
       !!globalConfig.verbose,
       // 4 = the console call is buried 4 stack frames deep
-      BufferedConsole.write([], type, message, 4),
+      BufferedConsole.write([], type, message, level, api),
       config,
       globalConfig,
     );
 
   let testConsole;
+  let testStdOut: NodeJS.WriteStream;
+  let testStdErr: NodeJS.WriteStream;
+  let buffer: ConsoleBuffer;
 
   if (globalConfig.silent) {
     testConsole = new NullConsole(consoleOut, consoleOut, consoleFormatter);
+    testStdOut = new Transform({
+      transform(_chunk, _encoding, callback) {
+        callback();
+      },
+    });
+    testStdErr = new Transform({
+      transform(_chunk, _encoding, callback) {
+        callback();
+      },
+    });
   } else if (globalConfig.verbose) {
     testConsole = new CustomConsole(consoleOut, consoleOut, consoleFormatter);
+    testStdOut = new Transform({
+      transform(chunk, _encoding, callback) {
+        callback(undefined, chunk);
+      },
+    });
+    testStdErr = new Transform({
+      transform(chunk, _encoding, callback) {
+        callback(undefined, chunk);
+      },
+    });
   } else {
-    testConsole = new BufferedConsole();
+    buffer = [];
+    testConsole = new BufferedConsole(buffer);
+    testStdOut = new Transform({
+      transform(chunk, _encoding, callback) {
+        callback(undefined, chunk);
+      },
+    });
+    testStdErr = new Transform({
+      transform(chunk, _encoding, callback) {
+        callback(undefined, chunk);
+      },
+    });
   }
+
+  const originalStdOutWrite = testStdOut.write;
+  const originalStdErrWrite = testStdErr.write;
+
+  testStdOut.write = (chunk: string, ...rest: Array<any>) => {
+    const type = 'write';
+    const message = chunk.toString() + '\n';
+    const api = 'process.stdout';
+
+    if (buffer) {
+      BufferedConsole.write(buffer, type, message, 2, api);
+    } else if (globalConfig.verbose) {
+      consoleOut.write(consoleFormatter(type, message, api, 3));
+    }
+
+    return originalStdOutWrite.call(testStdOut, chunk, ...rest);
+  };
+
+  testStdErr.write = (chunk: string, ...rest: Array<any>) => {
+    const type = 'write';
+    const message = chunk.toString() + '\n';
+    const api = 'process.stderr';
+
+    if (buffer) {
+      BufferedConsole.write(buffer, type, message, 2, api);
+    } else if (globalConfig.verbose) {
+      consoleOut.write(consoleFormatter(type, message, api, 3));
+    }
+
+    return originalStdErrWrite.call(testStdErr, chunk, ...rest);
+  };
 
   const environment = new TestEnvironment(config, {
     console: testConsole,
@@ -146,6 +219,18 @@ async function runTestInternal(
 
   const cacheFS = {[path]: testSource};
   setGlobal(environment.global, 'console', testConsole);
+
+  testStdOut.isTTY = environment.global.process.stdout.isTTY;
+  testStdErr.isTTY = environment.global.process.stderr.isTTY;
+
+  Object.defineProperty(environment.global.process, 'stdout', {
+    value: testStdOut,
+    writable: false,
+  });
+  Object.defineProperty(environment.global.process, 'stderr', {
+    value: testStdErr,
+    writable: false,
+  });
 
   const runtime = new Runtime(config, environment, resolver, cacheFS, {
     changedFiles: context?.changedFiles,
