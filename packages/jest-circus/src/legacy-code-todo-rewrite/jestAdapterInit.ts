@@ -87,8 +87,8 @@ export const initialize = async ({
       // Unfortunately at this stage there's no way to know if there are any `.only` tests in the suite
       // that will result in this test to be skipped, so we'll be executing the promise function anyway,
       // even if it ends up being skipped.
-      const promise = mutex(() => testFn());
-      nodeGlobal.test(testName, () => promise, timeout);
+      // const promise = mutex(() => testFn());
+      nodeGlobal.test(testName, testFn, timeout);
     };
 
     const only = (

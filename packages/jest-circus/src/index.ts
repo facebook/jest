@@ -122,7 +122,7 @@ const afterEach: THook = (fn, timeout) =>
 const afterAll: THook = (fn, timeout) =>
   _addHook(fn, 'afterAll', afterAll, timeout);
 
-const test: Global.It = (() => {
+const test: Global.ItConcurrent = (() => {
   const test = (
     testName: Circus.TestName,
     fn: Circus.TestFn,
@@ -138,6 +138,11 @@ const test: Global.It = (() => {
     fn: Circus.TestFn,
     timeout?: number,
   ): void => _addTest(testName, 'only', fn, test.only, timeout);
+  const concurrent = (
+    testName: Circus.TestName,
+    fn: Circus.TestFn,
+    timeout?: number,
+  ): void => _addTest(testName, 'concurrent', fn, test.concurrent, timeout);
 
   test.todo = (testName: Circus.TestName, ...rest: Array<any>): void => {
     if (rest.length > 0 || typeof testName !== 'string') {
@@ -196,10 +201,15 @@ const test: Global.It = (() => {
   test.only = only;
   test.skip = skip;
 
+  concurrent.each = bindEach(concurrent);
+  concurrent.only = only;
+  concurrent.skip = skip;
+  test.concurrent = concurrent;
+
   return test;
 })();
 
-const it: Global.It = test;
+const it: Global.ItConcurrent = test;
 
 export type Event = Circus.Event;
 export type State = Circus.State;

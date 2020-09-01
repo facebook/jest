@@ -6,6 +6,7 @@
  */
 
 import type {Circus} from '@jest/types';
+import throat from 'throat';
 import {RETRY_TIMES} from './types';
 
 import {dispatch, getState} from './state';
@@ -17,6 +18,8 @@ import {
   invariant,
   makeRunResult,
 } from './utils';
+
+const mutex = throat(5);
 
 const run = async (): Promise<Circus.RunResult> => {
   const {rootDescribeBlock} = getState();
@@ -43,6 +46,7 @@ const _runTestsForDescribeBlock = async (
   const retryTimes = parseInt(global[RETRY_TIMES], 10) || 0;
   const deferredRetryTests = [];
 
+  let concurrentTests = [];
   for (const child of describeBlock.children) {
     switch (child.type) {
       case 'describeBlock': {
@@ -51,7 +55,11 @@ const _runTestsForDescribeBlock = async (
       }
       case 'test': {
         const hasErrorsBeforeTestRun = child.errors.length > 0;
-        await _runTest(child);
+        if (child.mode) {
+          await _runTest(child);
+        } else {
+          concurrentTests.push(mutex(() => _runTest(child)));
+        }
 
         if (
           hasErrorsBeforeTestRun === false &&
@@ -65,6 +73,8 @@ const _runTestsForDescribeBlock = async (
     }
   }
 
+  await Promise.all(concurrentTests);
+  concurrentTests = [];
   // Re-run failed tests n-times if configured
   for (const test of deferredRetryTests) {
     let numRetriesAvailable = retryTimes;
@@ -72,11 +82,16 @@ const _runTestsForDescribeBlock = async (
     while (numRetriesAvailable > 0 && test.errors.length > 0) {
       // Clear errors so retries occur
       await dispatch({name: 'test_retry', test});
-
-      await _runTest(test);
+      if (test.mode == 'concurrent') {
+        concurrentTests.push(mutex(() => _runTest(test)));
+      } else {
+        await _runTest(test);
+      }
       numRetriesAvailable--;
     }
   }
+
+  await Promise.all(concurrentTests);
 
   for (const hook of afterAll) {
     await _callCircusHook({describeBlock, hook});
