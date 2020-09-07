@@ -513,14 +513,6 @@ describe("doesn't bleed module file extensions resolution with multiple workers"
 
     expect(configs).toHaveLength(2);
 
-    const [{name: name1}, {name: name2}] = configs;
-
-    expect(name1).toEqual(expect.any(String));
-    expect(name2).toEqual(expect.any(String));
-    expect(name1).toHaveLength(32);
-    expect(name2).toHaveLength(32);
-    expect(name1).not.toEqual(name2);
-
     const {stderr} = runJest(DIR, [
       '--no-watchman',
       '-w=2',
@@ -555,14 +547,6 @@ describe("doesn't bleed module file extensions resolution with multiple workers"
     const {configs} = getConfig(DIR);
 
     expect(configs).toHaveLength(2);
-
-    const [{name: name1}, {name: name2}] = configs;
-
-    expect(name1).toEqual(expect.any(String));
-    expect(name2).toEqual(expect.any(String));
-    expect(name1).toHaveLength(32);
-    expect(name2).toHaveLength(32);
-    expect(name1).not.toEqual(name2);
 
     const {stderr} = runJest(DIR, ['--no-watchman', '-w=2']);
 

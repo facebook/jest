@@ -27,7 +27,7 @@ module.exports = async function createRuntime(filename, config) {
           'haste_impl.js',
         ),
       },
-      name: 'Runtime-' + filename.replace(/\W/, '-') + '.tests',
+      id: 'Runtime-' + filename.replace(/\W/, '-') + '.tests',
       rootDir: path.resolve(path.dirname(filename), 'test_root'),
       ...config,
     },

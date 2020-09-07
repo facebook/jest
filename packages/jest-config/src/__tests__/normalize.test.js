@@ -79,7 +79,7 @@ it('picks a name based on the rootDir', () => {
         rootDir,
       },
       {},
-    ).options.name,
+    ).options.id,
   ).toBe(expected);
 });
 
@@ -100,11 +100,11 @@ it('keeps custom names based on the rootDir', () => {
   expect(
     normalize(
       {
-        name: 'custom-name',
+        id: 'custom-name',
         rootDir: '/root/path/foo',
       },
       {},
-    ).options.name,
+    ).options.id,
   ).toBe('custom-name');
 });
 
