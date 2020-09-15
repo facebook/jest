@@ -17,12 +17,16 @@ import type {
   WorkerPoolInterface,
 } from './types';
 
-const canUseWorkerThreads = () => {
+const canUseWorkerThreads: () => boolean = () => {
   try {
     require('worker_threads');
     return true;
-  } catch {
-    return false;
+  } catch (error) {
+    if (error.code === 'MODULE_NOT_FOUND') {
+      return false;
+    }
+
+    throw error;
   }
 };
 
@@ -39,7 +43,7 @@ class WorkerPool extends BaseWorkerPool implements WorkerPoolInterface {
 
   createWorker(workerOptions: WorkerOptions): WorkerInterface {
     let Worker;
-    if (this._options.enableWorkerThreads && canUseWorkerThreads()) {
+    if (canUseWorkerThreads()) {
       Worker = require('./workers/NodeThreadsWorker').default;
     } else {
       Worker = require('./workers/ChildProcessWorker').default;

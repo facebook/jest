@@ -87,7 +87,6 @@ export type FarmOptions = {
     workerPath: string,
     options?: WorkerPoolOptions,
   ) => WorkerPoolInterface;
-  enableWorkerThreads?: boolean;
 };
 
 export type WorkerPoolOptions = {
@@ -96,7 +95,6 @@ export type WorkerPoolOptions = {
   resourceLimits: ResourceLimits;
   maxRetries: number;
   numWorkers: number;
-  enableWorkerThreads: boolean;
 };
 
 export type WorkerOptions = {
