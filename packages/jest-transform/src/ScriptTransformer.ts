@@ -445,7 +445,8 @@ export default class ScriptTransformer {
     let scriptCacheKey = undefined;
     let instrument = false;
 
-    if (!options.isCoreModule) {
+    // Skip cache for core and dynamically loaded modules.
+    if (!options.isCoreModule && typeof options.filenameOverride !== 'string') {
       instrument =
         options.coverageProvider === 'babel' &&
         shouldInstrument(filename, options, this._config);

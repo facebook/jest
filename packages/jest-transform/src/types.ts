@@ -25,6 +25,7 @@ export type Options = ShouldInstrumentOptions &
     isInternalModule: boolean;
     supportsDynamicImport: boolean;
     supportsStaticESM: boolean;
+    filenameOverride?: string;
   }>;
 
 // This is fixed in source-map@0.7.x, but we can't upgrade yet since it's async

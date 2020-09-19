@@ -7,8 +7,9 @@
 
 import path from 'path';
 
-module.exports = async function createRuntime(filename, config) {
-  const NodeEnvironment = require('jest-environment-node');
+module.exports = async function createRuntime(filename, config, options) {
+  const Environment =
+    options?.EnvironmentImpl || require('jest-environment-node');
   const Runtime = require('../');
 
   const {normalize} = require('jest-config');
@@ -35,8 +36,10 @@ module.exports = async function createRuntime(filename, config) {
     {},
   ).options;
 
-  const environment = new NodeEnvironment(config);
-  environment.global.console = console;
+  const environment = new Environment(config);
+  if (environment.global) {
+    environment.global.console = console;
+  }
 
   const hasteMap = await Runtime.createHasteMap(config, {
     maxWorkers: 1,
