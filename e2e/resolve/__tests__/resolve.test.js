@@ -83,6 +83,13 @@ test('should require resolve haste files correctly', () => {
   expect(require.resolve('Test6')).toBe(require.resolve('../__mocks__/Test6'));
 
   expect(require('Test6').key).toBe('mock');
+
+  // Same as Test6
+  expect(require.resolve('Test9')).toBe(
+    require.resolve('../__mocks__/Test9.mock'),
+  );
+
+  expect(require('Test9').key).toBe('mock');
 });
 
 test('should require resolve haste mocks correctly', () => {
@@ -99,6 +106,13 @@ test('should require resolve haste mocks correctly', () => {
   expect(require.resolve('Test6')).toBe(require.resolve('../__mocks__/Test6'));
 
   expect(require('Test6').key).toBe('mock');
+
+  // Same as Test6
+  expect(require.resolve('Test9')).toBe(
+    require.resolve('../__mocks__/Test9.mock'),
+  );
+
+  expect(require('Test9').key).toBe('mock');
 });
 
 test('should throw module not found error if the module has dependencies that cannot be found', () => {

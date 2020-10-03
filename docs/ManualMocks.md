@@ -19,6 +19,10 @@ Scoped modules can be mocked by creating a file in a directory structure that ma
 
 > Warning: If we want to mock Node's core modules (e.g.: `fs` or `path`), then explicitly calling e.g. `jest.mock('path')` is **required**, because core Node modules are not mocked by default.
 
+## Avoiding name collisions with manual mocks
+
+Manual mocks in a `__mocks__/` subdirectory may also be tagged with an explicit `.mock` extension suffix to prevent filename collision with the original code. For example, a module called `account` in the `models` directory can be mocked by creating a file called `account.mock.js` in the `models/__mocks__` directory.
+
 ## Examples
 
 ```bash
@@ -28,7 +32,9 @@ Scoped modules can be mocked by creating a file in a directory structure that ma
 │   └── fs.js
 ├── models
 │   ├── __mocks__
+│   │   ├── account.mock.js
 │   │   └── user.js
+│   ├── account.js
 │   └── user.js
 ├── node_modules
 └── views

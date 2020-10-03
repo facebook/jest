@@ -17,5 +17,9 @@ describe('getMockName', () => {
     expect(getMockName(path.join('a', '__mocks__', 'c', 'd.js'))).toBe(
       path.join('c', 'd').replace(/\\/g, '/'),
     );
+
+    expect(getMockName(path.join('a', '__mocks__', 'e.mock.js'))).toBe('e');
+
+    expect(getMockName(path.join('a', '__mocks__', 'e.m.js'))).toBe('e.m');
   });
 });
