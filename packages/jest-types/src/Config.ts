@@ -357,6 +357,7 @@ export type ProjectConfig = {
   testEnvironment: string;
   testEnvironmentOptions: Record<string, unknown>;
   testMatch: Array<Glob>;
+  testNamePattern?: string;
   testLocationInResults: boolean;
   testPathIgnorePatterns: Array<string>;
   testRegex: Array<string | RegExp>;

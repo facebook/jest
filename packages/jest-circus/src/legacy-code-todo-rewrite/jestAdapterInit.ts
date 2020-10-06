@@ -123,7 +123,7 @@ export const initialize = async ({
   await dispatch({
     name: 'setup',
     parentProcess,
-    testNamePattern: globalConfig.testNamePattern,
+    testNamePattern: config.testNamePattern ?? globalConfig.testNamePattern,
   });
 
   if (config.testLocationInResults) {

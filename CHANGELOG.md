@@ -2,6 +2,8 @@
 
 ### Features
 
+- `[jest-runner, jest-circus, jest-jasmine2, jest-types]` Added support for `testNamePattern` in the `Project.Config`. This enables custom Jest runners to specify which test cases are ran in each test file (by setting the `testNamePattern` config on each `JestTest.context.config`). The `GlobalConfig.testNamePattern` was also exposed to custom Jest runners.
+
 ### Fixes
 
 - `[jest-mock]` Fix typings for `mockResolvedValue`, `mockResolvedValueOnce`, `mockRejectedValue` and `mockRejectedValueOnce`
@@ -105,8 +107,7 @@
 
 - `[expect]` Match symbols and bigints in `any()` ([#10223](https://github.com/facebook/jest/pull/10223))
 - `[jest-changed-files]` Use `git diff` instead of `git log` for `--changedSince` ([#10155](https://github.com/facebook/jest/pull/10155))
-- `[jest-console]` Add missing `console.timeLog` for compatibility with Node ([#10209](https://github.com/facebook/jest/pull/10209))
-- `[jest-haste-map]` Check `find` binary supports the `-iname` parameter ([#10308](https://github.com/facebook/jest/pull/10308))
+- `[jest-console]` Add missing console.timeLog for compatability with Node ([#10209](https://github.com/facebook/jest/pull/10209))
 - `[jest-snapshot]` Strip added indentation for inline error snapshots ([#10217](https://github.com/facebook/jest/pull/10217))
 
 ### Chore & Maintenance
@@ -117,7 +118,8 @@
 - `[jest-jasmine2]` Remove usage of `Function` type ([#10216](https://github.com/facebook/jest/pull/10216))
 - `[jest-resolve]` Improve types ([#10239](https://github.com/facebook/jest/pull/10239))
 - `[docs]` Clarify the [`jest.requireActual(moduleName)`](https://jestjs.io/docs/en/jest-object#jestrequireactualmodulename) example
-- `[jest-types]` Refine typings of `coverageReporters` ([#10275](https://github.com/facebook/jest/pull/10275))
+
+### Performance
 
 ## 26.1.0
 
