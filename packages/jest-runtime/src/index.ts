@@ -151,6 +151,7 @@ class Runtime {
     | null;
   private _internalModuleRegistry: ModuleRegistry;
   private _isCurrentlyExecutingManualMock: string | null;
+  private _isolatedRequireInProgress: boolean;
   private _mockFactories: Map<string, () => unknown>;
   private _mockMetaDataCache: Map<
     string,
@@ -200,6 +201,7 @@ class Runtime {
     this._explicitShouldMock = new Map();
     this._internalModuleRegistry = new Map();
     this._isCurrentlyExecutingManualMock = null;
+    this._isolatedRequireInProgress = false;
     this._mockFactories = new Map();
     this._mockRegistry = new Map();
     // during setup, this cannot be null (and it's fine to explode if it is)
@@ -513,48 +515,52 @@ class Runtime {
       modulePath = this._resolveModule(from, moduleName);
     }
 
-    let moduleRegistry;
+    let disableIsolatedRequireInProgress = false;
+    let moduleRegistry = this._moduleRegistry;
 
     if (options?.isInternalModule) {
       moduleRegistry = this._internalModuleRegistry;
-    } else {
-      if (
-        this._moduleRegistry.get(modulePath) ||
-        !this._isolatedModuleRegistry
-      ) {
-        moduleRegistry = this._moduleRegistry;
-      } else {
-        moduleRegistry = this._isolatedModuleRegistry;
-      }
+    } else if (
+      this._isolatedModuleRegistry &&
+      !this._isolatedRequireInProgress
+    ) {
+      // Only isolate modules that were explicitly required inside isolateModules callback,
+      // preventing higher dependencies within that module to become indirectly isolated
+      this._isolatedRequireInProgress = true;
+      disableIsolatedRequireInProgress = true;
+      moduleRegistry = this._isolatedModuleRegistry;
     }
 
-    const module = moduleRegistry.get(modulePath);
-    if (module) {
-      return module.exports;
+    let module = moduleRegistry.get(modulePath);
+    if (!module) {
+      // We must register the pre-allocated module object first so that any
+      // circular dependencies that may arise while evaluating the module can
+      // be satisfied.
+      const localModule: InitialModule = {
+        children: [],
+        exports: {},
+        filename: modulePath,
+        id: modulePath,
+        loaded: false,
+      };
+      moduleRegistry.set(modulePath, localModule);
+
+      this._loadModule(
+        localModule,
+        from,
+        moduleName,
+        modulePath,
+        options,
+        moduleRegistry,
+      );
+
+      module = localModule;
     }
 
-    // We must register the pre-allocated module object first so that any
-    // circular dependencies that may arise while evaluating the module can
-    // be satisfied.
-    const localModule: InitialModule = {
-      children: [],
-      exports: {},
-      filename: modulePath,
-      id: modulePath,
-      loaded: false,
-    };
-    moduleRegistry.set(modulePath, localModule);
-
-    this._loadModule(
-      localModule,
-      from,
-      moduleName,
-      modulePath,
-      options,
-      moduleRegistry,
-    );
-
-    return localModule.exports;
+    if (disableIsolatedRequireInProgress) {
+      this._isolatedRequireInProgress = false;
+    }
+    return module.exports;
   }
 
   requireInternalModule<T = unknown>(from: Config.Path, to?: string): T {
@@ -583,21 +589,31 @@ class Runtime {
       moduleName,
     );
 
-    if (
-      this._isolatedMockRegistry &&
-      this._isolatedMockRegistry.get(moduleID)
-    ) {
-      return this._isolatedMockRegistry.get(moduleID);
+    const isolatedMockRegistry =
+      !this._isolatedRequireInProgress && this._isolatedMockRegistry;
+    let disableIsolatedRequireInProgress = false;
+
+    if (isolatedMockRegistry) {
+      if (isolatedMockRegistry.get(moduleID)) {
+        return isolatedMockRegistry.get(moduleID);
+      } else {
+        this._isolatedRequireInProgress = true;
+        disableIsolatedRequireInProgress = true;
+      }
     } else if (this._mockRegistry.get(moduleID)) {
       return this._mockRegistry.get(moduleID);
     }
 
-    const mockRegistry = this._isolatedMockRegistry || this._mockRegistry;
+    const mockRegistry = isolatedMockRegistry || this._mockRegistry;
 
     if (this._mockFactories.has(moduleID)) {
       // has check above makes this ok
       const module = this._mockFactories.get(moduleID)!();
       mockRegistry.set(moduleID, module);
+
+      if (disableIsolatedRequireInProgress) {
+        this._isolatedRequireInProgress = false;
+      }
       return module as T;
     }
 
@@ -657,6 +673,10 @@ class Runtime {
     } else {
       // Look for a real module to generate an automock from
       mockRegistry.set(moduleID, this._generateMock(from, moduleName));
+    }
+
+    if (disableIsolatedRequireInProgress) {
+      this._isolatedRequireInProgress = false;
     }
 
     return mockRegistry.get(moduleID);

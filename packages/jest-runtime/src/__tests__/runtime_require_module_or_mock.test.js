@@ -255,6 +255,105 @@ describe('isolateModules', () => {
       });
     }));
 
+  it('isolates module after module has already been required', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      let exports;
+
+      exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithState',
+      );
+      exports.increment();
+      expect(exports.getState()).toBe(2);
+
+      runtime.isolateModules(() => {
+        exports = runtime.requireModuleOrMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        expect(exports.getState()).toBe(1);
+      });
+    }));
+
+  it('can isolate the same module multiple times', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      runtime.isolateModules(() => {
+        const exports = runtime.requireModuleOrMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        exports.increment();
+        expect(exports.getState()).toBe(2);
+      });
+
+      runtime.isolateModules(() => {
+        const exports = runtime.requireModuleOrMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        expect(exports.getState()).toBe(1);
+      });
+    }));
+
+  it("doesn't isolate higher dependencies within the isolated module", () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      const exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithStatefulImport',
+      );
+      exports.increment();
+      expect(exports.getState()).toBe(2);
+
+      let isolatedExports;
+      runtime.isolateModules(
+        () =>
+          (isolatedExports = runtime.requireModuleOrMock(
+            runtime.__mockRootPath,
+            'ModuleWithStatefulImport',
+          )),
+      );
+
+      // Higher dependency's state is unaffected
+      expect(exports.getState()).toBe(isolatedExports.getState());
+      // Internal object within isolated module becomes a copy
+      expect(exports.scopedObject).toEqual(isolatedExports.scopedObject);
+      expect(exports.scopedObject).not.toBe(isolatedExports.scopedObject);
+    }));
+
+  it('can isolate mocks', () =>
+    createRuntime(__filename, {
+      moduleNameMapper,
+    }).then(runtime => {
+      runtime.setMock(runtime.__mockRootPath, 'ModuleWithState', () => {
+        let state = 50;
+        return {
+          getState: () => state,
+          increment: () => state++,
+        };
+      });
+
+      const exports = runtime.requireModuleOrMock(
+        runtime.__mockRootPath,
+        'ModuleWithStatefulImport',
+      );
+      exports.increment();
+      expect(exports.getState()).toBe(51);
+
+      runtime.isolateModules(() => {
+        const isolatedMock = runtime.requireMock(
+          runtime.__mockRootPath,
+          'ModuleWithState',
+        );
+        expect(isolatedMock.getState()).toBe(50);
+      });
+    }));
+
   it('cannot nest isolateModules blocks', () =>
     createRuntime(__filename, {
       moduleNameMapper,

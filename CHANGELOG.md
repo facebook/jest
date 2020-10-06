@@ -4,6 +4,8 @@
 
 ### Fixes
 
+- `[jest-runtime]` Fix `isolateModules` not working correctly when module has already been imported ([#8634](https://github.com/facebook/jest/pull/8634))
+
 ### Chore & Maintenance
 
 ### Performance
