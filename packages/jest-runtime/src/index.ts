@@ -161,7 +161,7 @@ class Runtime {
   private _moduleMocker: typeof jestMock;
   private _isolatedModuleRegistry: ModuleRegistry | null;
   private _moduleRegistry: ModuleRegistry;
-  private _esmoduleRegistry: Map<string, Promise<VMModule>>;
+  private _esmoduleRegistry: Map<string, VMModule>;
   private _resolver: Resolver;
   private _shouldAutoMock: boolean;
   private _shouldMockModuleCache: BooleanMap;
@@ -381,21 +381,23 @@ class Runtime {
         },
       });
 
-      this._esmoduleRegistry.set(
-        cacheKey,
-        // we wanna put the linking promise in the cache so modules loaded in
-        // parallel can all await it. We then await it synchronously below, so
-        // we shouldn't get any unhandled rejections
-        module
-          .link(this.linkModules.bind(this))
-          .then(() => module.evaluate())
-          .then(() => module),
-      );
+      this._esmoduleRegistry.set(cacheKey, module);
     }
 
     const module = this._esmoduleRegistry.get(cacheKey);
 
     invariant(module);
+
+    if (module.status === 'unlinked') {
+      await module.link(this.linkModules.bind(this));
+    }
+
+    if (module.status === 'linked') {
+      const {result} = await module.evaluate();
+
+      // last statement in file might be a promise - await it if so
+      await result;
+    }
 
     return module;
   }
@@ -470,8 +472,6 @@ class Runtime {
     await module.link(() => {
       throw new Error('This should never happen');
     });
-
-    await module.evaluate();
 
     return module;
   }
@@ -1669,8 +1669,6 @@ class Runtime {
     await module.link(() => {
       throw new Error('This should never happen');
     });
-
-    await module.evaluate();
 
     return module;
   }
