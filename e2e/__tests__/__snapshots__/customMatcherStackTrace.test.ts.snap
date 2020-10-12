@@ -38,10 +38,10 @@ FAIL __tests__/sync.test.js
       47 | 
       48 |     // This expecation fails due to an error we throw (intentionally)
 
-      at Error (__tests__/sync.test.js:45:13)
-      at baz (__tests__/sync.test.js:43:23)
-      at bar (__tests__/sync.test.js:42:23)
-      at foo (__tests__/sync.test.js:52:7)
-      at Object.callback (__tests__/sync.test.js:11:18)
-      at Object.toCustomMatch (__tests__/sync.test.js:53:8)
+      at baz (__tests__/sync.test.js:45:13)
+      at bar (__tests__/sync.test.js:43:23)
+      at foo (__tests__/sync.test.js:42:23)
+      at callback (__tests__/sync.test.js:52:7)
+      at Object.toCustomMatch (__tests__/sync.test.js:11:18)
+      at Object.it (__tests__/sync.test.js:53:8)
 `;
