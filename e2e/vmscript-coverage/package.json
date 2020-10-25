@@ -1,0 +1,6 @@
+{
+  "jest": {
+    "rootDir": "./",
+    "testEnvironment": "node"
+  }
+}
