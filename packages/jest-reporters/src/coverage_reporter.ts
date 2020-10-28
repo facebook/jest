@@ -226,7 +226,7 @@ export default class CoverageReporter extends BaseReporter {
   }
 
   private _checkThreshold(map: istanbulCoverage.CoverageMap) {
-    const {coverageThreshold} = this._globalConfig;
+    const {coverageThreshold, findRelatedTests} = this._globalConfig;
 
     if (coverageThreshold) {
       function check(
@@ -347,7 +347,17 @@ export default class CoverageReporter extends BaseReporter {
 
       let errors: Array<string> = [];
 
-      thresholdGroups.forEach(thresholdGroup => {
+      const groupsForCheck = findRelatedTests
+        ? thresholdGroups.filter(
+            group =>
+              group === THRESHOLD_GROUP_TYPES.GLOBAL ||
+              coveredFilesSortedIntoThresholdGroup.some(
+                fileWithGroup => fileWithGroup[1] === group,
+              ),
+          )
+        : thresholdGroups;
+
+      groupsForCheck.forEach(thresholdGroup => {
         switch (groupTypeByThresholdGroup[thresholdGroup]) {
           case THRESHOLD_GROUP_TYPES.GLOBAL: {
             const coverage = combineCoverage(
