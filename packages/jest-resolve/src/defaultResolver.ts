@@ -23,15 +23,6 @@ type ResolverOptions = {
   packageFilter?: ResolveOpts['packageFilter'];
 };
 
-declare global {
-  namespace NodeJS {
-    export interface ProcessVersions {
-      // the "pnp" version named isn't in DefinitelyTyped
-      pnp?: unknown;
-    }
-  }
-}
-
 export default function defaultResolver(
   path: Config.Path,
   options: ResolverOptions,
