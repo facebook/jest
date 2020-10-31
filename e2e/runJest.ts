@@ -18,6 +18,8 @@ import {normalizeIcons} from './Utils';
 const JEST_PATH = path.resolve(__dirname, '../packages/jest-cli/bin/jest.js');
 
 type RunJestOptions = {
+  preserveSymlinks?: string;
+  nodeFlags?: Array<string>;
   nodeOptions?: string;
   nodePath?: string;
   skipPkgJsonCheck?: boolean; // don't complain if can't find package.json
@@ -78,8 +80,13 @@ function spawnJest(
 
   if (options.nodeOptions) env['NODE_OPTIONS'] = options.nodeOptions;
   if (options.nodePath) env['NODE_PATH'] = options.nodePath;
+  if (options.preserveSymlinks)
+    env['NODE_PRESERVE_SYMLINKS'] = options.preserveSymlinks;
 
   const spawnArgs = [JEST_PATH, ...args];
+  if (options.nodeFlags) {
+    spawnArgs.unshift(...options.nodeFlags);
+  }
   const spawnOptions = {
     cwd: dir,
     env,

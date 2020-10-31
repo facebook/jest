@@ -6,6 +6,7 @@
 /examples/*/node_modules/
 /examples/mongodb/globalConfig.json
 
+/e2e/preserve-symlinks/*
 /e2e/*/node_modules
 /e2e/*/.pnp
 /e2e/*/.pnp.js

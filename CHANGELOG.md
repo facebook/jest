@@ -200,6 +200,7 @@
 - `[jest-config]` Support config files exporting (`async`) `function`s ([#10001](https://github.com/facebook/jest/pull/10001))
 - `[jest-cli, jest-core]` Add `--selectProjects` CLI argument to filter test suites by project name ([#8612](https://github.com/facebook/jest/pull/8612))
 - `[jest-cli, jest-init]` Add `coverageProvider` to `jest --init` prompts ([#10044](https://github.com/facebook/jest/pull/10044))
+- `[*]` Add support for NODE_PRESERVE_SYMLINKS and --preserve-symlinks behavior
 
 ### Fixes
 

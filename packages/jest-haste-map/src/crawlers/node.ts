@@ -8,6 +8,7 @@
 import * as path from 'path';
 import {spawn} from 'child_process';
 import * as fs from 'graceful-fs';
+import {shouldPreserveSymlinks} from 'jest-util';
 import H from '../constants';
 import * as fastPath from '../lib/fast_path';
 import type {
@@ -16,6 +17,8 @@ import type {
   IgnoreMatcher,
   InternalHasteMap,
 } from '../types';
+
+const preserveSymlinks = shouldPreserveSymlinks();
 
 type Result = Array<[/* id */ string, /* mtime */ number, /* size */ number]>;
 
@@ -86,7 +89,7 @@ function find(
         }
 
         if (typeof entry !== 'string') {
-          if (entry.isSymbolicLink()) {
+          if (!preserveSymlinks && entry.isSymbolicLink()) {
             return;
           }
 
@@ -103,7 +106,7 @@ function find(
 
           // This logic is unnecessary for node > v10.10, but leaving it in
           // since we need it for backwards-compatibility still.
-          if (!err && stat && !stat.isSymbolicLink()) {
+          if (!err && stat && (preserveSymlinks || !stat.isSymbolicLink())) {
             if (stat.isDirectory()) {
               search(file);
             } else {
@@ -140,7 +143,13 @@ function findNative(
   callback: Callback,
 ): void {
   const args = Array.from(roots);
-  args.push('-type', 'f');
+  if (preserveSymlinks) {
+    // follow symlinks to determine file type
+    args.unshift('-L');
+    args.push('( -not -type d )');
+  } else {
+    args.push('-type', 'f');
+  }
   if (extensions.length) {
     args.push('(');
   }

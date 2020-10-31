@@ -23,5 +23,6 @@ import * as preRunMessage from './preRunMessage';
 export {default as pluralize} from './pluralize';
 export {default as formatTime} from './formatTime';
 export {default as tryRealpath} from './tryRealpath';
+export {default as shouldPreserveSymlinks} from './shouldPreserveSymlinks';
 
 export {preRunMessage, specialChars};

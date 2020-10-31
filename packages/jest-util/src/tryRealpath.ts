@@ -7,8 +7,14 @@
 
 import {realpathSync} from 'graceful-fs';
 import type {Config} from '@jest/types';
+import shouldPreserveSymlinks from './shouldPreserveSymlinks';
+
+const preserveSymlinks = shouldPreserveSymlinks();
 
 export default function tryRealpath(path: Config.Path): Config.Path {
+  if (preserveSymlinks) {
+    return path;
+  }
   try {
     path = realpathSync.native(path);
   } catch (error) {
