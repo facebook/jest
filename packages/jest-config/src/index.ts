@@ -18,6 +18,7 @@ export {getTestEnvironment, isJSONString} from './utils';
 export {default as normalize} from './normalize';
 export {default as deprecationEntries} from './Deprecated';
 export {replaceRootDirInPath} from './utils';
+export {checkMultipleConfigs} from './resolveConfigPath';
 export {default as defaults} from './Defaults';
 export {default as descriptions} from './Descriptions';
 import * as constants from './constants';

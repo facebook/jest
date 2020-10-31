@@ -83,6 +83,30 @@ const resolveConfigPathByTraversing = (
   );
 };
 
+export const checkMultipleConfigs = (pathToResolve: Config.Path): boolean => {
+  const jestConfig = JEST_CONFIG_EXT_ORDER.map(ext =>
+    path.resolve(pathToResolve, getConfigFilename(ext)),
+  ).find(isFile);
+
+  if (!jestConfig) {
+    return false;
+  }
+
+  const packageJson = path.resolve(pathToResolve, PACKAGE_JSON);
+
+  if (!isFile(packageJson)) {
+    return false;
+  }
+
+  const configObject = require(packageJson);
+
+  if (!configObject.jest) {
+    return false;
+  }
+
+  return true;
+};
+
 const makeResolutionErrorMessage = (
   initialPath: Config.Path,
   cwd: Config.Path,

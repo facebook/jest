@@ -108,3 +108,29 @@ test('does not error out when using winston', () => {
   expect(wrap(rest)).toMatchSnapshot();
   expect(wrap(summary)).toMatchSnapshot();
 });
+
+test('warns of multiple configs', () => {
+  const {stderr, stdout, exitCode} = runJest('console');
+  const {summary, rest} = extractSummary(stderr);
+  console.log('in last test');
+  console.log(summary);
+  console.log(rest);
+  expect(exitCode).toBe(0);
+  expect(wrap(stdout)).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
+});
+
+test('does not warn of multiple configs when --config is passed', () => {
+  const {stderr, stdout, exitCode} = runJest('console', [
+    '--config=' + JSON.stringify({testEnvironment: 'node'}),
+  ]);
+  const {summary, rest} = extractSummary(stderr);
+  console.log('in last with --config test');
+  console.log(summary);
+  console.log(rest);
+  expect(exitCode).toBe(0);
+  expect(wrap(stdout)).toMatchSnapshot();
+  expect(wrap(rest)).toMatchSnapshot();
+  expect(wrap(summary)).toMatchSnapshot();
+});

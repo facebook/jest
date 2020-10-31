@@ -9,7 +9,7 @@ import type {Config} from '@jest/types';
 import type {AggregatedResult} from '@jest/test-result';
 import {CustomConsole} from '@jest/console';
 import {createDirectory, preRunMessage} from 'jest-util';
-import {readConfigs} from 'jest-config';
+import {checkMultipleConfigs, readConfigs} from 'jest-config';
 import Runtime = require('jest-runtime');
 import type {ChangedFilesPromise} from 'jest-changed-files';
 import HasteMap = require('jest-haste-map');
@@ -47,6 +47,27 @@ export async function runCLI(
   // it'll break the JSON structure and it won't be valid.
   const outputStream =
     argv.json || argv.useStderr ? process.stderr : process.stdout;
+
+  if (!argv.config) {
+    projects.forEach(project => {
+      const hasMultipleConfigs = checkMultipleConfigs(project);
+      if (hasMultipleConfigs) {
+        console.warn(
+          chalk.yellow(
+            chalk.bold(`Multiple configurations found:
+
+              Jest will use 'jest.config.js' for configuration, but Jest also 
+              found a configuration in 'package.json'. Delete the 'jest' key 
+              in that file to silence this warning, or delete the 'jest.config.js' file 
+              to use the configuration from 'package.json'.
+
+              Configuration Documentation:
+              https://jestjs.io/docs/en/configuration.html`),
+          ),
+        );
+      }
+    });
+  }
 
   const {globalConfig, configs, hasDeprecationWarnings} = await readConfigs(
     argv,

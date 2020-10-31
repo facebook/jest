@@ -145,6 +145,57 @@ Snapshots:   0 total
 Time:        <<REPLACED>>
 `;
 
+exports[`does not warn of multiple configs when --config is passed 1`] = `
+  console.log
+    This is a log message.
+
+      at Object.log (__tests__/console.test.js:10:11)
+
+  console.info
+    This is an info message.
+
+      at Object.info (__tests__/console.test.js:12:11)
+
+  console.warn
+    This is a warning message.
+
+      12 |   console.info('This is an info message.');
+      13 | 
+    > 14 |   console.warn('This is a warning message.');
+         |           ^
+      15 | 
+      16 |   console.error('This is an error message.');
+      17 | });
+
+      at Object.warn (__tests__/console.test.js:14:11)
+
+  console.error
+    This is an error message.
+
+      14 |   console.warn('This is a warning message.');
+      15 | 
+    > 16 |   console.error('This is an error message.');
+         |           ^
+      17 | });
+      18 | 
+
+      at Object.error (__tests__/console.test.js:16:11)
+
+`;
+
+exports[`does not warn of multiple configs when --config is passed 2`] = `
+PASS __tests__/console.test.js
+  ✓ works just fine
+`;
+
+exports[`does not warn of multiple configs when --config is passed 3`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
 exports[`respects --noStackTrace 1`] = `
   console.log
     This is a log message.
@@ -225,6 +276,56 @@ PASS __tests__/console.test.js
 `;
 
 exports[`the jsdom console is the same as the test console 3`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
+
+exports[`warns of multiple configs 1`] = ``;
+
+exports[`warns of multiple configs 2`] = `
+PASS __tests__/console.test.js
+  ● Console
+
+    console.log
+      This is a log message.
+
+      at Object.log (__tests__/console.test.js:10:11)
+
+    console.info
+      This is an info message.
+
+      at Object.info (__tests__/console.test.js:12:11)
+
+    console.warn
+      This is a warning message.
+
+      12 |   console.info('This is an info message.');
+      13 | 
+    > 14 |   console.warn('This is a warning message.');
+         |           ^
+      15 | 
+      16 |   console.error('This is an error message.');
+      17 | });
+
+      at Object.warn (__tests__/console.test.js:14:11)
+
+    console.error
+      This is an error message.
+
+      14 |   console.warn('This is a warning message.');
+      15 | 
+    > 16 |   console.error('This is an error message.');
+         |           ^
+      17 | });
+      18 | 
+
+      at Object.error (__tests__/console.test.js:16:11)
+`;
+
+exports[`warns of multiple configs 3`] = `
 Test Suites: 1 passed, 1 total
 Tests:       1 passed, 1 total
 Snapshots:   0 total
