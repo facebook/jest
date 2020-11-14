@@ -344,5 +344,192 @@ Object {
       },
     },
   },
+  "typescriptPreprocessor.js": Object {
+    "b": Object {
+      "0": Array [
+        0,
+        0,
+      ],
+      "1": Array [
+        0,
+        0,
+      ],
+    },
+    "branchMap": Object {
+      "0": Object {
+        "line": 12,
+        "loc": Object {
+          "end": Object {
+            "column": 5,
+            "line": 24,
+          },
+          "start": Object {
+            "column": 4,
+            "line": 12,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 5,
+              "line": 24,
+            },
+            "start": Object {
+              "column": 4,
+              "line": 12,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 5,
+              "line": 24,
+            },
+            "start": Object {
+              "column": 4,
+              "line": 12,
+            },
+          },
+        ],
+        "type": "if",
+      },
+      "1": Object {
+        "line": 12,
+        "loc": Object {
+          "end": Object {
+            "column": 53,
+            "line": 12,
+          },
+          "start": Object {
+            "column": 8,
+            "line": 12,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 28,
+              "line": 12,
+            },
+            "start": Object {
+              "column": 8,
+              "line": 12,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 53,
+              "line": 12,
+            },
+            "start": Object {
+              "column": 32,
+              "line": 12,
+            },
+          },
+        ],
+        "type": "binary-expr",
+      },
+    },
+    "f": Object {
+      "0": 0,
+    },
+    "fnMap": Object {
+      "0": Object {
+        "decl": Object {
+          "end": Object {
+            "column": 3,
+            "line": 11,
+          },
+          "start": Object {
+            "column": 2,
+            "line": 11,
+          },
+        },
+        "line": 11,
+        "loc": Object {
+          "end": Object {
+            "column": 3,
+            "line": 26,
+          },
+          "start": Object {
+            "column": 21,
+            "line": 11,
+          },
+        },
+        "name": "(anonymous_0)",
+      },
+    },
+    "inputSourceMap": null,
+    "path": "typescriptPreprocessor.js",
+    "s": Object {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+    },
+    "statementMap": Object {
+      "0": Object {
+        "end": Object {
+          "column": 33,
+          "line": 8,
+        },
+        "start": Object {
+          "column": 12,
+          "line": 8,
+        },
+      },
+      "1": Object {
+        "end": Object {
+          "column": 2,
+          "line": 27,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 10,
+        },
+      },
+      "2": Object {
+        "end": Object {
+          "column": 5,
+          "line": 24,
+        },
+        "start": Object {
+          "column": 4,
+          "line": 12,
+        },
+      },
+      "3": Object {
+        "end": Object {
+          "column": 8,
+          "line": 19,
+        },
+        "start": Object {
+          "column": 21,
+          "line": 13,
+        },
+      },
+      "4": Object {
+        "end": Object {
+          "column": 8,
+          "line": 23,
+        },
+        "start": Object {
+          "column": 6,
+          "line": 20,
+        },
+      },
+      "5": Object {
+        "end": Object {
+          "column": 15,
+          "line": 25,
+        },
+        "start": Object {
+          "column": 4,
+          "line": 25,
+        },
+      },
+    },
+  },
 }
 `;

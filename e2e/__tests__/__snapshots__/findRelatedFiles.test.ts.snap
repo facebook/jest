@@ -31,8 +31,27 @@ Ran all test suites.
 `;
 
 exports[`--findRelatedTests flag generates coverage report for filename 2`] = `
+
+
+> 1 | {"jest":{"collectCoverage":true,"testEnvironment":"node"}}
+> 1 | {"jest":{"collectCoverage":true,"testEnvironment":"node"}}
+ERROR: /tmp/find-related-tests-test/package.json: Unexpected token, expected ";" (1:7)
+Failed to collect coverage from /tmp/find-related-tests-test/package.json
 PASS __tests__/a.test.js
 PASS __tests__/b.test.js
+STACK: SyntaxError: /tmp/find-related-tests-test/package.json: Unexpected token, expected ";" (1:7)
+at Parser._raise (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:799:17)
+at Parser.parseBlockBody (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:12145:10)
+at Parser.parseBlockOrModuleBlockBody (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:12159:25)
+at Parser.parseExpressionStatement (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:12117:10)
+at Parser.parseStatement (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:11577:17)
+at Parser.parseStatementContent (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:11713:19)
+at Parser.raise (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:786:17)
+at Parser.raiseWithData (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:792:17)
+at Parser.semicolon (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:9071:40)
+at Parser.unexpected (/home/femmy/Desktop/jest/node_modules/@babel/parser/lib/index.js:9089:16)
+|        ^
+|        ^
 `;
 
 exports[`--findRelatedTests flag generates coverage report for filename 3`] = `

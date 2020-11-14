@@ -216,14 +216,6 @@ export const options = {
     description: 'The directory where Jest should output its coverage files.',
     type: 'string',
   },
-  coveragePathIgnorePatterns: {
-    description:
-      'An array of regexp pattern strings that are matched ' +
-      'against all file paths before executing the test. If the file path' +
-      'matches any of the patterns, coverage information will be skipped.',
-    string: true,
-    type: 'array',
-  },
   coverageProvider: {
     choices: ['babel', 'v8'],
     description: 'Select between Babel and V8 to collect coverage',

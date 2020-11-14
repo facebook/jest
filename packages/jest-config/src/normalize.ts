@@ -301,7 +301,6 @@ const normalizeUnmockedModulePathPatterns = (
   options: Config.InitialOptionsWithRootDir,
   key: keyof Pick<
     Config.InitialOptions,
-    | 'coveragePathIgnorePatterns'
     | 'modulePathIgnorePatterns'
     | 'testPathIgnorePatterns'
     | 'transformIgnorePatterns'
@@ -716,7 +715,6 @@ export default function normalize(
             ];
           });
         break;
-      case 'coveragePathIgnorePatterns':
       case 'modulePathIgnorePatterns':
       case 'testPathIgnorePatterns':
       case 'transformIgnorePatterns':

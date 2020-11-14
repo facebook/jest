@@ -80,12 +80,6 @@ export default function shouldInstrument(
     return false;
   }
 
-  if (
-    config.coveragePathIgnorePatterns.some(pattern => !!filename.match(pattern))
-  ) {
-    return false;
-  }
-
   if (config.globalSetup === filename) {
     return false;
   }

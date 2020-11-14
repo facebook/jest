@@ -20,6 +20,14 @@ const deprecatedOptions: DeprecatedOptions = {
   }
   `,
 
+  coveragePathIgnorePatterns: () => `  Option ${chalk.bold(
+    '"coveragePathIgnorePatterns"',
+  )} was replaced by configuration ${chalk.bold(
+    '"collectCoverageFrom"',
+  )}, use negated pattern.
+  Please update your configuration.
+  `,
+
   mapCoverage: () => `  Option ${chalk.bold(
     '"mapCoverage"',
   )} has been removed, as it's no longer necessary.

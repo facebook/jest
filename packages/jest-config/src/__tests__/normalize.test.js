@@ -253,7 +253,12 @@ describe('findRelatedTests', () => {
       },
     );
 
-    const expected = [`../${sourceFile}`, `${sourceFile}`, `bar/${sourceFile}`];
+    const expected = [
+      `!**/node_modules/**`,
+      `../${sourceFile}`,
+      `${sourceFile}`,
+      `bar/${sourceFile}`,
+    ];
 
     expect(options.collectCoverageFrom).toEqual(expected);
   });
@@ -451,57 +456,6 @@ describe('setupTestFrameworkScriptFile', () => {
         {},
       ),
     ).toThrowErrorMatchingSnapshot();
-  });
-});
-
-describe('coveragePathIgnorePatterns', () => {
-  it('does not normalize paths relative to rootDir', () => {
-    // This is a list of patterns, so we can't assume any of them are
-    // directories
-    const {options} = normalize(
-      {
-        coveragePathIgnorePatterns: ['bar/baz', 'qux/quux'],
-        rootDir: '/root/path/foo',
-      },
-      {},
-    );
-
-    expect(options.coveragePathIgnorePatterns).toEqual([
-      joinForPattern('bar', 'baz'),
-      joinForPattern('qux', 'quux'),
-    ]);
-  });
-
-  it('does not normalize trailing slashes', () => {
-    // This is a list of patterns, so we can't assume any of them are
-    // directories
-    const {options} = normalize(
-      {
-        coveragePathIgnorePatterns: ['bar/baz', 'qux/quux/'],
-        rootDir: '/root/path/foo',
-      },
-      {},
-    );
-
-    expect(options.coveragePathIgnorePatterns).toEqual([
-      joinForPattern('bar', 'baz'),
-      joinForPattern('qux', 'quux', ''),
-    ]);
-  });
-
-  it('substitutes <rootDir> tokens', () => {
-    const {options} = normalize(
-      {
-        coveragePathIgnorePatterns: ['hasNoToken', '<rootDir>/hasAToken'],
-        rootDir: '/root/path/foo',
-      },
-      {},
-    );
-
-    expect(options.coveragePathIgnorePatterns).toEqual([
-      'hasNoToken',
-      joinForPattern('', 'root', 'path', 'foo', 'hasAToken'),
-    ]);
   });
 });
 

@@ -19,8 +19,6 @@ const descriptions: {[key in keyof Config.InitialOptions]: string} = {
     'An array of glob patterns indicating a set of files for which coverage information should be collected',
   coverageDirectory:
     'The directory where Jest should output its coverage files',
-  coveragePathIgnorePatterns:
-    'An array of regexp pattern strings used to skip coverage collection',
   coverageProvider:
     'Indicates which provider should be used to instrument code for coverage',
   coverageReporters:

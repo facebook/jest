@@ -25,7 +25,7 @@ const defaultConfig = {
   browser: false,
   cacheDirectory: path.join(tmpdir(), 'jest'),
   clearMocks: false,
-  coveragePathIgnorePatterns: [NODE_MODULES_REGEXP],
+  collectCoverageFrom: ['!**/node_modules/**'],
   coverageReporters: ['json', 'text', 'lcov', 'clover'],
   expand: false,
   globals: {},
@@ -65,12 +65,11 @@ const validConfig = {
   cacheDirectory: '/tmp/user/jest',
   clearMocks: false,
   collectCoverage: true,
-  collectCoverageFrom: ['src', '!public'],
+  collectCoverageFrom: ['src', '!public', '!**/node_modules/**'],
   collectCoverageOnlyFrom: {
     '<rootDir>/this-directory-is-covered/Covered.js': true,
   },
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: [NODE_MODULES_REGEXP],
   coverageReporters: ['json', 'text', 'lcov', 'clover'],
   coverageThreshold: {
     global: {

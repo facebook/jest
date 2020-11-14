@@ -21,7 +21,7 @@ const defaultOptions: Config.DefaultOptions = {
   changedFilesWithAncestor: false,
   clearMocks: false,
   collectCoverage: false,
-  coveragePathIgnorePatterns: [NODE_MODULES_REGEXP],
+  collectCoverageFrom: ['!**/node_modules/**'],
   coverageProvider: 'babel',
   coverageReporters: ['json', 'text', 'lcov', 'clover'],
   errorOnDeprecated: false,

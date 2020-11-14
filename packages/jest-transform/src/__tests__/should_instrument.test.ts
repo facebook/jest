@@ -97,12 +97,6 @@ describe('shouldInstrument', () => {
       );
     });
 
-    it('should return true if the file is not in coveragePathIgnorePatterns', () => {
-      testShouldInstrument('do/collect/coverage.js', defaultOptions, {
-        coveragePathIgnorePatterns: ['dont'],
-      });
-    });
-
     it('should return true if file is a testfile but forceCoverageMatch is set', () => {
       testShouldInstrument('do/collect/sum.coverage.test.js', defaultOptions, {
         forceCoverageMatch: ['**/*.(coverage).(test).js'],
@@ -185,12 +179,6 @@ describe('shouldInstrument', () => {
         },
         defaultConfig,
       );
-    });
-
-    it('if the file is in coveragePathIgnorePatterns', () => {
-      testShouldInstrument('dont/collect/coverage.js', defaultOptions, {
-        coveragePathIgnorePatterns: ['dont'],
-      });
     });
 
     it('if file is in mock patterns', () => {

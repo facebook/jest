@@ -69,7 +69,7 @@ const DEFAULT_PROJECT_CONFIG: Config.ProjectConfig = {
   cache: false,
   cacheDirectory: '/test_cache_dir/',
   clearMocks: false,
-  coveragePathIgnorePatterns: [],
+  collectCoverageFrom: ['!**/node_modules/**'],
   cwd: '/test_root_dir/',
   detectLeaks: false,
   detectOpenHandles: false,

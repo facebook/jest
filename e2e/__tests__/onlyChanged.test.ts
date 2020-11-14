@@ -186,7 +186,11 @@ test('do not pickup non-tested files when reporting coverage on only changed fil
     'package.json': JSON.stringify({name: 'new name'}),
   });
 
-  const {stderr, stdout, exitCode} = runJest(DIR, ['-o', '--coverage']);
+  const {stderr, stdout, exitCode} = runJest(DIR, [
+    '-o',
+    '--coverage, --collectCoverageFrom=package.json',
+  ]);
+
   expect(stderr).toEqual(
     expect.not.stringContaining('Failed to collect coverage from'),
   );

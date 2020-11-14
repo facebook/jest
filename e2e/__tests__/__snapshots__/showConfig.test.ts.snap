@@ -8,8 +8,8 @@ exports[`--showConfig outputs config info and exits 1`] = `
       "cache": false,
       "cacheDirectory": "/tmp/jest",
       "clearMocks": false,
-      "coveragePathIgnorePatterns": [
-        "/node_modules/"
+      "collectCoverageFrom": [
+        "!**/node_modules/**"
       ],
       "cwd": "<<REPLACED_ROOT_DIR>>",
       "detectLeaks": false,
@@ -83,7 +83,9 @@ exports[`--showConfig outputs config info and exits 1`] = `
     "bail": 0,
     "changedFilesWithAncestor": false,
     "collectCoverage": false,
-    "collectCoverageFrom": [],
+    "collectCoverageFrom": [
+      "!**/node_modules/**"
+    ],
     "coverageDirectory": "<<REPLACED_ROOT_DIR>>/coverage",
     "coverageProvider": "babel",
     "coverageReporters": [

@@ -74,5 +74,275 @@ Object {
       },
     },
   },
+  "preprocessor.js": Object {
+    "b": Object {
+      "0": Array [
+        0,
+        0,
+      ],
+      "1": Array [
+        0,
+        0,
+      ],
+      "2": Array [
+        0,
+        0,
+      ],
+    },
+    "branchMap": Object {
+      "0": Object {
+        "line": 24,
+        "loc": Object {
+          "end": Object {
+            "column": 5,
+            "line": 35,
+          },
+          "start": Object {
+            "column": 4,
+            "line": 24,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 5,
+              "line": 35,
+            },
+            "start": Object {
+              "column": 4,
+              "line": 24,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 5,
+              "line": 35,
+            },
+            "start": Object {
+              "column": 4,
+              "line": 24,
+            },
+          },
+        ],
+        "type": "if",
+      },
+      "1": Object {
+        "line": 24,
+        "loc": Object {
+          "end": Object {
+            "column": 55,
+            "line": 24,
+          },
+          "start": Object {
+            "column": 8,
+            "line": 24,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 24,
+              "line": 24,
+            },
+            "start": Object {
+              "column": 8,
+              "line": 24,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 55,
+              "line": 24,
+            },
+            "start": Object {
+              "column": 28,
+              "line": 24,
+            },
+          },
+        ],
+        "type": "binary-expr",
+      },
+      "2": Object {
+        "line": 37,
+        "loc": Object {
+          "end": Object {
+            "column": 46,
+            "line": 37,
+          },
+          "start": Object {
+            "column": 11,
+            "line": 37,
+          },
+        },
+        "locations": Array [
+          Object {
+            "end": Object {
+              "column": 39,
+              "line": 37,
+            },
+            "start": Object {
+              "column": 11,
+              "line": 37,
+            },
+          },
+          Object {
+            "end": Object {
+              "column": 46,
+              "line": 37,
+            },
+            "start": Object {
+              "column": 43,
+              "line": 37,
+            },
+          },
+        ],
+        "type": "binary-expr",
+      },
+    },
+    "f": Object {
+      "0": 0,
+    },
+    "fnMap": Object {
+      "0": Object {
+        "decl": Object {
+          "end": Object {
+            "column": 3,
+            "line": 21,
+          },
+          "start": Object {
+            "column": 2,
+            "line": 21,
+          },
+        },
+        "line": 21,
+        "loc": Object {
+          "end": Object {
+            "column": 3,
+            "line": 38,
+          },
+          "start": Object {
+            "column": 51,
+            "line": 21,
+          },
+        },
+        "name": "(anonymous_0)",
+      },
+    },
+    "path": "preprocessor.js",
+    "s": Object {
+      "0": 0,
+      "1": 0,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 0,
+      "6": 0,
+      "7": 0,
+      "8": 0,
+      "9": 0,
+    },
+    "statementMap": Object {
+      "0": Object {
+        "end": Object {
+          "column": 62,
+          "line": 8,
+        },
+        "start": Object {
+          "column": 40,
+          "line": 8,
+        },
+      },
+      "1": Object {
+        "end": Object {
+          "column": 71,
+          "line": 9,
+        },
+        "start": Object {
+          "column": 39,
+          "line": 9,
+        },
+      },
+      "2": Object {
+        "end": Object {
+          "column": 55,
+          "line": 11,
+        },
+        "start": Object {
+          "column": 19,
+          "line": 11,
+        },
+      },
+      "3": Object {
+        "end": Object {
+          "column": 1,
+          "line": 17,
+        },
+        "start": Object {
+          "column": 16,
+          "line": 13,
+        },
+      },
+      "4": Object {
+        "end": Object {
+          "column": 2,
+          "line": 39,
+        },
+        "start": Object {
+          "column": 0,
+          "line": 19,
+        },
+      },
+      "5": Object {
+        "end": Object {
+          "column": 32,
+          "line": 22,
+        },
+        "start": Object {
+          "column": 4,
+          "line": 22,
+        },
+      },
+      "6": Object {
+        "end": Object {
+          "column": 5,
+          "line": 35,
+        },
+        "start": Object {
+          "column": 4,
+          "line": 24,
+        },
+      },
+      "7": Object {
+        "end": Object {
+          "column": 64,
+          "line": 25,
+        },
+        "start": Object {
+          "column": 6,
+          "line": 25,
+        },
+      },
+      "8": Object {
+        "end": Object {
+          "column": 8,
+          "line": 34,
+        },
+        "start": Object {
+          "column": 6,
+          "line": 26,
+        },
+      },
+      "9": Object {
+        "end": Object {
+          "column": 47,
+          "line": 37,
+        },
+        "start": Object {
+          "column": 4,
+          "line": 37,
+        },
+      },
+    },
+  },
 }
 `;

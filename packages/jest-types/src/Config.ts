@@ -59,7 +59,7 @@ export type DefaultOptions = {
   changedFilesWithAncestor: boolean;
   clearMocks: boolean;
   collectCoverage: boolean;
-  coveragePathIgnorePatterns: Array<string>;
+  collectCoverageFrom: Array<Glob>;
   coverageReporters: Array<CoverageReporterName>;
   coverageProvider: CoverageProvider;
   errorOnDeprecated: boolean;
@@ -129,7 +129,6 @@ export type InitialOptions = Partial<{
     [key: string]: boolean;
   };
   coverageDirectory: string;
-  coveragePathIgnorePatterns: Array<string>;
   coverageProvider: CoverageProvider;
   coverageReporters: CoverageReporters;
   coverageThreshold: {
@@ -262,7 +261,6 @@ export type GlobalConfig = {
     [key: string]: boolean;
   };
   coverageDirectory: string;
-  coveragePathIgnorePatterns?: Array<string>;
   coverageProvider: CoverageProvider;
   coverageReporters: CoverageReporters;
   coverageThreshold?: CoverageThreshold;
@@ -320,7 +318,7 @@ export type ProjectConfig = {
   cache: boolean;
   cacheDirectory: Path;
   clearMocks: boolean;
-  coveragePathIgnorePatterns: Array<string>;
+  collectCoverageFrom: Array<Glob>;
   cwd: Path;
   dependencyExtractor?: string;
   detectLeaks: boolean;
@@ -392,7 +390,6 @@ export type Argv = Arguments<
     config: string;
     coverage: boolean;
     coverageDirectory: string;
-    coveragePathIgnorePatterns: Array<string>;
     coverageReporters: Array<string>;
     coverageThreshold: string;
     debug: boolean;

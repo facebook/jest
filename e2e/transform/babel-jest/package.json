@@ -4,12 +4,8 @@
   },
   "jest": {
     "collectCoverageOnlyFrom": {
-      "<rootDir>/this-directory-is-covered/covered.js": true,
-      "<rootDir>/this-directory-is-covered/excludedFromCoverage.js": true
+      "<rootDir>/this-directory-is-covered/covered.js": true
     },
-    "coveragePathIgnorePatterns": [
-      "excludedFromCoverage"
-    ],
     "testEnvironment": "node"
   }
 }

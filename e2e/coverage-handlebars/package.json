@@ -3,6 +3,9 @@
     "transform": {
       "\\.hbs$": "<rootDir>/transform-handlebars.js"
     },
+    "collectCoverageFrom": [
+      "!<rootDir>/*.js"
+    ],
     "testEnvironment": "node"
   },
   "dependencies": {

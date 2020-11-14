@@ -21,12 +21,11 @@ const initialOptions: Config.InitialOptions = {
   changedSince: 'master',
   clearMocks: false,
   collectCoverage: true,
-  collectCoverageFrom: ['src', '!public'],
+  collectCoverageFrom: ['src', '!public', '!**/node_modules/**'],
   collectCoverageOnlyFrom: {
     '<rootDir>/this-directory-is-covered/Covered.js': true,
   },
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: [NODE_MODULES_REGEXP],
   coverageProvider: 'v8',
   coverageReporters: ['json', 'text', 'lcov', 'clover'],
   coverageThreshold: {
