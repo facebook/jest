@@ -666,10 +666,6 @@ export const options = {
     description: 'This option sets the default timeouts of test cases.',
     type: 'number',
   },
-  testURL: {
-    description: 'This option sets the URL for the jsdom environment.',
-    type: 'string',
-  },
   timers: {
     description:
       'Setting this value to fake allows the use of fake timers ' +

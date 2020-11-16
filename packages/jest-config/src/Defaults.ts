@@ -63,7 +63,6 @@ const defaultOptions: Config.DefaultOptions = {
   testRegex: [],
   testRunner: 'jasmine2',
   testSequencer: '@jest/test-sequencer',
-  testURL: 'http://localhost',
   timers: 'real',
   transformIgnorePatterns: [NODE_MODULES_REGEXP, `\\.pnp\\.[^\\${sep}]+$`],
   useStderr: false,

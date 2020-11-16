@@ -98,7 +98,6 @@ export type DefaultOptions = {
   testRegex: Array<string>;
   testRunner: string;
   testSequencer: string;
-  testURL: string;
   timers: Timers;
   transformIgnorePatterns: Array<Glob>;
   useStderr: boolean;
@@ -212,7 +211,6 @@ export type InitialOptions = Partial<{
   testResultsProcessor: string;
   testRunner: string;
   testSequencer: string;
-  testURL: string;
   testTimeout: number;
   timers: Timers;
   transform: {
@@ -364,7 +362,6 @@ export type ProjectConfig = {
   testPathIgnorePatterns: Array<string>;
   testRegex: Array<string | RegExp>;
   testRunner: string;
-  testURL: string;
   timers: Timers;
   transform: Array<[string, Path, Record<string, unknown>]>;
   transformIgnorePatterns: Array<Glob>;
@@ -447,7 +444,6 @@ export type Argv = Arguments<
     testResultsProcessor: string;
     testRunner: string;
     testSequencer: string;
-    testURL: string;
     testTimeout: number | null | undefined;
     timers: string;
     transform: string;

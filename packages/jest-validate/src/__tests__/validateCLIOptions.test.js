@@ -19,19 +19,6 @@ test('validates yargs special options', () => {
   expect(validateCLIOptions(argv, options)).toBe(true);
 });
 
-test('validates testURL', () => {
-  const options = {
-    testURL: {
-      description: 'This option sets the URL for the jsdom environment.',
-      type: 'string',
-    },
-  };
-  const argv = {
-    testURL: 'http://localhost',
-  };
-  expect(validateCLIOptions(argv, options)).toBe(true);
-});
-
 test('fails for unknown option', () => {
   const options = ['$0', '_', 'help', 'h'];
   const argv = {

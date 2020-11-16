@@ -48,7 +48,6 @@ const defaultConfig = {
   testPathIgnorePatterns: [NODE_MODULES_REGEXP],
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   testResultsProcessor: null,
-  testURL: 'http://localhost',
   timers: 'real',
   transformIgnorePatterns: [NODE_MODULES_REGEXP],
   useStderr: false,
@@ -112,7 +111,6 @@ const validConfig = {
   testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
   testResultsProcessor: 'processor-node-module',
   testRunner: 'jasmine2',
-  testURL: 'http://localhost',
   timers: 'real',
   transform: {
     '\\.js$': '<rootDir>/preprocessor.js',

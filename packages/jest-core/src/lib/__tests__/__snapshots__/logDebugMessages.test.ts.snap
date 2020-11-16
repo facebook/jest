@@ -50,7 +50,6 @@ exports[`prints the config object 1`] = `
       "\\\\.test\\\\.js$"
     ],
     "testRunner": "myRunner",
-    "testURL": "http://localhost",
     "timers": "real",
     "transform": [],
     "transformIgnorePatterns": [],

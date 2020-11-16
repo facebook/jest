@@ -82,8 +82,6 @@ const descriptions: {[key in keyof Config.InitialOptions]: string} = {
   testResultsProcessor:
     'This option allows the use of a custom results processor',
   testRunner: 'This option allows use of a custom test runner',
-  testURL:
-    'This option sets the URL for the jsdom environment. It is reflected in properties such as location.href',
   timers:
     'Setting this value to "fake" allows the use of fake timers for functions such as "setTimeout"',
   transform: 'A map from regular expressions to paths to transformers',
