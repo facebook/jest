@@ -30,7 +30,7 @@ export type ModuleWrapper = (
   __dirname: string,
   __filename: Module['filename'],
   jest?: Jest,
-  ...extraGlobals: Array<Global.Global[keyof Global.Global]>
+  ...sandboxInjectedGlobals: Array<Global.Global[keyof Global.Global]>
 ) => unknown;
 
 export declare class JestEnvironment {

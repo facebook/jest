@@ -14,7 +14,7 @@ const DIR = path.resolve(tmpdir(), 'extra-globals');
 
 beforeEach(() => {
   cleanup(DIR);
-  createEmptyPackage(DIR, {jest: {extraGlobals: ['Math']}});
+  createEmptyPackage(DIR, {jest: {sandboxInjectedGlobals: ['Math']}});
 });
 
 afterAll(() => cleanup(DIR));

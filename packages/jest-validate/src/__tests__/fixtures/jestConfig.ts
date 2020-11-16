@@ -84,7 +84,6 @@ const validConfig = {
   logHeapUsage: true,
   moduleDirectories: ['node_modules'],
   moduleFileExtensions: ['js', 'json', 'jsx', 'node'],
-  moduleLoader: '<rootDir>',
   moduleNameMapper: {
     '^React$': '<rootDir>/node_modules/react',
     '^Vue$': ['<rootDir>/node_modules/vue', '<rootDir>/node_modules/vue3'],
@@ -102,6 +101,7 @@ const validConfig = {
   restoreMocks: false,
   rootDir: '/',
   roots: ['<rootDir>'],
+  runtime: '<rootDir>',
   setupFiles: ['<rootDir>/setup.js'],
   setupFilesAfterEnv: ['<rootDir>/testSetupFile.js'],
   silent: true,

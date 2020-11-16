@@ -142,7 +142,6 @@ export type InitialOptions = Partial<{
   detectOpenHandles: boolean;
   displayName: string | DisplayName;
   expand: boolean;
-  extraGlobals: Array<string>;
   filter: Path;
   findRelatedTests: boolean;
   forceCoverageMatch: Array<Glob>;
@@ -162,7 +161,6 @@ export type InitialOptions = Partial<{
   maxWorkers: number | string;
   moduleDirectories: Array<string>;
   moduleFileExtensions: Array<string>;
-  moduleLoader: Path;
   moduleNameMapper: {
     [key: string]: string | Array<string>;
   };
@@ -189,6 +187,8 @@ export type InitialOptions = Partial<{
   roots: Array<Path>;
   runner: string;
   runTestsByPath: boolean;
+  runtime: Path;
+  sandboxInjectedGlobals: Array<string>;
   scriptPreprocessor: string;
   setupFiles: Array<Path>;
   setupTestFrameworkScriptFile: Path;
@@ -327,7 +327,6 @@ export type ProjectConfig = {
   detectOpenHandles: boolean;
   displayName?: DisplayName;
   errorOnDeprecated: boolean;
-  extraGlobals: Array<keyof NodeJS.Global>;
   filter?: Path;
   forceCoverageMatch: Array<Glob>;
   globalSetup?: string;
@@ -337,7 +336,6 @@ export type ProjectConfig = {
   injectGlobals: boolean;
   moduleDirectories: Array<string>;
   moduleFileExtensions: Array<string>;
-  moduleLoader?: Path;
   moduleNameMapper: Array<[string, string]>;
   modulePathIgnorePatterns: Array<string>;
   modulePaths?: Array<string>;
@@ -350,6 +348,8 @@ export type ProjectConfig = {
   rootDir: Path;
   roots: Array<Path>;
   runner: string;
+  runtime?: Path;
+  sandboxInjectedGlobals: Array<keyof NodeJS.Global>;
   setupFiles: Array<Path>;
   setupFilesAfterEnv: Array<Path>;
   skipFilter: boolean;

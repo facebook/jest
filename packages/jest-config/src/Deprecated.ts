@@ -20,9 +20,21 @@ const deprecatedOptions: DeprecatedOptions = {
   }
   `,
 
+  extraGlobals: () => `  Option ${chalk.bold(
+    '"extraGlobals"',
+  )} has been renamed, to sandboxInjectedGlobals.
+
+  Please update your configuration.`,
+
   mapCoverage: () => `  Option ${chalk.bold(
     '"mapCoverage"',
   )} has been removed, as it's no longer necessary.
+
+  Please update your configuration.`,
+
+  moduleLoader: () => `  Option ${chalk.bold(
+    '"moduleLoader"',
+  )} has been renamed, to runtime.
 
   Please update your configuration.`,
 

@@ -13,7 +13,6 @@ Object {
     "detectOpenHandles": false,
     "displayName": undefined,
     "errorOnDeprecated": false,
-    "extraGlobals": Array [],
     "filter": undefined,
     "forceCoverageMatch": Array [],
     "globalSetup": undefined,
@@ -25,7 +24,6 @@ Object {
     "moduleFileExtensions": Array [
       "js",
     ],
-    "moduleLoader": "/test_module_loader_path",
     "moduleNameMapper": Array [],
     "modulePathIgnorePatterns": Array [],
     "modulePaths": Array [],
@@ -38,6 +36,8 @@ Object {
     "rootDir": "/",
     "roots": Array [],
     "runner": "jest-runner",
+    "runtime": "/test_module_loader_path",
+    "sandboxInjectedGlobals": Array [],
     "setupFiles": Array [],
     "setupFilesAfterEnv": Array [],
     "skipFilter": false,
@@ -234,7 +234,7 @@ exports[`ScriptTransformer uses multiple preprocessors 1`] = `
 const TRANSFORMED = {
   filename: '/fruits/banana.js',
   script: 'module.exports = "banana";',
-  config: '{"automock":false,"cache":true,"cacheDirectory":"/cache/","clearMocks":false,"coveragePathIgnorePatterns":[],"cwd":"/test_root_dir/","detectLeaks":false,"detectOpenHandles":false,"errorOnDeprecated":false,"extraGlobals":[],"forceCoverageMatch":[],"globals":{},"haste":{},"injectGlobals":true,"moduleDirectories":[],"moduleFileExtensions":["js"],"moduleLoader":"/test_module_loader_path","moduleNameMapper":[],"modulePathIgnorePatterns":[],"modulePaths":[],"name":"test","prettierPath":"prettier","resetMocks":false,"resetModules":false,"restoreMocks":false,"rootDir":"/","roots":[],"runner":"jest-runner","setupFiles":[],"setupFilesAfterEnv":[],"skipFilter":false,"skipNodeResolution":false,"slowTestThreshold":5,"snapshotSerializers":[],"testEnvironment":"node","testEnvironmentOptions":{},"testLocationInResults":false,"testMatch":[],"testPathIgnorePatterns":[],"testRegex":["\\\\.test\\\\.js$"],"testRunner":"jest-jasmine2","testURL":"http://localhost","timers":"real","transform":[["\\\\.js$","test_preprocessor",{}],["\\\\.css$","css-preprocessor",{}]],"transformIgnorePatterns":["/node_modules/"],"watchPathIgnorePatterns":[]}',
+  config: '{"automock":false,"cache":true,"cacheDirectory":"/cache/","clearMocks":false,"coveragePathIgnorePatterns":[],"cwd":"/test_root_dir/","detectLeaks":false,"detectOpenHandles":false,"errorOnDeprecated":false,"forceCoverageMatch":[],"globals":{},"haste":{},"injectGlobals":true,"moduleDirectories":[],"moduleFileExtensions":["js"],"moduleNameMapper":[],"modulePathIgnorePatterns":[],"modulePaths":[],"name":"test","prettierPath":"prettier","resetMocks":false,"resetModules":false,"restoreMocks":false,"rootDir":"/","roots":[],"runner":"jest-runner","runtime":"/test_module_loader_path","sandboxInjectedGlobals":[],"setupFiles":[],"setupFilesAfterEnv":[],"skipFilter":false,"skipNodeResolution":false,"slowTestThreshold":5,"snapshotSerializers":[],"testEnvironment":"node","testEnvironmentOptions":{},"testLocationInResults":false,"testMatch":[],"testPathIgnorePatterns":[],"testRegex":["\\\\.test\\\\.js$"],"testRunner":"jest-jasmine2","testURL":"http://localhost","timers":"real","transform":[["\\\\.js$","test_preprocessor",{}],["\\\\.css$","css-preprocessor",{}]],"transformIgnorePatterns":["/node_modules/"],"watchPathIgnorePatterns":[]}',
 };
 `;
 
@@ -251,7 +251,7 @@ exports[`ScriptTransformer uses the supplied preprocessor 1`] = `
 const TRANSFORMED = {
   filename: '/fruits/banana.js',
   script: 'module.exports = "banana";',
-  config: '{"automock":false,"cache":true,"cacheDirectory":"/cache/","clearMocks":false,"coveragePathIgnorePatterns":[],"cwd":"/test_root_dir/","detectLeaks":false,"detectOpenHandles":false,"errorOnDeprecated":false,"extraGlobals":[],"forceCoverageMatch":[],"globals":{},"haste":{},"injectGlobals":true,"moduleDirectories":[],"moduleFileExtensions":["js"],"moduleLoader":"/test_module_loader_path","moduleNameMapper":[],"modulePathIgnorePatterns":[],"modulePaths":[],"name":"test","prettierPath":"prettier","resetMocks":false,"resetModules":false,"restoreMocks":false,"rootDir":"/","roots":[],"runner":"jest-runner","setupFiles":[],"setupFilesAfterEnv":[],"skipFilter":false,"skipNodeResolution":false,"slowTestThreshold":5,"snapshotSerializers":[],"testEnvironment":"node","testEnvironmentOptions":{},"testLocationInResults":false,"testMatch":[],"testPathIgnorePatterns":[],"testRegex":["\\\\.test\\\\.js$"],"testRunner":"jest-jasmine2","testURL":"http://localhost","timers":"real","transform":[["\\\\.js$","test_preprocessor",{}]],"transformIgnorePatterns":["/node_modules/"],"watchPathIgnorePatterns":[]}',
+  config: '{"automock":false,"cache":true,"cacheDirectory":"/cache/","clearMocks":false,"coveragePathIgnorePatterns":[],"cwd":"/test_root_dir/","detectLeaks":false,"detectOpenHandles":false,"errorOnDeprecated":false,"forceCoverageMatch":[],"globals":{},"haste":{},"injectGlobals":true,"moduleDirectories":[],"moduleFileExtensions":["js"],"moduleNameMapper":[],"modulePathIgnorePatterns":[],"modulePaths":[],"name":"test","prettierPath":"prettier","resetMocks":false,"resetModules":false,"restoreMocks":false,"rootDir":"/","roots":[],"runner":"jest-runner","runtime":"/test_module_loader_path","sandboxInjectedGlobals":[],"setupFiles":[],"setupFilesAfterEnv":[],"skipFilter":false,"skipNodeResolution":false,"slowTestThreshold":5,"snapshotSerializers":[],"testEnvironment":"node","testEnvironmentOptions":{},"testLocationInResults":false,"testMatch":[],"testPathIgnorePatterns":[],"testRegex":["\\\\.test\\\\.js$"],"testRunner":"jest-jasmine2","testURL":"http://localhost","timers":"real","transform":[["\\\\.js$","test_preprocessor",{}]],"transformIgnorePatterns":["/node_modules/"],"watchPathIgnorePatterns":[]}',
 };
 `;
 

@@ -15,7 +15,6 @@ exports[`--showConfig outputs config info and exits 1`] = `
       "detectLeaks": false,
       "detectOpenHandles": false,
       "errorOnDeprecated": false,
-      "extraGlobals": [],
       "forceCoverageMatch": [],
       "globals": {},
       "haste": {
@@ -46,6 +45,7 @@ exports[`--showConfig outputs config info and exits 1`] = `
         "<<REPLACED_ROOT_DIR>>"
       ],
       "runner": "jest-runner",
+      "sandboxInjectedGlobals": [],
       "setupFiles": [],
       "setupFilesAfterEnv": [],
       "skipFilter": false,

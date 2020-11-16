@@ -1089,15 +1089,17 @@ export default class Runtime {
 
     const lastArgs: [Jest | undefined, ...Array<Global.Global>] = [
       this._config.injectGlobals ? jestObject : undefined, // jest object
-      ...this._config.extraGlobals.map<Global.Global>(globalVariable => {
-        if (this._environment.global[globalVariable]) {
-          return this._environment.global[globalVariable];
-        }
+      ...this._config.sandboxInjectedGlobals.map<Global.Global>(
+        globalVariable => {
+          if (this._environment.global[globalVariable]) {
+            return this._environment.global[globalVariable];
+          }
 
-        throw new Error(
-          `You have requested '${globalVariable}' as a global variable, but it was not present. Please check your config or your global environment.`,
-        );
-      }),
+          throw new Error(
+            `You have requested '${globalVariable}' as a global variable, but it was not present. Please check your config or your global environment.`,
+          );
+        },
+      ),
     ];
 
     if (!this._mainModule && filename === this._testPath) {
@@ -1667,7 +1669,7 @@ export default class Runtime {
       '__dirname',
       '__filename',
       this._config.injectGlobals ? 'jest' : undefined,
-      ...this._config.extraGlobals,
+      ...this._config.sandboxInjectedGlobals,
     ].filter(notEmpty);
   }
 

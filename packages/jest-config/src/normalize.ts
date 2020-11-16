@@ -643,7 +643,7 @@ export default function normalize(
       case 'dependencyExtractor':
       case 'globalSetup':
       case 'globalTeardown':
-      case 'moduleLoader':
+      case 'runtime':
       case 'snapshotResolver':
       case 'testResultsProcessor':
       case 'testRunner':
@@ -881,7 +881,6 @@ export default function normalize(
       case 'detectOpenHandles':
       case 'errorOnDeprecated':
       case 'expand':
-      case 'extraGlobals':
       case 'globals':
       case 'findRelatedTests':
       case 'forceCoverageMatch':
@@ -907,6 +906,7 @@ export default function normalize(
       case 'restoreMocks':
       case 'rootDir':
       case 'runTestsByPath':
+      case 'sandboxInjectedGlobals':
       case 'silent':
       case 'skipFilter':
       case 'skipNodeResolution':
@@ -1092,8 +1092,8 @@ export default function normalize(
     newOptions.projects = [];
   }
 
-  if (!newOptions.extraGlobals) {
-    newOptions.extraGlobals = [];
+  if (!newOptions.sandboxInjectedGlobals) {
+    newOptions.sandboxInjectedGlobals = [];
   }
 
   if (!newOptions.forceExit) {

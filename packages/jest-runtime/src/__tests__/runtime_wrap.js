@@ -24,7 +24,9 @@ describe('Runtime', () => {
     });
 
     it('injects "extra globals"', async () => {
-      const runtime = await createRuntime(__filename, {extraGlobals: ['Math']});
+      const runtime = await createRuntime(__filename, {
+        sandboxInjectedGlobals: ['Math'],
+      });
 
       expect(
         wrap(runtime.wrapCodeInModuleWrapper('module.exports = "Hello!"')),
