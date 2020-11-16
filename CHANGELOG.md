@@ -19,6 +19,7 @@
 - `[jest-runtime]` [**BREAKING**] remove long-deprecated `jest.addMatchers`, `jest.resetModuleRegistry`, and `jest.runTimersToTime` ([#9853](https://github.com/facebook/jest/pull/9853))
 - `[jest-transform]` Show enhanced `SyntaxError` message for all `SyntaxError`s ([#10749](https://github.com/facebook/jest/pull/10749))
 - `[jest-transform]` [**BREAKING**] Refactor API to pass an options bag around rather than multiple boolean options ([#10753](https://github.com/facebook/jest/pull/10753))
+- `[jest-resolve]` Handle module name case differences on case-sensitive and case-insensitive file systems ([#10794](https://github.com/facebook/jest/pull/10794))
 
 ### Chore & Maintenance
 

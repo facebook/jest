@@ -9,6 +9,7 @@
 
 import * as path from 'path';
 import chalk = require('chalk');
+import {existsSync, readdirSync} from 'graceful-fs';
 import slash = require('slash');
 import type {Config} from '@jest/types';
 import type {ModuleMap} from 'jest-haste-map';
@@ -230,7 +231,21 @@ class Resolver {
     const module =
       this.resolveStubModuleName(from, moduleName) ||
       this.resolveModuleFromDirIfExists(dirname, moduleName, options);
-    if (module) return module;
+    if (module) {
+      const resolvedModuleName = path.parse(module).name;
+      const requestedModuleName = path.parse(moduleName).name;
+
+      if (
+        resolvedModuleName !== requestedModuleName &&
+        resolvedModuleName.toUpperCase() === requestedModuleName.toUpperCase()
+      ) {
+        console.warn(
+          `Module ${requestedModuleName} resolved, but has different casing: ${resolvedModuleName}`,
+        );
+      }
+
+      return module;
+    }
 
     // 5. Throw an error if the module could not be found. `resolve.sync` only
     // produces an error based on the dirname but we have the actual current
@@ -238,10 +253,37 @@ class Resolver {
     const relativePath =
       slash(path.relative(this._options.rootDir, from)) || '.';
 
-    throw new ModuleNotFoundError(
-      `Cannot find module '${moduleName}' from '${relativePath}'`,
+    let message = `Cannot find module '${moduleName}' from '${relativePath}'`;
+
+    const similarlyNamedFiles = this._getSimilarlyNamedFiles(
+      dirname,
       moduleName,
     );
+    if (similarlyNamedFiles) {
+      message += `. Did you mean to import one of: ${similarlyNamedFiles}?`;
+    }
+
+    throw new ModuleNotFoundError(message, moduleName);
+  }
+
+  private _getSimilarlyNamedFiles(dirname: string, moduleName: string): string {
+    const fullModulePath = path.resolve(dirname, moduleName);
+    const moduleParentDir = path.dirname(fullModulePath);
+    if (!existsSync(moduleParentDir)) {
+      return '';
+    }
+    const files = readdirSync(moduleParentDir);
+    const moduleBaseName = path.basename(moduleName);
+    const uppercaseModuleName = moduleBaseName.toUpperCase();
+    return files
+      .filter(file => {
+        const fileName = path.parse(file).name;
+        return (
+          fileName !== moduleBaseName &&
+          fileName.toUpperCase() === uppercaseModuleName
+        );
+      })
+      .join(', ');
   }
 
   private _isAliasModule(moduleName: string): boolean {

@@ -220,6 +220,43 @@ describe('resolveModule', () => {
     expect(resolvedWithSlash).toBe(fooSlashIndex);
     expect(resolvedWithSlash).toBe(resolvedWithDot);
   });
+
+  it('warns if a module has different casing on case-insensitive file system', () => {
+    let warning = '';
+    const spy = jest
+      .spyOn(global.console, 'warn')
+      .mockImplementation(message => (warning = message));
+    const resolver = new Resolver(moduleMap, {
+      extensions: ['.js'],
+    } as ResolverConfig);
+    const src = require.resolve('../');
+    const modulePath = require.resolve('../__mocks__/mockJsDependency.js');
+    jest
+      .spyOn(resolver, 'resolveModuleFromDirIfExists')
+      .mockImplementation(() => modulePath);
+    try {
+      resolver.resolveModule(src, './__mocks__/Mockjsdependency');
+    } finally {
+      spy.mockRestore();
+    }
+    expect(warning).toBe(
+      'Module Mockjsdependency resolved, but has different casing: mockJsDependency',
+    );
+  });
+
+  it('suggests similarly named modules if cannot find module on case-sensitive file system', () => {
+    expect(() => {
+      const src = require.resolve('../');
+      const resolver = new Resolver(moduleMap, {
+        extensions: ['.js'],
+        rootDir: src,
+      } as ResolverConfig);
+      jest
+        .spyOn(resolver, 'resolveModuleFromDirIfExists')
+        .mockImplementation(() => null);
+      resolver.resolveModule(src, './__mocks__/Mockjsdependency');
+    }).toThrowError('Did you mean to import one of: mockJsDependency.js');
+  });
 });
 
 describe('getMockModule', () => {
@@ -272,7 +309,7 @@ describe('Resolver.getModulePaths() -> nodeModulesPaths()', () => {
     // about the test environment when it comes to absolute paths.
     jest.doMock('graceful-fs', () => ({
       ...jest.requireActual('graceful-fs'),
-      realPathSync: {
+      realpathSync: {
         native: (dirInput: string) => dirInput,
       },
     }));
