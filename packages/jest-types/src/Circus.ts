@@ -220,6 +220,7 @@ export type DescribeBlock = {
   hooks: Array<Hook>;
   mode: BlockMode;
   name: BlockName;
+  errors: Array<TestError>;
   parent?: DescribeBlock;
   /** @deprecated Please get from `children` array instead */
   tests: Array<TestEntry>;

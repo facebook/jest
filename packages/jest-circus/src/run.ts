@@ -35,45 +35,43 @@ const _runTestsForDescribeBlock = async (
   const {beforeAll, afterAll} = getAllHooksForDescribe(describeBlock);
 
   for (const hook of beforeAll) {
+    if (describeBlock.errors.length > 0) {
+      // discontinue running beforeAll hooks on failure
+      break;
+    }
     await _callCircusHook({describeBlock, hook});
   }
 
-  // Tests that fail and are retried we run after other tests
-  const retryTimes = parseInt(global[RETRY_TIMES], 10) || 0;
-  const deferredRetryTests = [];
-
-  for (const child of describeBlock.children) {
-    switch (child.type) {
-      case 'describeBlock': {
-        await _runTestsForDescribeBlock(child);
-        break;
-      }
-      case 'test': {
-        const hasErrorsBeforeTestRun = child.errors.length > 0;
-        await _runTest(child);
-
-        if (
-          hasErrorsBeforeTestRun === false &&
-          retryTimes > 0 &&
-          child.errors.length > 0
-        ) {
-          deferredRetryTests.push(child);
+  if (describeBlock.errors.length === 0) {
+    // Tests that fail and are retried we run after other tests
+    const retryTimes = parseInt(global[RETRY_TIMES], 10) || 0;
+    const deferredRetryTests = [];
+    for (const child of describeBlock.children) {
+      switch (child.type) {
+        case 'describeBlock': {
+          await _runTestsForDescribeBlock(child);
+          break;
         }
-        break;
+        case 'test': {
+          await _runTest(child);
+          if (retryTimes > 0 && child.errors.length > 0) {
+            deferredRetryTests.push(child);
+          }
+          break;
+        }
       }
     }
-  }
+    // Re-run failed tests n-times if configured
+    for (const test of deferredRetryTests) {
+      let numRetriesAvailable = retryTimes;
 
-  // Re-run failed tests n-times if configured
-  for (const test of deferredRetryTests) {
-    let numRetriesAvailable = retryTimes;
+      while (numRetriesAvailable > 0 && test.errors.length > 0) {
+        // Clear errors so retries occur
+        await dispatch({name: 'test_retry', test});
 
-    while (numRetriesAvailable > 0 && test.errors.length > 0) {
-      // Clear errors so retries occur
-      await dispatch({name: 'test_retry', test});
-
-      await _runTest(test);
-      numRetriesAvailable--;
+        await _runTest(test);
+        numRetriesAvailable--;
+      }
     }
   }
 
@@ -107,7 +105,7 @@ const _runTest = async (test: Circus.TestEntry): Promise<void> => {
   const {afterEach, beforeEach} = getEachHooksForTest(test);
 
   for (const hook of beforeEach) {
-    if (test.errors.length) {
+    if (test.errors.length > 0) {
       // If any of the before hooks failed already, we don't run any
       // hooks after that.
       break;
@@ -115,7 +113,9 @@ const _runTest = async (test: Circus.TestEntry): Promise<void> => {
     await _callCircusHook({hook, test, testContext});
   }
 
-  await _callCircusTest(test, testContext);
+  if (test.errors.length === 0) {
+    await _callCircusTest(test, testContext);
+  }
 
   for (const hook of afterEach) {
     await _callCircusHook({hook, test, testContext});
@@ -159,10 +159,6 @@ const _callCircusTest = async (
   await dispatch({name: 'test_fn_start', test});
   const timeout = test.timeout || getState().testTimeout;
   invariant(test.fn, `Tests with no 'fn' should have 'mode' set to 'skipped'`);
-
-  if (test.errors.length) {
-    return; // We don't run the test if there's already an error in before hooks.
-  }
 
   try {
     await callAsyncCircusFn(test, testContext, {
