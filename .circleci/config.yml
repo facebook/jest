@@ -27,20 +27,6 @@ jobs:
       - store_test_results:
           path: reports/junit
 
-  test-jest-circus:
-    working_directory: ~/jest
-    executor: node/default
-    steps:
-      - checkout
-      - node/install:
-          lts: true
-          install-npm: false
-      - node/install-packages: *install
-      - run:
-          command: JEST_CIRCUS=1 yarn test-ci-partial && JEST_CIRCUS=1 yarn test-leak
-      - store_test_results:
-          path: reports/junit
-
   test-node-12:
     working_directory: ~/jest
     executor: node/default
@@ -106,6 +92,5 @@ workflows:
       - test-node-12
       - test-node-14
       - test-node-15 # current
-      - test-jest-circus
       - test-or-deploy-website:
           filters: *filter-ignore-gh-pages

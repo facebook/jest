@@ -90,3 +90,35 @@ jobs:
         run: yarn test-ci-partial:parallel --max-workers ${{ steps.cpu-cores.outputs.count }}
         env:
           CI: true
+  test-circus:
+    name: Run all tests using jest-circus
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get yarn cache
+        id: yarn-cache
+        run: echo "::set-output name=dir::$(yarn config get cacheFolder)"
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.yarn-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-12.x-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-${{ matrix.node-version }}-yarn-
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2.1.2
+        with:
+          node-version: 12.x
+      - name: install
+        run: yarn
+      - name: build
+        run: yarn build:js
+      - name: Get number of CPU cores
+        id: cpu-cores
+        uses: SimenB/github-actions-cpu-cores@v1
+      - name: run tests
+        run: |
+          JEST_CIRCUS=1 yarn test-ci-partial:parallel --max-workers ${{ steps.cpu-cores.outputs.count }}
+          JEST_CIRCUS=1 yarn test-leak
+        env:
+          CI: true
