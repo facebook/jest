@@ -7,12 +7,96 @@
 
 import diff from 'diff-sequences';
 import {DIFF_DELETE, DIFF_EQUAL, DIFF_INSERT, Diff} from './cleanupSemantic';
+import {
+  joinAlignedDiffsExpand,
+  joinAlignedDiffsNoExpand,
+} from './joinAlignedDiffs';
 import {normalizeDiffOptions} from './normalizeDiffOptions';
-import {printDiffLines} from './printDiffs';
-import type {DiffOptions} from './types';
+import type {DiffOptions, DiffOptionsNormalized} from './types';
 
 const isEmptyString = (lines: Array<string>) =>
   lines.length === 1 && lines[0].length === 0;
+
+type ChangeCounts = {
+  a: number;
+  b: number;
+};
+
+const countChanges = (diffs: Array<Diff>): ChangeCounts => {
+  let a = 0;
+  let b = 0;
+
+  diffs.forEach(diff => {
+    switch (diff[0]) {
+      case DIFF_DELETE:
+        a += 1;
+        break;
+
+      case DIFF_INSERT:
+        b += 1;
+        break;
+    }
+  });
+
+  return {a, b};
+};
+
+const printAnnotation = (
+  {
+    aAnnotation,
+    aColor,
+    aIndicator,
+    bAnnotation,
+    bColor,
+    bIndicator,
+    includeChangeCounts,
+    omitAnnotationLines,
+  }: DiffOptionsNormalized,
+  changeCounts: ChangeCounts,
+): string => {
+  if (omitAnnotationLines) {
+    return '';
+  }
+
+  let aRest = '';
+  let bRest = '';
+
+  if (includeChangeCounts) {
+    const aCount = String(changeCounts.a);
+    const bCount = String(changeCounts.b);
+
+    // Padding right aligns the ends of the annotations.
+    const baAnnotationLengthDiff = bAnnotation.length - aAnnotation.length;
+    const aAnnotationPadding = ' '.repeat(Math.max(0, baAnnotationLengthDiff));
+    const bAnnotationPadding = ' '.repeat(Math.max(0, -baAnnotationLengthDiff));
+
+    // Padding left aligns the ends of the counts.
+    const baCountLengthDiff = bCount.length - aCount.length;
+    const aCountPadding = ' '.repeat(Math.max(0, baCountLengthDiff));
+    const bCountPadding = ' '.repeat(Math.max(0, -baCountLengthDiff));
+
+    aRest =
+      aAnnotationPadding + '  ' + aIndicator + ' ' + aCountPadding + aCount;
+    bRest =
+      bAnnotationPadding + '  ' + bIndicator + ' ' + bCountPadding + bCount;
+  }
+
+  return (
+    aColor(aIndicator + ' ' + aAnnotation + aRest) +
+    '\n' +
+    bColor(bIndicator + ' ' + bAnnotation + bRest) +
+    '\n\n'
+  );
+};
+
+export const printDiffLines = (
+  diffs: Array<Diff>,
+  options: DiffOptionsNormalized,
+): string =>
+  printAnnotation(options, countChanges(diffs)) +
+  (options.expand
+    ? joinAlignedDiffsExpand(diffs, options)
+    : joinAlignedDiffsNoExpand(diffs, options));
 
 // Compare two arrays of strings line-by-line. Format as comparison lines.
 export const diffLinesUnified = (
