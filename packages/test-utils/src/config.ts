@@ -46,6 +46,7 @@ const DEFAULT_GLOBAL_CONFIG: Config.GlobalConfig = {
   replname: undefined,
   reporters: [],
   rootDir: '/test_root_dir/',
+  runInBand: false,
   runTestsByPath: false,
   silent: false,
   skipFilter: false,
