@@ -98,6 +98,7 @@ const DEFAULT_PROJECT_CONFIG: Config.ProjectConfig = {
   restoreMocks: false,
   rootDir: '/test_root_dir/',
   roots: [],
+  runInBand: true,
   runner: 'jest-runner',
   setupFiles: [],
   setupFilesAfterEnv: [],

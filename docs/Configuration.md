@@ -905,6 +905,18 @@ async runTests(
 
 If you need to restrict your test-runner to only run in serial rather than being executed in parallel your class should have the property `isSerial` to be set as `true`.
 
+### `runInBand` [boolean]
+
+Default: `false`
+
+Configure how tests run at project level
+
+This option allows the test runner to be pragmatic in how it runs your tests. Sometimes it's desirable for a specific package within your repository
+to run tests in band, such as integration tests, but for other packages in the same repository to run tests in parallel.
+
+This option allows you to be granular in how your tests are run per jest project, but to still benefit from the speed
+increases of running tests in in parallel
+
 ### `setupFiles` \[array]
 
 Default: `[]`

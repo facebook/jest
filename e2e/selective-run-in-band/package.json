@@ -1,0 +1,21 @@
+{
+  "description": "Testing the behaviour of runInBand at project level",
+  "jest": {
+    "projects": [
+      {
+        "displayName": "first-project",
+        "testEnvironment": "node",
+        "runInBand": true
+      },
+      {
+        "displayName": "second-project",
+        "testEnvironment": "node",
+        "runInBand": true
+      },
+      {
+        "displayName": "third-project",
+        "testEnvironment": "node"
+      }
+    ]
+  }
+}
