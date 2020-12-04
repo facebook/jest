@@ -98,6 +98,7 @@ test('schedule tests run in parallel per default', async () => {
     },
     path: './test/path.js',
   };
+
   const tests = [test, test];
 
   await scheduler.scheduleTests(tests, {isInterrupted: jest.fn()});
