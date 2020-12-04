@@ -35,6 +35,7 @@ exports[`prints the config object 1`] = `
     "roots": [
       "path/to/dir/test"
     ],
+    "runInBand": true,
     "runner": "jest-runner",
     "setupFiles": [],
     "setupFilesAfterEnv": [],
