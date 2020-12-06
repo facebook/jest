@@ -347,7 +347,7 @@ test('resolves projects and their <rootDir> properly', () => {
       },
     }),
     'project1.conf.json': JSON.stringify({
-      name: 'project1',
+      id: 'project1',
       rootDir: './project1',
       // root dir should be this project's directory
       setupFiles: ['<rootDir>/project1_setup.js'],
@@ -357,7 +357,7 @@ test('resolves projects and their <rootDir> properly', () => {
     'project1/project1_setup.js': 'global.project1 = true;',
     'project2/__tests__/test.test.js': `test('project2', () => expect(global.project2).toBe(true))`,
     'project2/project2.conf.json': JSON.stringify({
-      name: 'project2',
+      id: 'project2',
       rootDir: '../', // root dir is set to the top level
       setupFiles: ['<rootDir>/project2/project2_setup.js'], // rootDir shold be of the
       testEnvironment: 'node',
@@ -513,7 +513,7 @@ describe("doesn't bleed module file extensions resolution with multiple workers"
 
     expect(configs).toHaveLength(2);
 
-    const [{name: name1}, {name: name2}] = configs;
+    const [{id: name1}, {id: name2}] = configs;
 
     expect(name1).toEqual(expect.any(String));
     expect(name2).toEqual(expect.any(String));
@@ -556,7 +556,7 @@ describe("doesn't bleed module file extensions resolution with multiple workers"
 
     expect(configs).toHaveLength(2);
 
-    const [{name: name1}, {name: name2}] = configs;
+    const [{id: name1}, {id: name2}] = configs;
 
     expect(name1).toEqual(expect.any(String));
     expect(name2).toEqual(expect.any(String));

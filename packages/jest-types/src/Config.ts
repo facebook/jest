@@ -166,7 +166,7 @@ export type InitialOptions = Partial<{
   };
   modulePathIgnorePatterns: Array<string>;
   modulePaths: Array<string>;
-  name: string;
+  id: string;
   noStackTrace: boolean;
   notify: boolean;
   notifyMode: string;
