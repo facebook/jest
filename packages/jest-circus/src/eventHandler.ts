@@ -14,7 +14,7 @@ import {TEST_TIMEOUT_SYMBOL} from './types';
 import {
   addErrorToEachTestUnderDescribe,
   describeBlockHasTests,
-  getTestDuration,
+  getChildDuration,
   invariant,
   makeDescribe,
   makeTest,
@@ -31,6 +31,7 @@ const eventHandler: Circus.EventHandler = (
       break;
     }
     case 'hook_start': {
+      event.hook.startedAt = Date.now();
       event.hook.seenDone = false;
       break;
     }
@@ -50,6 +51,7 @@ const eventHandler: Circus.EventHandler = (
       const describeBlock = makeDescribe(blockName, currentDescribeBlock, mode);
       currentDescribeBlock.children.push(describeBlock);
       state.currentDescribeBlock = describeBlock;
+      state.timings.definitionStart = Date.now();
       break;
     }
     case 'finish_describe_definition': {
@@ -91,6 +93,7 @@ const eventHandler: Circus.EventHandler = (
       if (currentDescribeBlock.parent) {
         state.currentDescribeBlock = currentDescribeBlock.parent;
       }
+      state.timings.definitionEnd = Date.now();
       break;
     }
     case 'add_hook': {
@@ -159,6 +162,10 @@ const eventHandler: Circus.EventHandler = (
       currentDescribeBlock.tests.push(test);
       break;
     }
+    case 'hook_success': {
+      event.hook.duration = getChildDuration(event.hook);
+      break;
+    }
     case 'hook_failure': {
       const {test, describeBlock, error, hook} = event;
       const {asyncError, type} = hook;
@@ -174,6 +181,7 @@ const eventHandler: Circus.EventHandler = (
         invariant(test, 'always present for `*Each` hooks');
         test.errors.push([error, asyncError]);
       }
+      hook.duration = getChildDuration(hook);
       break;
     }
     case 'test_skip': {
@@ -185,7 +193,7 @@ const eventHandler: Circus.EventHandler = (
       break;
     }
     case 'test_done': {
-      event.test.duration = getTestDuration(event.test);
+      event.test.duration = getChildDuration(event.test);
       event.test.status = 'done';
       state.currentlyRunningTest = null;
       break;
@@ -222,6 +230,7 @@ const eventHandler: Circus.EventHandler = (
       break;
     }
     case 'setup': {
+      state.timings.setupStart = Date.now();
       // Uncaught exception handlers should be defined on the parent process
       // object. If defined on the VM's process object they just no op and let
       // the parent process crash. It might make sense to return a `dispatch`

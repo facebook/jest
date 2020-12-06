@@ -23,6 +23,7 @@ const run = async (): Promise<Circus.RunResult> => {
   await _runTestsForDescribeBlock(rootDescribeBlock);
   await dispatch({name: 'run_finish'});
   return makeRunResult(
+    getState().timings,
     getState().rootDescribeBlock,
     getState().unhandledErrors,
   );

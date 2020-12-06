@@ -6,6 +6,7 @@
  */
 
 import type * as Global from './Global';
+import type {Milliseconds} from './TestResult';
 
 type Process = NodeJS.Process;
 
@@ -30,6 +31,8 @@ export type Hook = {
   parent: DescribeBlock;
   seenDone: boolean;
   timeout: number | undefined | null;
+  startedAt?: number;
+  duration?: number | null;
 };
 
 export interface EventHandler {
@@ -179,6 +182,7 @@ export type TestResult = {
   errorsDetailed: Array<MatcherResults | unknown>;
   invocations: number;
   status: TestStatus;
+  phasing: boolean;
   location?: {column: number; line: number} | null;
   testPath: Array<TestName | BlockName>;
 };
@@ -197,6 +201,14 @@ export type GlobalErrorHandlers = {
   >;
 };
 
+// setup -> start_describe_definition: time at the global scope (require() scope?)
+// start_describe_definition -> finish_describe_definition: time inside describe hooks?
+export type StateTimings = {
+  setupStart?: Milliseconds;
+  definitionStart?: Milliseconds;
+  definitionEnd?: Milliseconds;
+};
+
 export type State = {
   currentDescribeBlock: DescribeBlock;
   currentlyRunningTest?: TestEntry | null; // including when hooks are being executed
@@ -211,6 +223,7 @@ export type State = {
   rootDescribeBlock: DescribeBlock;
   testNamePattern?: RegExp | null;
   testTimeout: number;
+  timings: StateTimings;
   unhandledErrors: Array<Exception>;
   includeTestLocationInResult: boolean;
 };

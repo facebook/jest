@@ -1,0 +1,83 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`phasing result reporting has extra results 1`] = `
+Array [
+  Object {
+    "ancestorTitles": Array [
+      "the test file",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "the test file parses, transpiles, and loads imports",
+    "location": null,
+    "status": "passed",
+    "title": "parses, transpiles, and loads imports",
+  },
+  Object {
+    "ancestorTitles": Array [
+      "the test file",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "the test file produces tests",
+    "location": null,
+    "status": "passed",
+    "title": "produces tests",
+  },
+  Object {
+    "ancestorTitles": Array [
+      "desc",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "desc beforeAll",
+    "location": null,
+    "status": "passed",
+    "title": "beforeAll",
+  },
+  Object {
+    "ancestorTitles": Array [
+      "desc",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "desc beforeAll",
+    "location": null,
+    "status": "passed",
+    "title": "beforeAll",
+  },
+  Object {
+    "ancestorTitles": Array [
+      "desc",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "desc does nothing",
+    "location": null,
+    "status": "passed",
+    "title": "does nothing",
+  },
+  Object {
+    "ancestorTitles": Array [
+      "desc",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "desc does nothing again",
+    "location": null,
+    "status": "passed",
+    "title": "does nothing again",
+  },
+  Object {
+    "ancestorTitles": Array [
+      "desc",
+    ],
+    "duration": 987654321,
+    "failureMessages": Array [],
+    "fullName": "desc afterAll",
+    "location": null,
+    "status": "passed",
+    "title": "afterAll",
+  },
+]
+`;
