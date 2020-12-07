@@ -77,6 +77,34 @@ declare global {
 }
 ```
 
+Alternatively, you can use the type `ExtendedExpect` and there is no danger of incorrectly typing the matchers.  This will also make available all applicable custom matchers as asymmetric matcher creators.  Asymmetric matchers are covered later.
+
+```ts
+const extendedMatchers = {
+  toBeWithinRange(received:any, floor:number, ceiling:number) {
+    const pass = received >= floor && received <= ceiling;
+    if (pass) {
+      return {
+        message: () =>
+          `expected ${received} not to be within range ${floor} - ${ceiling}`,
+        pass: true,
+      };
+    } else {
+      return {
+        message: () =>
+          `expected ${received} to be within range ${floor} - ${ceiling}`,
+        pass: false,
+      };
+    }
+  }
+}
+
+expect.extend(extendedMatchers)
+
+const extendedExpect:jest.ExtendedExpect<typeof extendedMatchers> = expect as any;
+
+```
+
 #### Async Matchers
 
 `expect.extend` also supports async matchers. Async matchers return a Promise so you will need to await the returned value. Let's use an example matcher to illustrate the usage of them. We are going to implement a matcher called `toBeDivisibleByExternalValue`, where the divisible number is going to be pulled from an external source.
@@ -254,6 +282,91 @@ it('stores only 10 characters', () => {
   */
 });
 ```
+
+#### Asymmetric matchers
+
+Asymmetric matchers are objects with an `asymmetricMatch` method with a single argument that returns `true` or `false`.  They can be passed as argument to some of the built in matchers, such as `toBeCalledWith` and `toEqual`, or to custom matchers if supported.
+
+Jest provides 6 asymmetric matchers.  These are **created** using the following methods on `expect'.
+
+1. `expect.anything`
+2. `expect.any`
+
+
+3. `expect.arrayContaining`
+4. `expect.objectContaining`
+5. `expect.stringContaining`
+6. `expect.stringMatching`
+
+By chaining with `not` ( for the latter 4 ) the created matcher will return `!` the 'normal' result.
+
+e.g `expect.not.arrayContaining`
+
+##### Example
+
+```js
+test('toBeCalledWith accepts asymmetric matchers', () => {
+  const mock = jest.fn();
+
+  mock(1);
+  expect(mock).toBeCalledWith(expect.any(Number));
+
+  mock('hello');
+  expect(mock).toBeCalledWith(expect.not.stringContaining('hi'));
+})
+
+```
+
+##### Custom Asymmetric Matchers
+
+The following options are available.
+
+1. One time - just pass an object with `asymmetricMatch` method.
+2. Multiple usage - create an asymmetricMatcher creator with required configuration arguments including isNot.
+3. Multiple usage - **use `expect.extend`**.
+
+Any custom matcher that does not return a promise will be available on expect as an asymmetric matcher creator with automatic `not`.
+( If the custom matcher is only to be used as an asymmetric matcher creator then there is no need to return the message property )
+
+The number of configuration arguments can be 0 or many and correspond to the asymmetric matcher creator arguments.
+The received argument is the argument to `asymmetricMatch`.
+
+```js
+expect.extend({
+  myAsymmetricMatcher(received, config1, config2){
+    return {
+      pass:true,// determine as necessary
+      message:()=>''// message property not required if only used for asymmetric
+    }
+  }
+})
+
+const asymmetricMatcher = expect.myAsymmetricMatcher('some config 1','some config 2');
+const notAsymmetricMatcher = expect.not.myAsymmetricMatcher('other config 1','other config 2');
+
+/*
+  pass to a matcher
+  expect({}).toSomeMatcher(asymmetricMatcher);
+
+  within a matcher...
+  if(received.asymmetricMatch){
+    const asymmetricMatched = received.asymmetricMatch(received);
+    //do something with asymmetricMatched
+  }else{
+    //....
+  }
+
+*/
+```
+
+**Note** that if using typescript and ExtendedExpect, all custom matchers that do not return a promise will have intellisense.
+
+```ts
+expect.extend(extendedMatchers)
+
+const extendedExpect:jest.ExtendedExpect<typeof extendedMatchers> = expect as any;
+```
+
 
 ### `expect.anything()`
 
