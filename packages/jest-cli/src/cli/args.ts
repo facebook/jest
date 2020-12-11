@@ -473,6 +473,13 @@ export const options = {
     string: true,
     type: 'array',
   },
+  reportPhasingResults: {
+    default: undefined,
+    description:
+      'Include the results of phasing actions, such as transpilation and hooks, ' +
+      'in the test results, and hence in the test reports.',
+    type: 'boolean',
+  },
   reporters: {
     description: 'A list of custom reporters for the test suite.',
     string: true,

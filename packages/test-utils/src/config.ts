@@ -92,6 +92,7 @@ const DEFAULT_PROJECT_CONFIG: Config.ProjectConfig = {
   modulePaths: [],
   name: 'test_name',
   prettierPath: 'prettier',
+  reportPhasingResults: false,
   resetMocks: false,
   resetModules: false,
   resolver: undefined,

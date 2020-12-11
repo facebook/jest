@@ -967,6 +967,7 @@ export default function normalize(
       case 'outputFile':
       case 'passWithNoTests':
       case 'replname':
+      case 'reportPhasingResults':
       case 'reporters':
       case 'resetMocks':
       case 'resetModules':
