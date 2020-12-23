@@ -637,7 +637,6 @@ export default class Runtime {
             this.setExport(key, value);
           });
         },
-        // should identifier be `node://${moduleName}`?
         {context, identifier: moduleName},
       );
 
@@ -646,69 +645,7 @@ export default class Runtime {
       return evaluateSyntheticModule(module);
     }
 
-    const manualMockOrStub = this._resolver.getMockModule(from, moduleName);
-
-    let modulePath =
-      this._resolver.getMockModule(from, moduleName) ||
-      this._resolveModule(from, moduleName);
-
-    let isManualMock =
-      manualMockOrStub &&
-      !this._resolver.resolveStubModuleName(from, moduleName);
-    if (!isManualMock) {
-      // If the actual module file has a __mocks__ dir sitting immediately next
-      // to it, look to see if there is a manual mock for this file.
-      //
-      // subDir1/my_module.js
-      // subDir1/__mocks__/my_module.js
-      // subDir2/my_module.js
-      // subDir2/__mocks__/my_module.js
-      //
-      // Where some other module does a relative require into each of the
-      // respective subDir{1,2} directories and expects a manual mock
-      // corresponding to that particular my_module.js file.
-
-      const moduleDir = path.dirname(modulePath);
-      const moduleFileName = path.basename(modulePath);
-      const potentialManualMock = path.join(
-        moduleDir,
-        '__mocks__',
-        moduleFileName,
-      );
-      if (fs.existsSync(potentialManualMock)) {
-        isManualMock = true;
-        modulePath = potentialManualMock;
-      }
-    }
-    if (isManualMock) {
-      const localModule: InitialModule = {
-        children: [],
-        exports: {},
-        filename: modulePath,
-        id: modulePath,
-        loaded: false,
-        path: modulePath,
-      };
-
-      this._loadModule(
-        localModule,
-        from,
-        moduleName,
-        modulePath,
-        undefined,
-        this._moduleMockRegistry,
-      );
-
-      this._moduleMockRegistry.set(moduleID, localModule.exports);
-    } else {
-      // Look for a real module to generate an automock from
-      this._moduleMockRegistry.set(
-        moduleID,
-        this._generateMock(from, moduleName),
-      );
-    }
-
-    return this._moduleMockRegistry.get(moduleID);
+    throw new Error('Attempting to import a mock without a factory');
   }
 
   private getExportsOfCjs(modulePath: Config.Path) {
