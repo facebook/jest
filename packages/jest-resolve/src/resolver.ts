@@ -313,10 +313,8 @@ export default class Resolver {
   getModuleID(
     virtualMocks: Map<string, boolean>,
     from: Config.Path,
-    _moduleName?: string,
+    moduleName = '',
   ): string {
-    const moduleName = _moduleName || '';
-
     const key = from + path.delimiter + moduleName;
     const cachedModuleID = this._moduleIDCache.get(key);
     if (cachedModuleID) {
