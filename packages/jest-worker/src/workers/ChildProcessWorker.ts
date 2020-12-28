@@ -92,6 +92,9 @@ export default class ChildProcessWorker implements WorkerInterface {
       } as NodeJS.ProcessEnv,
       // Suppress --debug / --inspect flags while preserving others (like --harmony).
       execArgv: process.execArgv.filter(v => !/^--(debug|inspect)/.test(v)),
+      // default to advanced serialization in order to match worker threads
+      // @ts-expect-error: option does not exist on the node 10 types
+      serialization: 'advanced',
       silent: true,
       ...this._options.forkOptions,
     });
