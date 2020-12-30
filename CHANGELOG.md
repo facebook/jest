@@ -52,6 +52,7 @@
 - `[jest-worker]` [**BREAKING**] Use named exports ([#10623] (https://github.com/facebook/jest/pull/10623))
 - `[jest-worker]` Do not swallow errors during serialization ([#10984] (https://github.com/facebook/jest/pull/10984))
 - `[pretty-format]` [**BREAKING**] Convert to ES Modules ([#10515](https://github.com/facebook/jest/pull/10515))
+- `[jest-transform]` Fix source mapping of transformed code in the debugger ([#10534](https://github.com/facebook/jest/pull/10534))
 
 ### Chore & Maintenance
 

@@ -366,6 +366,9 @@ export default class ScriptTransformer {
       map = typeof instrumented === 'string' ? null : instrumented.map;
     } else {
       code = transformed.code;
+      if (map) {
+        code += '\n//# sourceMappingURL=' + sourceMapPath;
+      }
     }
 
     if (map) {
