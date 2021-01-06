@@ -70,6 +70,7 @@ it('passes fork options down to child_process.fork, adding the defaults', () => 
     env: {...process.env, FORCE_COLOR: supportsColor.stdout ? '1' : undefined}, // Default option.
     execArgv: ['-p'], // Filtered option.
     execPath: 'hello', // Added option.
+    serialization: 'advanced', // Default option.
     silent: true, // Default option.
   });
 });

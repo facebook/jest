@@ -69,7 +69,7 @@ Maximum amount of times that a dead child can be re-spawned, per call. Defaults 
 
 #### `forkOptions: Object` (optional)
 
-Allow customizing all options passed to `childProcess.fork`. By default, some values are set (`cwd`, `env` and `execArgv`), but you can override them and customize the rest. For a list of valid values, check [the Node documentation](https://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options).
+Allow customizing all options passed to `childProcess.fork`. By default, some values are set (`cwd`, `env`, `execArgv` and `serialization`), but you can override them and customize the rest. For a list of valid values, check [the Node documentation](https://nodejs.org/api/child_process.html#child_process_child_process_fork_modulepath_args_options).
 
 #### `computeWorkerKey: (method: string, ...args: Array<any>) => ?string` (optional)
 
