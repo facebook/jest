@@ -43,16 +43,18 @@ export default class DefaultReporter extends BaseReporter {
     this._err = process.stderr.write.bind(process.stderr);
     this._status = new Status();
     this._bufferedOutput = new Set();
-    this._wrapStdio(process.stdout);
-    this._wrapStdio(process.stderr);
+    this.__wrapStdio(process.stdout);
+    this.__wrapStdio(process.stderr);
     this._status.onChange(() => {
-      this._clearStatus();
-      this._printStatus();
+      this.__clearStatus();
+      this.__printStatus();
     });
   }
 
-  private _wrapStdio(stream: NodeJS.WritableStream | NodeJS.WriteStream) {
-    const originalWrite = stream.write;
+  protected __wrapStdio(
+    stream: NodeJS.WritableStream | NodeJS.WriteStream,
+  ): void {
+    const write = stream.write.bind(stream);
 
     let buffer: Array<string> = [];
     let timeout: NodeJS.Timeout | null = null;
@@ -62,11 +64,11 @@ export default class DefaultReporter extends BaseReporter {
       buffer = [];
 
       // This is to avoid conflicts between random output and status text
-      this._clearStatus();
+      this.__clearStatus();
       if (string) {
-        originalWrite.call(stream, string);
+        write(string);
       }
-      this._printStatus();
+      this.__printStatus();
 
       this._bufferedOutput.delete(flushBufferedOutput);
     };
@@ -103,7 +105,7 @@ export default class DefaultReporter extends BaseReporter {
     }
   }
 
-  private _clearStatus() {
+  protected __clearStatus(): void {
     if (isInteractive) {
       if (this._globalConfig.useStderr) {
         this._err(this._clear);
@@ -113,7 +115,7 @@ export default class DefaultReporter extends BaseReporter {
     }
   }
 
-  private _printStatus() {
+  protected __printStatus(): void {
     const {content, clear} = this._status.get();
     this._clear = clear;
     if (isInteractive) {

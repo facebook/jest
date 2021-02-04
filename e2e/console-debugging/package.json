@@ -1,0 +1,9 @@
+{
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "setupFiles": [
+      "./stdout-spy.js"
+    ]
+  }
+}

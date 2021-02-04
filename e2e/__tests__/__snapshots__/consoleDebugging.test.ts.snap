@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`console debugging with --verbose 1`] = `
+  console.log
+    test
+
+      at Object.log (__tests__/console-debugging.test.js:14:11)
+
+`;
+
+exports[`console debugging with --verbose 2`] = `
+PASS __tests__/console-debugging.test.js
+  ✓ verbose mode prints console output synchronously
+`;
+
+exports[`console debugging with --verbose 3`] = `
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   1 passed, 1 total
+Time:        <<REPLACED>>
+Ran all test suites.
+`;
