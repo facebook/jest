@@ -56,6 +56,7 @@
 - `[jest-worker]` Do not swallow errors during serialization ([#10984](https://github.com/facebook/jest/pull/10984))
 - `[pretty-format]` [**BREAKING**] Convert to ES Modules ([#10515](https://github.com/facebook/jest/pull/10515))
 - `[pretty-format]` Only call `hasAttribute` if it's a function ([#11000](https://github.com/facebook/jest/pull/11000))
+- `[jest-config]` Allow searching for tests in node_modules by exposing `retainAllFiles` ([#11084](https://github.com/facebook/jest/pull/11084))
 
 ### Chore & Maintenance
 

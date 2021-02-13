@@ -329,7 +329,7 @@ export default class Runtime {
       name: config.name,
       platforms: config.haste.platforms || ['ios', 'android'],
       resetCache: options && options.resetCache,
-      retainAllFiles: false,
+      retainAllFiles: config.haste.retainAllFiles || false,
       rootDir: config.rootDir,
       roots: config.roots,
       throwOnModuleCollision: config.haste.throwOnModuleCollision,
