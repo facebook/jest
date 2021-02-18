@@ -4926,6 +4926,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-jest-deadlines@workspace:packages/babel-plugin-jest-deadlines":
+  version: 0.0.0-use.local
+  resolution: "babel-plugin-jest-deadlines@workspace:packages/babel-plugin-jest-deadlines"
+  dependencies:
+    "@babel/core": ^7.11.6
+    "@babel/preset-react": ^7.12.1
+    "@babel/types": ^7.3.3
+    "@types/babel__core": ^7.0.0
+    "@types/babel__template": ^7.0.2
+    "@types/node": "*"
+    babel-plugin-tester: ^10.0.0
+  languageName: unknown
+  linkType: soft
+
 "babel-plugin-jest-hoist@^27.0.0-next.0, babel-plugin-jest-hoist@workspace:packages/babel-plugin-jest-hoist":
   version: 0.0.0-use.local
   resolution: "babel-plugin-jest-hoist@workspace:packages/babel-plugin-jest-hoist"

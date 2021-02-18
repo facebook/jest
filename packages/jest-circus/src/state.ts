@@ -21,6 +21,7 @@ export const ROOT_DESCRIBE_BLOCK_NAME = 'ROOT_DESCRIBE_BLOCK';
 const ROOT_DESCRIBE_BLOCK = makeDescribe(ROOT_DESCRIBE_BLOCK_NAME);
 const INITIAL_STATE: Circus.State = {
   currentDescribeBlock: ROOT_DESCRIBE_BLOCK,
+  currentlyRunningChildDeadline: null,
   currentlyRunningTest: null,
   expand: undefined,
   hasFocusedTests: false,

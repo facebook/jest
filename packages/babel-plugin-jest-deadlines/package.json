@@ -1,0 +1,33 @@
+{
+  "name": "babel-plugin-jest-deadlines",
+  "version": "26.6.2",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebook/jest.git",
+    "directory": "packages/babel-plugin-jest-deadlines"
+  },
+  "engines": {
+    "node": "^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0"
+  },
+  "license": "MIT",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": "./build/index.js",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@babel/types": "^7.3.3",
+    "@types/babel__core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/preset-react": "^7.12.1",
+    "@types/babel__template": "^7.0.2",
+    "@types/node": "*",
+    "babel-plugin-tester": "^10.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

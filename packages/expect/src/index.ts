@@ -412,6 +412,12 @@ setMatchers(spyMatchers, true, expect as Expect);
 setMatchers(toThrowMatchers, true, expect as Expect);
 
 expect.addSnapshotSerializer = () => void 0;
+expect.deadline = async () => {
+  throw new Error('deadline must be implemented by the runtime');
+};
+expect.withinDeadline = async () => {
+  throw new Error('withinDeadline must be implemented by the runtime');
+};
 expect.assertions = assertions;
 expect.hasAssertions = hasAssertions;
 expect.getState = getState;

@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`passes generally 1`] = `
+Object {
+  "rest": "FAIL __tests__/plain.test.js
+  ● Test suite failed to run
+
+    Cannot find module 'babel-plugin-jest-deadlines' from '/home/faux/clone/jest/e2e/babel-plugin-jest-deadlines'
+
+      at Function.resolveSync [as sync] (../../node_modules/resolve/lib/sync.js:90:15)
+          at Array.map (<anonymous>)",
+  "summary": "Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /plain.test.js/i.",
+}
+`;
+
+exports[`throws on deadline exceeded 1`] = `
+Object {
+  "rest": "FAIL __tests__/typescript.test.ts
+  ● Test suite failed to run
+
+    Cannot find module 'babel-plugin-jest-deadlines' from '/home/faux/clone/jest/e2e/babel-plugin-jest-deadlines'
+
+      at Function.resolveSync [as sync] (../../node_modules/resolve/lib/sync.js:90:15)
+          at Array.map (<anonymous>)",
+  "summary": "Test Suites: 1 failed, 1 total
+Tests:       0 total
+Snapshots:   0 total
+Time:        <<REPLACED>>
+Ran all test suites matching /typescript.test.ts/i.",
+}
+`;

@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`babel-plugin-jest-deadlines bare function call in statement context: bare function call in statement context 1`] = `
+
+async function foo() {
+  await bar();
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const _expect = require("@jest/globals").expect;
+
+async function foo() {
+  await _expect.withinDeadline(bar());
+}
+
+
+`;
+
+exports[`babel-plugin-jest-deadlines skips double stacking: skips double stacking 1`] = `
+
+async function foo() {
+  await expect.withinDeadline(bar());
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const _expect = require("@jest/globals").expect;
+
+async function foo() {
+  await _expect.withinDeadline(expect.withinDeadline(bar()));
+}
+
+
+`;
+
+exports[`babel-plugin-jest-deadlines transforms an existing expect: transforms an existing expect 1`] = `
+
+async function foo() {
+  await expect(bar()).resolves.toBe("hot potatoes");
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const _expect = require("@jest/globals").expect;
+
+async function foo() {
+  await _expect.withinDeadline(expect(bar()).resolves.toBe("hot potatoes"));
+}
+
+
+`;
+
+exports[`babel-plugin-jest-deadlines transforms an expression: transforms an expression 1`] = `
+
+async function foo() {
+  return await bar();
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const _expect = require("@jest/globals").expect;
+
+async function foo() {
+  return await _expect.withinDeadline(bar());
+}
+
+
+`;
+
+exports[`babel-plugin-jest-deadlines transforms await in argument context: transforms await in argument context 1`] = `
+
+async function foo() {
+  await bar(1, await quux(), 3);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const _expect = require("@jest/globals").expect;
+
+async function foo() {
+  await _expect.withinDeadline(bar(1, await _expect.withinDeadline(quux()), 3));
+}
+
+
+`;
+
+exports[`babel-plugin-jest-deadlines transforms multiple awaits: transforms multiple awaits 1`] = `
+
+async function foo() {
+  await bar(1, 2, 3);
+  await quux(1, 2, 3);
+}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+const _expect = require("@jest/globals").expect;
+
+async function foo() {
+  await _expect.withinDeadline(bar(1, 2, 3));
+  await _expect.withinDeadline(quux(1, 2, 3));
+}
+
+
+`;

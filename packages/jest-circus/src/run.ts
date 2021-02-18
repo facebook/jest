@@ -150,6 +150,7 @@ const _callCircusHook = async ({
 }): Promise<void> => {
   await dispatch({hook, name: 'hook_start'});
   const timeout = hook.timeout || getState().testTimeout;
+  _updateDeadline(timeout);
 
   try {
     await callAsyncCircusFn(hook, testContext, {
@@ -168,6 +169,7 @@ const _callCircusTest = async (
 ): Promise<void> => {
   await dispatch({name: 'test_fn_start', test});
   const timeout = test.timeout || getState().testTimeout;
+  _updateDeadline(timeout);
   invariant(test.fn, `Tests with no 'fn' should have 'mode' set to 'skipped'`);
 
   if (test.errors.length) {
@@ -183,6 +185,10 @@ const _callCircusTest = async (
   } catch (error) {
     await dispatch({error, name: 'test_fn_failure', test});
   }
+};
+
+const _updateDeadline = (timeout: number): void => {
+  getState().currentlyRunningChildDeadline = Date.now() + timeout - 20;
 };
 
 export default run;
