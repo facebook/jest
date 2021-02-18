@@ -16,12 +16,12 @@
   },
   "author": "James Kyle <me@thejameskyle.com>",
   "dependencies": {
-    "@jest/types": "^27.0.0-next.1",
     "ansi-regex": "^5.0.0",
     "ansi-styles": "^5.0.0",
     "react-is": "^17.0.1"
   },
   "devDependencies": {
+    "@jest/types": "^27.0.0-next.1",
     "@types/react": "*",
     "@types/react-is": "^17.0.0",
     "@types/react-test-renderer": "*",
