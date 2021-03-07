@@ -304,7 +304,8 @@ function getType(ref?: unknown): MockFunctionMetadataType | null {
   if (
     typeName === 'Function' ||
     typeName === 'AsyncFunction' ||
-    typeName === 'GeneratorFunction'
+    typeName === 'GeneratorFunction' ||
+    typeName === 'AsyncGeneratorFunction'
   ) {
     return 'function';
   } else if (Array.isArray(ref)) {
@@ -347,7 +348,8 @@ function isReadonlyProp(object: any, prop: string): boolean {
     return (
       typeName === 'Function' ||
       typeName === 'AsyncFunction' ||
-      typeName === 'GeneratorFunction'
+      typeName === 'GeneratorFunction' ||
+      typeName === 'AsyncGeneratorFunction'
     );
   }
 

@@ -12,3 +12,7 @@ const methods = require('../index');
 test('mock works with generator', () => {
   expect(methods.generatorMethod).toBeDefined();
 });
+
+test('mock works with asyncGenerator', () => {
+  expect(methods.asyncGeneratorMethod).toBeDefined();
+});
