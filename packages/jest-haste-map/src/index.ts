@@ -58,6 +58,7 @@ type Options = {
   dependencyExtractor?: string | null;
   extensions: Array<string>;
   forceNodeFilesystemAPI?: boolean;
+  hasteBlocklistModulePath?: string;
   hasteImplModulePath?: string;
   ignorePattern?: HasteRegExp;
   maxWorkers: number;
@@ -81,6 +82,7 @@ type InternalOptions = {
   dependencyExtractor: string | null;
   extensions: Array<string>;
   forceNodeFilesystemAPI: boolean;
+  hasteBlocklistModulePath?: string;
   hasteImplModulePath?: string;
   ignorePattern?: HasteRegExp;
   maxWorkers: number;
@@ -229,6 +231,7 @@ export default class HasteMap extends EventEmitter {
       dependencyExtractor: options.dependencyExtractor || null,
       extensions: options.extensions,
       forceNodeFilesystemAPI: !!options.forceNodeFilesystemAPI,
+      hasteBlocklistModulePath: options.hasteBlocklistModulePath,
       hasteImplModulePath: options.hasteImplModulePath,
       maxWorkers: options.maxWorkers,
       mocksPattern: options.mocksPattern
@@ -537,6 +540,7 @@ export default class HasteMap extends EventEmitter {
             computeSha1,
             dependencyExtractor: this._options.dependencyExtractor,
             filePath,
+            hasteBlocklistModulePath: this._options.hasteBlocklistModulePath,
             hasteImplModulePath: this._options.hasteImplModulePath,
             rootDir,
           })
@@ -613,6 +617,7 @@ export default class HasteMap extends EventEmitter {
         computeSha1,
         dependencyExtractor: this._options.dependencyExtractor,
         filePath,
+        hasteBlocklistModulePath: this._options.hasteBlocklistModulePath,
         hasteImplModulePath: this._options.hasteImplModulePath,
         rootDir,
       })

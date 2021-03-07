@@ -19,6 +19,7 @@ export type WorkerMessage = {
   rootDir: string;
   filePath: string;
   hasteImplModulePath?: string;
+  hasteBlocklistModulePath?: string;
 };
 
 export type WorkerMetadata = {

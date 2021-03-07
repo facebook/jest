@@ -55,6 +55,7 @@ const initialOptions: Config.InitialOptions = {
   haste: {
     computeSha1: true,
     defaultPlatform: 'ios',
+    hasteBlocklistModulePath: '<rootDir>/custom_blocklist.js',
     hasteImplModulePath: '<rootDir>/haste_impl.js',
     platforms: ['ios', 'android'],
     throwOnModuleCollision: false,

@@ -316,6 +316,7 @@ export default class Runtime {
       console: options && options.console,
       dependencyExtractor: config.dependencyExtractor,
       extensions: [Snapshot.EXTENSION].concat(config.moduleFileExtensions),
+      hasteBlocklistModulePath: config.haste.hasteBlocklistModulePath,
       hasteImplModulePath: config.haste.hasteImplModulePath,
       ignorePattern,
       maxWorkers: (options && options.maxWorkers) || 1,

@@ -301,6 +301,36 @@ describe('HasteMap', () => {
     expect(hasteFS.matchFiles(/Kiwi/)).toEqual([]);
   });
 
+  it('ignores files with extensions in the blocklist', async () => {
+    mockFs[path.join('/', 'project', 'fruits', 'Kiwi.gif')] = `
+      // Kiwi!
+    `;
+    mockFs[path.join('/', 'project', 'fruits', 'Apple.json')] = `
+      // Apple!
+    `;
+    const {moduleMap} = await new HasteMap(defaultConfig).build();
+    expect(moduleMap.getModule('Apple.json')).toEqual(null);
+    expect(moduleMap.getModule('Kiwi.gif')).toEqual(null);
+  });
+
+  it('correctly handles custom blocklist extensions', async () => {
+    const config = {
+      ...defaultConfig,
+      hasteBlocklistModulePath: require.resolve('./custom_blocklist.js'),
+    };
+    mockFs[path.join('/', 'project', 'fruits', 'Kiwi.gif')] = `
+      // Kiwi!
+    `;
+    mockFs[path.join('/', 'project', 'fruits', 'Apple.json')] = `
+      // Apple!
+    `;
+    const {moduleMap} = await new HasteMap(config).build();
+    expect(moduleMap.getModule('Apple.json')).toEqual(
+      path.join('/', 'project', 'fruits', 'Apple.json'),
+    );
+    expect(moduleMap.getModule('Kiwi.gif')).toEqual(null);
+  });
+
   it('ignores vcs directories without ignore pattern', async () => {
     mockFs[path.join('/', 'project', 'fruits', '.git', 'fruit-history.js')] = `
       // test
