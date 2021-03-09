@@ -66,7 +66,7 @@ afterEach(() => {
   console.warn.mockRestore();
 });
 
-it('picks a name based on the rootDir', () => {
+it('picks an id based on the rootDir', () => {
   const rootDir = '/root/path/foo';
   const expected = crypto
     .createHash('md5')
@@ -79,33 +79,33 @@ it('picks a name based on the rootDir', () => {
         rootDir,
       },
       {},
-    ).options.name,
+    ).options.id,
   ).toBe(expected);
 });
 
-it('keeps custom project name based on the projects rootDir', () => {
-  const name = 'test';
+it('keeps custom project id based on the projects rootDir', () => {
+  const id = 'test';
   const options = normalize(
     {
-      projects: [{name, rootDir: '/path/to/foo'}],
+      projects: [{id, rootDir: '/path/to/foo'}],
       rootDir: '/root/path/baz',
     },
     {},
   );
 
-  expect(options.options.projects[0].name).toBe(name);
+  expect(options.options.projects[0].id).toBe(id);
 });
 
-it('keeps custom names based on the rootDir', () => {
+it('keeps custom ids based on the rootDir', () => {
   expect(
     normalize(
       {
-        name: 'custom-name',
+        id: 'custom-id',
         rootDir: '/root/path/foo',
       },
       {},
-    ).options.name,
-  ).toBe('custom-name');
+    ).options.id,
+  ).toBe('custom-id');
 });
 
 it('minimal config is stable across runs', () => {

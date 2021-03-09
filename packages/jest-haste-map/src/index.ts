@@ -59,10 +59,10 @@ type Options = {
   extensions: Array<string>;
   forceNodeFilesystemAPI?: boolean;
   hasteImplModulePath?: string;
+  id: string;
   ignorePattern?: HasteRegExp;
   maxWorkers: number;
   mocksPattern?: string;
-  name: string;
   platforms: Array<string>;
   resetCache?: boolean;
   retainAllFiles: boolean;
@@ -82,10 +82,10 @@ type InternalOptions = {
   extensions: Array<string>;
   forceNodeFilesystemAPI: boolean;
   hasteImplModulePath?: string;
+  id: string;
   ignorePattern?: HasteRegExp;
   maxWorkers: number;
   mocksPattern: RegExp | null;
-  name: string;
   platforms: Array<string>;
   resetCache?: boolean;
   retainAllFiles: boolean;
@@ -230,11 +230,11 @@ export default class HasteMap extends EventEmitter {
       extensions: options.extensions,
       forceNodeFilesystemAPI: !!options.forceNodeFilesystemAPI,
       hasteImplModulePath: options.hasteImplModulePath,
+      id: options.id,
       maxWorkers: options.maxWorkers,
       mocksPattern: options.mocksPattern
         ? new RegExp(options.mocksPattern)
         : null,
-      name: options.name,
       platforms: options.platforms,
       resetCache: options.resetCache,
       retainAllFiles: options.retainAllFiles,
@@ -282,9 +282,9 @@ export default class HasteMap extends EventEmitter {
 
     this._cachePath = HasteMap.getCacheFilePath(
       this._options.cacheDirectory,
-      `haste-map-${this._options.name}-${rootDirHash}`,
+      `haste-map-${this._options.id}-${rootDirHash}`,
       VERSION,
-      this._options.name,
+      this._options.id,
       this._options.roots
         .map(root => fastPath.relative(options.rootDir, root))
         .join(':'),

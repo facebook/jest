@@ -7,6 +7,7 @@
 
 import type {Config} from '@jest/types';
 
+// TODO should we had the description of id that was previously name
 const descriptions: {[key in keyof Config.InitialOptions]: string} = {
   automock: 'All imported modules in your tests should be mocked automatically',
   bail: 'Stop running tests after `n` failures',

@@ -38,7 +38,7 @@ export default class TestSequencer {
     const {config} = context;
     return HasteMap.getCacheFilePath(
       config.cacheDirectory,
-      'perf-cache-' + config.name,
+      'perf-cache-' + config.id,
     );
   }
 

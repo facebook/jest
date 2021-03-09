@@ -150,6 +150,7 @@ export type InitialOptions = Partial<{
   globalSetup: string | null | undefined;
   globalTeardown: string | null | undefined;
   haste: HasteConfig;
+  id: string;
   injectGlobals: boolean;
   reporters: Array<string | ReporterConfig>;
   logHeapUsage: boolean;
@@ -165,7 +166,6 @@ export type InitialOptions = Partial<{
   };
   modulePathIgnorePatterns: Array<string>;
   modulePaths: Array<string>;
-  name: string;
   noStackTrace: boolean;
   notify: boolean;
   notifyMode: string;
@@ -332,6 +332,7 @@ export type ProjectConfig = {
   globalTeardown?: string;
   globals: ConfigGlobals;
   haste: HasteConfig;
+  id: string;
   injectGlobals: boolean;
   moduleDirectories: Array<string>;
   moduleFileExtensions: Array<string>;
@@ -339,7 +340,6 @@ export type ProjectConfig = {
   moduleNameMapper: Array<[string, string]>;
   modulePathIgnorePatterns: Array<string>;
   modulePaths?: Array<string>;
-  name: string;
   prettierPath: string;
   resetMocks: boolean;
   resetModules: boolean;

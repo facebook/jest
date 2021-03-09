@@ -362,8 +362,8 @@ const normalizeMissingOptions = (
   configPath: Config.Path | null | undefined,
   projectIndex: number,
 ): Config.InitialOptionsWithRootDir => {
-  if (!options.name) {
-    options.name = createHash('md5')
+  if (!options.id) {
+    options.id = createHash('md5')
       .update(options.rootDir)
       // In case we load config from some path that has the same root dir
       .update(configPath || '')
@@ -953,12 +953,12 @@ export default function normalize(
       case 'findRelatedTests':
       case 'forceCoverageMatch':
       case 'forceExit':
+      case 'id':
       case 'injectGlobals':
       case 'lastCommit':
       case 'listTests':
       case 'logHeapUsage':
       case 'maxConcurrency':
-      case 'name':
       case 'noStackTrace':
       case 'notify':
       case 'notifyMode':
