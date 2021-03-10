@@ -22,6 +22,7 @@
       "version-26.0-puppeteer",
       "version-26.0-mongodb",
       "version-26.0-dynamodb",
+      "version-26.0-testcontainers",
       "version-26.0-tutorial-jquery",
       "version-26.0-watch-plugins",
       "version-26.0-migration-guide",
