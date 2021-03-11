@@ -57,6 +57,7 @@ const initialOptions: Config.InitialOptions = {
     defaultPlatform: 'ios',
     hasteImplModulePath: '<rootDir>/haste_impl.js',
     platforms: ['ios', 'android'],
+    retainAllFiles: false,
     throwOnModuleCollision: false,
   },
   injectGlobals: true,

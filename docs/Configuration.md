@@ -499,6 +499,8 @@ type HasteConfig = {
   platforms?: Array<string>;
   // Whether to throw on error on module collision.
   throwOnModuleCollision?: boolean;
+  // Whether to search for tests in node_modules.
+  retainAllFiles?: boolean;
 };
 ```
 
