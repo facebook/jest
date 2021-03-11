@@ -3,6 +3,6 @@
 exports[`renders correctly 1`] = `
 <p>
   1482363367.071
-   seconds have ellapsed since the UNIX epoch.
+   seconds have elapsed since the UNIX epoch.
 </p>
 `;

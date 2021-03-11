@@ -61,7 +61,7 @@ module.exports = {
 Let's create a [snapshot test](SnapshotTesting.md) for a Link component that renders hyperlinks:
 
 ```tsx
-// Link.react.js
+// src/Link.js
 import React from 'react';
 
 const STATUS = {
@@ -69,50 +69,39 @@ const STATUS = {
   NORMAL: 'normal',
 };
 
-export default class Link extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Link(props) {
+  const [cssClass, setCssClass] = React.useState(STATUS.NORMAL);
 
-    this._onMouseEnter = this._onMouseEnter.bind(this);
-    this._onMouseLeave = this._onMouseLeave.bind(this);
+  const _onMouseEnter = () => {
+    setCssClass(STATUS.HOVERED);
+  };
 
-    this.state = {
-      class: STATUS.NORMAL,
-    };
-  }
+  const _onMouseLeave = () => {
+    setCssClass(STATUS.NORMAL);
+  };
 
-  _onMouseEnter() {
-    this.setState({class: STATUS.HOVERED});
-  }
-
-  _onMouseLeave() {
-    this.setState({class: STATUS.NORMAL});
-  }
-
-  render() {
-    return (
-      <a
-        className={this.state.class}
-        href={this.props.page || '#'}
-        onMouseEnter={this._onMouseEnter}
-        onMouseLeave={this._onMouseLeave}
-      >
-        {this.props.children}
-      </a>
-    );
-  }
+  return (
+    <a
+      className={cssClass}
+      href={props.page || '#'}
+      onMouseEnter={_onMouseEnter}
+      onMouseLeave={_onMouseLeave}
+    >
+      {props.children}
+    </a>
+  );
 }
 ```
 
 Now let's use React's test renderer and Jest's snapshot feature to interact with the component and capture the rendered output and create a snapshot file:
 
 ```tsx
-// Link.react.test.js
+// src/Link.test.js
 import React from 'react';
-import renderer from 'react-test-renderer';
-import Link from '../Link.react';
+import Link from './Link';
+import renderer, { act } from 'react-test-renderer';
 
-test('Link changes the class when hovered', () => {
+it('changes the class when hovered', () => {
   const component = renderer.create(
     <Link page="http://www.facebook.com">Facebook</Link>,
   );
@@ -120,13 +109,17 @@ test('Link changes the class when hovered', () => {
   expect(tree).toMatchSnapshot();
 
   // manually trigger the callback
-  tree.props.onMouseEnter();
+  act(() => {
+    tree.props.onMouseEnter();
+  });
   // re-rendering
   tree = component.toJSON();
   expect(tree).toMatchSnapshot();
 
   // manually trigger the callback
-  tree.props.onMouseLeave();
+  act(() => {
+    tree.props.onMouseLeave();
+  });
   // re-rendering
   tree = component.toJSON();
   expect(tree).toMatchSnapshot();
@@ -136,33 +129,71 @@ test('Link changes the class when hovered', () => {
 When you run `yarn test` or `jest`, this will produce an output file like this:
 
 ```javascript
-// __tests__/__snapshots__/Link.react.test.js.snap
-exports[`Link changes the class when hovered 1`] = `
+// src/__snapshots__/Link.test.js.snap
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`changes the class when hovered 1`] = `
 <a
   className="normal"
   href="http://www.facebook.com"
   onMouseEnter={[Function]}
-  onMouseLeave={[Function]}>
+  onMouseLeave={[Function]}
+>
   Facebook
 </a>
 `;
 
-exports[`Link changes the class when hovered 2`] = `
+exports[`changes the class when hovered 2`] = `
 <a
   className="hovered"
   href="http://www.facebook.com"
   onMouseEnter={[Function]}
-  onMouseLeave={[Function]}>
+  onMouseLeave={[Function]}
+>
   Facebook
 </a>
 `;
 
-exports[`Link changes the class when hovered 3`] = `
+exports[`changes the class when hovered 3`] = `
 <a
   className="normal"
   href="http://www.facebook.com"
   onMouseEnter={[Function]}
-  onMouseLeave={[Function]}>
+  onMouseLeave={[Function]}
+>
+  Facebook
+</a>
+`;
+
+exports[`properly escapes quotes 1`] = `
+<a
+  className="normal"
+  href="#"
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  "Facebook" \\'is \\ 'awesome'
+</a>
+`;
+
+exports[`renders as an anchor when no page is set 1`] = `
+<a
+  className="normal"
+  href="#"
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
+  Facebook
+</a>
+`;
+
+exports[`renders correctly 1`] = `
+<a
+  className="normal"
+  href="http://www.facebook.com"
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+>
   Facebook
 </a>
 `;
@@ -221,40 +252,27 @@ Let's implement a checkbox which swaps between two labels:
 
 import React from 'react';
 
-export default class CheckboxWithLabel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {isChecked: false};
+export default function CheckboxWithLabel(props) {
+  const [isChecked, setIsChecked] = React.useState(false);
 
-    // bind manually because React class components don't auto-bind
-    // https://reactjs.org/blog/2015/01/27/react-v0.13.0-beta-1.html#autobinding
-    this.onChange = this.onChange.bind(this);
-  }
+  const onChange = () => {
+    setIsChecked(!isChecked);
+  };
 
-  onChange() {
-    this.setState({isChecked: !this.state.isChecked});
-  }
-
-  render() {
-    return (
-      <label>
-        <input
-          type="checkbox"
-          checked={this.state.isChecked}
-          onChange={this.onChange}
-        />
-        {this.state.isChecked ? this.props.labelOn : this.props.labelOff}
-      </label>
-    );
-  }
+  return (
+    <label>
+      <input type="checkbox" checked={isChecked} onChange={onChange} />
+      {isChecked ? props.labelOn : props.labelOff}
+    </label>
+  );
 }
 ```
 
 ```tsx
-// __tests__/CheckboxWithLabel-test.js
+// CheckboxWithLabel.test.js
 import React from 'react';
 import {cleanup, fireEvent, render} from '@testing-library/react';
-import CheckboxWithLabel from '../CheckboxWithLabel';
+import CheckboxWithLabel from './CheckboxWithLabel';
 
 // Note: running cleanup afterEach is done automatically for you in @testing-library/react@9.0.0 or higher
 // unmount and cleanup DOM after the test is finished.
@@ -282,11 +300,11 @@ You have to run `yarn add --dev enzyme` to use Enzyme. If you are using a React 
 Let's rewrite the test from above using Enzyme instead of react-testing-library. We use Enzyme's [shallow renderer](http://airbnb.io/enzyme/docs/api/shallow.html) in this example.
 
 ```tsx
-// __tests__/CheckboxWithLabel-test.js
+// CheckboxWithLabel.test.js
 
 import React from 'react';
 import {shallow} from 'enzyme';
-import CheckboxWithLabel from '../CheckboxWithLabel';
+import CheckboxWithLabel from './CheckboxWithLabel';
 
 test('CheckboxWithLabel changes the text after click', () => {
   // Render a checkbox with label in the document

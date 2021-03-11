@@ -3,8 +3,8 @@
 'use strict';
 
 import React from 'react';
-import Link from '../Link.react';
-import renderer from 'react-test-renderer';
+import Link from './Link';
+import renderer, { act } from 'react-test-renderer';
 
 it('renders correctly', () => {
   const tree = renderer
@@ -33,13 +33,17 @@ it('changes the class when hovered', () => {
   expect(tree).toMatchSnapshot();
 
   // manually trigger the callback
-  tree.props.onMouseEnter();
+  act(() => {
+    tree.props.onMouseEnter();
+  });
   // re-rendering
   tree = component.toJSON();
   expect(tree).toMatchSnapshot();
 
   // manually trigger the callback
-  tree.props.onMouseLeave();
+  act(() => {
+    tree.props.onMouseLeave();
+  });
   // re-rendering
   tree = component.toJSON();
   expect(tree).toMatchSnapshot();
