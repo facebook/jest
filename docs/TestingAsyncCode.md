@@ -47,6 +47,8 @@ If `done()` is never called, the test will fail (with timeout error), which is w
 
 If the `expect` statement fails, it throws an error and `done()` is not called. If we want to see in the test log why it failed, we have to wrap `expect` in a `try` block and pass the error in the `catch` block to `done`. Otherwise, we end up with an opaque timeout error that doesn't show what value was received by `expect(data)`.
 
+*Note: `done()` should not be mixed with Promises as this tends to lead to memory leaks in your tests.*
+
 ## Promises
 
 If your code uses promises, there is a more straightforward way to handle asynchronous tests. Return a promise from your test, and Jest will wait for that promise to resolve. If the promise is rejected, the test will automatically fail.
