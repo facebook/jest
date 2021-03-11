@@ -70,38 +70,22 @@ const STATUS = {
   NORMAL: 'normal',
 };
 
-export default class Link extends React.Component {
-  constructor(props) {
-    super(props);
+export default function Link(props) {
+  const [class, setClass] = React.useState(STATUS.NORMAL);
 
-    this._onMouseEnter = this._onMouseEnter.bind(this);
-    this._onMouseLeave = this._onMouseLeave.bind(this);
+  const onMouseEnter = () => setClass(STATUS.HOVERED);
+  const onMouseLeave = () => setClass(STATUS.NORMAL);
 
-    this.state = {
-      class: STATUS.NORMAL,
-    };
-  }
-
-  _onMouseEnter() {
-    this.setState({class: STATUS.HOVERED});
-  }
-
-  _onMouseLeave() {
-    this.setState({class: STATUS.NORMAL});
-  }
-
-  render() {
-    return (
-      <a
-        className={this.state.class}
-        href={this.props.page || '#'}
-        onMouseEnter={this._onMouseEnter}
-        onMouseLeave={this._onMouseLeave}
-      >
-        {this.props.children}
-      </a>
-    );
-  }
+  return (
+    <a
+      className={class}
+      href={props.page || '#'}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      {props.children}
+    </a>
+  );
 }
 ```
 
@@ -222,32 +206,21 @@ Let's implement a checkbox which swaps between two labels:
 
 import React from 'react';
 
-export default class CheckboxWithLabel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {isChecked: false};
+export default function CheckboxWithLabel(props) {
+  const [isChecked, setIsChecked] = React.useState(false);
 
-    // bind manually because React class components don't auto-bind
-    // https://reactjs.org/blog/2015/01/27/react-v0.13.0-beta-1.html#autobinding
-    this.onChange = this.onChange.bind(this);
-  }
+  const onChange() = () => setIsChecked(isChecked => !isChecked);
 
-  onChange() {
-    this.setState({isChecked: !this.state.isChecked});
-  }
-
-  render() {
-    return (
-      <label>
-        <input
-          type="checkbox"
-          checked={this.state.isChecked}
-          onChange={this.onChange}
-        />
-        {this.state.isChecked ? this.props.labelOn : this.props.labelOff}
-      </label>
-    );
-  }
+  return (
+    <label>
+      <input
+        type="checkbox"
+        checked={isChecked}
+        onChange={onChange}
+      />
+      {isChecked ? props.labelOn : props.labelOff}
+    </label>
+  );
 }
 ```
 
