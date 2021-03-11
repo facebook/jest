@@ -744,6 +744,12 @@ class MyCustomReporter {
 
 For the full list of methods and argument types see `Reporter` interface in [packages/jest-reporters/src/types.ts](https://github.com/facebook/jest/blob/master/packages/jest-reporters/src/types.ts)
 
+### `reportPhasingResults` [boolean]
+
+Default: `false`
+
+Include the outcome of phasing actions, such as transpilation (babel) and hooks (`beforeAll`) in the test results.
+
 ### `resetMocks` [boolean]
 
 Default: `false`

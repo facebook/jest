@@ -195,6 +195,7 @@ const groupOptions = (
     modulePaths: options.modulePaths,
     name: options.name,
     prettierPath: options.prettierPath,
+    reportPhasingResults: options.reportPhasingResults,
     resetMocks: options.resetMocks,
     resetModules: options.resetModules,
     resolver: options.resolver,

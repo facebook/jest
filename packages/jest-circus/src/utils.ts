@@ -301,32 +301,99 @@ export const callAsyncCircusFn = (
     });
 };
 
-export const getTestDuration = (test: Circus.TestEntry): number | null => {
+export const getChildDuration = (test: {
+  startedAt?: number | null;
+}): number | null => {
   const {startedAt} = test;
   return typeof startedAt === 'number' ? Date.now() - startedAt : null;
 };
 
+const maybeSubtract = (
+  start: number | null | undefined,
+  end: number | null | undefined,
+): number | null => {
+  if (typeof start !== 'number' || typeof end !== 'number') {
+    return null;
+  }
+
+  return end - start;
+};
+
+const perfTestResult = (
+  duration: number | undefined | null,
+  testPath: Array<string>,
+): Circus.TestResult => {
+  return {
+    duration,
+    errors: [],
+    errorsDetailed: [],
+    invocations: 1,
+    location: null,
+    phasing: true,
+    status: 'done',
+    testPath,
+  };
+};
+
+const addTopLevelPerfResults = (
+  timings: Circus.StateTimings,
+  testResults: Circus.TestResults,
+) => {
+  const rootName = 'the test file';
+  const requireTime = maybeSubtract(
+    timings.definitionStart,
+    timings.definitionEnd,
+  );
+  if (null != requireTime) {
+    testResults.unshift(
+      perfTestResult(requireTime, [rootName, 'produces tests']),
+    );
+  }
+  const describeTime = maybeSubtract(
+    timings.setupStart,
+    timings.definitionStart,
+  );
+  if (null != describeTime) {
+    testResults.unshift(
+      perfTestResult(describeTime, [
+        rootName,
+        'parses, transpiles, and loads imports',
+      ]),
+    );
+  }
+};
+
 export const makeRunResult = (
+  timings: Circus.StateTimings,
   describeBlock: Circus.DescribeBlock,
   unhandledErrors: Array<Error>,
-): Circus.RunResult => ({
-  testResults: makeTestResults(describeBlock),
-  unhandledErrors: unhandledErrors.map(_getError).map(getErrorStack),
-});
+): Circus.RunResult => {
+  const testResults = makeTestResults(describeBlock);
+  addTopLevelPerfResults(timings, testResults);
+  return {
+    testResults,
+    unhandledErrors: unhandledErrors.map(_getError).map(getErrorStack),
+  };
+};
+
+const tracePath = (child: Circus.TestEntry | Circus.Hook): Array<string> => {
+  const testPath = ['test' === child.type ? child.name : child.type];
+
+  let parent: Circus.DescribeBlock | undefined = child.parent;
+  do {
+    testPath.unshift(parent.name);
+  } while ((parent = parent.parent));
+  return testPath;
+};
 
 export const makeSingleTestResult = (
   test: Circus.TestEntry,
 ): Circus.TestResult => {
   const {includeTestLocationInResult} = getState();
-  const testPath = [];
-  let parent: Circus.TestEntry | Circus.DescribeBlock | undefined = test;
 
   const {status} = test;
   invariant(status, 'Status should be present after tests are run.');
-
-  do {
-    testPath.unshift(parent.name);
-  } while ((parent = parent.parent));
+  const testPath = tracePath(test);
 
   let location = null;
   if (includeTestLocationInResult) {
@@ -357,6 +424,7 @@ export const makeSingleTestResult = (
     errorsDetailed,
     invocations: test.invocations,
     location,
+    phasing: false,
     status,
     testPath: Array.from(testPath),
   };
@@ -370,7 +438,14 @@ const makeTestResults = (
   for (const child of describeBlock.children) {
     switch (child.type) {
       case 'describeBlock': {
+        const hooks = getAllHooksForDescribe(child);
+        for (const hook of hooks.beforeAll) {
+          testResults.push(perfTestResult(hook.duration, tracePath(hook)));
+        }
         testResults.push(...makeTestResults(child));
+        for (const hook of hooks.afterAll) {
+          testResults.push(perfTestResult(hook.duration, tracePath(hook)));
+        }
         break;
       }
       case 'test': {

@@ -30,6 +30,7 @@ const INITIAL_STATE: Circus.State = {
   rootDescribeBlock: ROOT_DESCRIBE_BLOCK,
   testNamePattern: null,
   testTimeout: 5000,
+  timings: {},
   unhandledErrors: [],
 };
 

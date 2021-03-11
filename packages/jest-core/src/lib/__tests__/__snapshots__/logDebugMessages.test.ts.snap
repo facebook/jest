@@ -28,6 +28,7 @@ exports[`prints the config object 1`] = `
     "modulePaths": [],
     "name": "test_name",
     "prettierPath": "prettier",
+    "reportPhasingResults": false,
     "resetMocks": false,
     "resetModules": false,
     "restoreMocks": false,
