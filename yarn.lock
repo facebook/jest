@@ -270,9 +270,9 @@ __metadata:
   linkType: hard
 
 "@babel/compat-data@npm:^7.13.0, @babel/compat-data@npm:^7.13.8":
-  version: 7.13.8
-  resolution: "@babel/compat-data@npm:7.13.8"
-  checksum: e07e24737973206dd17439224945a354352ce0896d5a0bdd22fc637464eb650bdf6651a42352dc35fa8d55842ce1b66e545a1e3c096ee8f45947dcc32a44be44
+  version: 7.13.11
+  resolution: "@babel/compat-data@npm:7.13.11"
+  checksum: cb491342012dbec6482d27e302688e1d13db932f631a55279c98a9ce22b94f5a24731f93e29a4fac8a0c2f2533f23a4ad9699d930044b562778dd6e0f4d5e369
   languageName: node
   linkType: hard
 
@@ -369,8 +369,8 @@ __metadata:
   linkType: hard
 
 "@babel/helper-create-class-features-plugin@npm:^7.13.0":
-  version: 7.13.10
-  resolution: "@babel/helper-create-class-features-plugin@npm:7.13.10"
+  version: 7.13.11
+  resolution: "@babel/helper-create-class-features-plugin@npm:7.13.11"
   dependencies:
     "@babel/helper-function-name": ^7.12.13
     "@babel/helper-member-expression-to-functions": ^7.13.0
@@ -379,7 +379,7 @@ __metadata:
     "@babel/helper-split-export-declaration": ^7.12.13
   peerDependencies:
     "@babel/core": ^7.0.0
-  checksum: 9d331528e12807a1697d4d24a5e98ca3587944d38927fe389880bb7882eaf6b004295d0c459aa3870090dfeb177bb787be1b2062a2e2587f34700c9c620681b8
+  checksum: 14da13eeb919216abd1f933a6ee0d7fab3a04899c091b6a4e7857be547249c0ac4e071689d97c2af5649e8688dcc99139039f74a500ca6728f9f7297a59e8d8c
   languageName: node
   linkType: hard
 
@@ -609,11 +609,11 @@ __metadata:
   linkType: hard
 
 "@babel/parser@npm:^7.0.0, @babel/parser@npm:^7.1.0, @babel/parser@npm:^7.1.6, @babel/parser@npm:^7.12.13, @babel/parser@npm:^7.12.16, @babel/parser@npm:^7.12.7, @babel/parser@npm:^7.13.0, @babel/parser@npm:^7.13.10, @babel/parser@npm:^7.7.2":
-  version: 7.13.10
-  resolution: "@babel/parser@npm:7.13.10"
+  version: 7.13.11
+  resolution: "@babel/parser@npm:7.13.11"
   bin:
     parser: ./bin/babel-parser.js
-  checksum: 2eec48a075e11ad45031e82acf51061970ca8044cc296df1281512d8de0a8b478b04416ae411aa56f4ac99ed8cf2f40b9eeec27b6a99062c7b06628a1a7c6a69
+  checksum: 3ab6f6097efc72ac9212831f8f1c17fbcf9f0a6d1b12fa2486a51db4674cf3e86674d0ff62ba789933703119e69ac5daf8d1bb9e400eb4a613df8b0103104ab6
   languageName: node
   linkType: hard
 
