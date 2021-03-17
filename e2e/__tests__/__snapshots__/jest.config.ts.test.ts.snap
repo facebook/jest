@@ -9,6 +9,26 @@ exports[`traverses directory tree up until it finds jest.config 1`] = `
 `;
 
 exports[`traverses directory tree up until it finds jest.config 2`] = `
+● Multiple configurations found:
+
+Jest will use \`path/to/jest.config.js\` for configuration, but Jest also
+found configuration in \`path/to/package.json\`. Delete the \`"jest"\` key
+in that file to silence this warning, or delete the \`jest.config.js\` file
+to use the configuration from \`package.json\`.
+
+Configuration Documentation:
+https://jestjs.io/docs/en/configuration.html
+
+● Multiple configurations found:
+
+Jest will use \`path/to/jest.config.js\` for configuration, but Jest also
+found configuration in \`path/to/package.json\`. Delete the \`"jest"\` key
+in that file to silence this warning, or delete the \`jest.config.js\` file
+to use the configuration from \`package.json\`.
+
+Configuration Documentation:
+https://jestjs.io/docs/en/configuration.html
+
 PASS ../../../__tests__/a-giraffe.js
   ✓ giraffe
   ✓ abc
@@ -23,6 +43,26 @@ Ran all test suites.
 `;
 
 exports[`works with jest.config.ts 1`] = `
+● Multiple configurations found:
+
+Jest will use \`path/to/jest.config.js\` for configuration, but Jest also
+found configuration in \`path/to/package.json\`. Delete the \`"jest"\` key
+in that file to silence this warning, or delete the \`jest.config.js\` file
+to use the configuration from \`package.json\`.
+
+Configuration Documentation:
+https://jestjs.io/docs/en/configuration.html
+
+● Multiple configurations found:
+
+Jest will use \`path/to/jest.config.js\` for configuration, but Jest also
+found configuration in \`path/to/package.json\`. Delete the \`"jest"\` key
+in that file to silence this warning, or delete the \`jest.config.js\` file
+to use the configuration from \`package.json\`.
+
+Configuration Documentation:
+https://jestjs.io/docs/en/configuration.html
+
 PASS __tests__/a-giraffe.js
   ✓ giraffe
 `;
@@ -36,6 +76,26 @@ Ran all test suites.
 `;
 
 exports[`works with tsconfig.json 1`] = `
+● Multiple configurations found:
+
+Jest will use \`path/to/jest.config.js\` for configuration, but Jest also
+found configuration in \`path/to/package.json\`. Delete the \`"jest"\` key
+in that file to silence this warning, or delete the \`jest.config.js\` file
+to use the configuration from \`package.json\`.
+
+Configuration Documentation:
+https://jestjs.io/docs/en/configuration.html
+
+● Multiple configurations found:
+
+Jest will use \`path/to/jest.config.js\` for configuration, but Jest also
+found configuration in \`path/to/package.json\`. Delete the \`"jest"\` key
+in that file to silence this warning, or delete the \`jest.config.js\` file
+to use the configuration from \`package.json\`.
+
+Configuration Documentation:
+https://jestjs.io/docs/en/configuration.html
+
 PASS __tests__/a-giraffe.js
   ✓ giraffe
 `;

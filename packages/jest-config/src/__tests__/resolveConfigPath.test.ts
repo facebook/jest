@@ -24,6 +24,8 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
     test(`file path with "${extension}"`, () => {
       const relativeConfigPath = `a/b/c/my_config${extension}`;
       const absoluteConfigPath = path.resolve(DIR, relativeConfigPath);
+      const warn = console.warn;
+      console.warn = jest.fn();
 
       writeFiles(DIR, {[relativeConfigPath]: ''});
 
@@ -42,6 +44,8 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
       expect(() => resolveConfigPath('does_not_exist', DIR)).toThrowError(
         NO_ROOT_DIR_ERROR_PATTERN,
       );
+      expect(console.warn).toHaveBeenCalledTimes(0);
+      console.warn = warn;
     });
 
     test(`directory path with "${extension}"`, () => {
@@ -52,6 +56,8 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
       );
       const relativeJestConfigPath = `a/b/c/jest.config${extension}`;
       const absoluteJestConfigPath = path.resolve(DIR, relativeJestConfigPath);
+      const warn = console.warn;
+      console.warn = jest.fn();
 
       writeFiles(DIR, {[`a/b/c/some_random_file${extension}`]: ''});
 
@@ -66,6 +72,8 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
         resolveConfigPath(path.dirname(relativeJestConfigPath), DIR),
       ).toThrowError(ERROR_PATTERN);
 
+      expect(console.warn).toHaveBeenCalledTimes(0);
+
       writeFiles(DIR, {[relativePackageJsonPath]: ''});
 
       // absolute
@@ -78,6 +86,8 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
         resolveConfigPath(path.dirname(relativePackageJsonPath), DIR),
       ).toBe(absolutePackageJsonPath);
 
+      expect(console.warn).toHaveBeenCalledTimes(0);
+
       writeFiles(DIR, {[relativeJestConfigPath]: ''});
 
       // jest.config.js takes precedence
@@ -87,10 +97,14 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
         resolveConfigPath(path.dirname(absolutePackageJsonPath), DIR),
       ).toBe(absoluteJestConfigPath);
 
+      expect(console.warn).toHaveBeenCalledTimes(1);
+
       // relative
       expect(
         resolveConfigPath(path.dirname(relativePackageJsonPath), DIR),
       ).toBe(absoluteJestConfigPath);
+
+      expect(console.warn).toHaveBeenCalledTimes(2);
 
       expect(() => {
         resolveConfigPath(
@@ -98,6 +112,9 @@ describe.each(JEST_CONFIG_EXT_ORDER.slice(0))(
           DIR,
         );
       }).toThrowError(NO_ROOT_DIR_ERROR_PATTERN);
+
+      expect(console.warn).toHaveBeenCalledTimes(2);
+      console.warn = warn;
     });
   },
 );

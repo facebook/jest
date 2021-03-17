@@ -57,16 +57,29 @@ const resolveConfigPathByTraversing = (
   initialPath: Config.Path,
   cwd: Config.Path,
 ): Config.Path => {
+  let correctConfig = '';
+  let foundedConfig = 0;
   const jestConfig = JEST_CONFIG_EXT_ORDER.map(ext =>
     path.resolve(pathToResolve, getConfigFilename(ext)),
   ).find(isFile);
   if (jestConfig) {
-    return jestConfig;
+    ++foundedConfig;
+    correctConfig = jestConfig;
   }
 
   const packageJson = path.resolve(pathToResolve, PACKAGE_JSON);
   if (isFile(packageJson)) {
-    return packageJson;
+    ++foundedConfig;
+    correctConfig = packageJson;
+  }
+
+  //Warning when we have multiple configurations
+  if (correctConfig) {
+    if (foundedConfig > 1) {
+      correctConfig = jestConfig || packageJson;
+      console.warn(multipleConfigsWarn);
+    }
+    return correctConfig;
   }
 
   // This is the system root.
@@ -95,3 +108,12 @@ const makeResolutionErrorMessage = (
   `traverse directory tree up, until it finds one of those files in exact order: ${JEST_CONFIG_EXT_ORDER.map(
     ext => `"${getConfigFilename(ext)}"`,
   ).join(' or ')}.`;
+
+const multipleConfigsWarn =
+  '● Multiple configurations found:\n\n' +
+  'Jest will use `path/to/jest.config.js` for configuration, but Jest also\n' +
+  'found configuration in `path/to/package.json`. Delete the `"jest"` key\n' +
+  'in that file to silence this warning, or delete the `jest.config.js` file\n' +
+  'to use the configuration from `package.json`.\n\n' +
+  'Configuration Documentation:\n' +
+  'https://jestjs.io/docs/en/configuration.html\n';
