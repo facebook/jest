@@ -52,11 +52,13 @@ export default class {
   }
 
   async isLeaking(): Promise<boolean> {
-    this._runGarbageCollector();
+    for (let i = 0; i < 2; ++i) {
+      this._runGarbageCollector();
 
-    // wait some ticks to allow GC to run properly, see https://github.com/nodejs/node/issues/34636#issuecomment-669366235
-    for (let i = 0; i < 10; i++) {
-      await tick();
+      // wait some ticks to allow GC to run properly, see https://github.com/nodejs/node/issues/34636#issuecomment-669366235
+      for (let i = 0; i < 10; i++) {
+        await tick();
+      }
     }
 
     return this._isReferenceBeingHeld;
