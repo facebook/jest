@@ -9,6 +9,7 @@ import * as fs from 'graceful-fs';
 import type {Config} from '@jest/types';
 import createProcessObject from './createProcessObject';
 import deepCyclicCopy from './deepCyclicCopy';
+import {fixInstanceOfError} from './fixInstanceOf';
 
 const DTRACE = Object.keys(global).filter(key => key.startsWith('DTRACE'));
 
@@ -66,6 +67,8 @@ export default function (
   globalObject.Buffer = global.Buffer;
   globalObject.setImmediate = global.setImmediate;
   globalObject.clearImmediate = global.clearImmediate;
+
+  fixInstanceOfError(globalObject.Error);
 
   return Object.assign(globalObject, deepCyclicCopy(globals));
 }
