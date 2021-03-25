@@ -64,6 +64,9 @@ class NodeEnvironment implements JestEnvironment {
       global.AbortController = AbortController;
     }
     installCommonGlobals(global, config.globals);
+    // Node's error-message stack size is limited at 10, but it's pretty useful
+    // to see more than that when a test fails.
+    global.Error.stackTraceLimit = 100;
     this.moduleMocker = new ModuleMocker(global);
 
     const timerIdToRef = (id: number) => ({

@@ -43,6 +43,7 @@ FAIL __tests__/index.js
 
       at createNoMappedModuleFoundError (../../packages/jest-resolve/build/index.js:558:17)
       at Object.require (index.js:10:1)
+      at Object.require (__tests__/index.js:10:20)
 `;
 
 exports[`moduleNameMapper wrong configuration 1`] = `
@@ -72,4 +73,5 @@ FAIL __tests__/index.js
 
       at createNoMappedModuleFoundError (../../packages/jest-resolve/build/index.js:558:17)
       at Object.require (index.js:10:1)
+      at Object.require (__tests__/index.js:10:20)
 `;

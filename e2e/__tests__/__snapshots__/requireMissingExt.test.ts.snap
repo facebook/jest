@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`shows a proper error from deep requires 1`] = `
+FAIL ./test.js
+  ● Test suite failed to run
+
+    Cannot find module '../package' from 'node_modules/discord.js/src/index.js'
+
+    Require stack:
+      node_modules/discord.js/src/index.js
+      test.js
+
+
+    However, Jest was able to find:
+    	'../package.json'
+
+    You might want to include a file extension in your import, or update your 'moduleFileExtensions', which is currently ['js'].
+
+    See https://jestjs.io/docs/en/configuration#modulefileextensions-arraystring
+
+       8 | 'use strict';
+       9 | 
+    > 10 | require('discord.js');
+         | ^
+      11 | 
+      12 | test('dummy', () => {
+      13 |   expect(1).toBe(1);
+
+      at Resolver.resolveModule (../../packages/jest-resolve/build/index.js:299:11)
+      at Object.<anonymous> (node_modules/discord.js/src/index.js:21:12)
+      at Object.require (test.js:10:1)
+`;
