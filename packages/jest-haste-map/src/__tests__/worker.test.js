@@ -11,7 +11,7 @@
 import * as path from 'path';
 import * as fs from 'graceful-fs';
 import H from '../constants';
-import {getSha1, worker} from '../worker';
+import {extractMetadata, getSha1} from '../worker';
 
 jest.mock('graceful-fs', () => {
   const path = require('path');
@@ -59,14 +59,14 @@ jest.mock('graceful-fs', () => {
 
 const rootDir = '/project';
 
-describe('worker', () => {
+describe('extractMetadata', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('parses JavaScript files and extracts module information', async () => {
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: true,
         filePath: path.join('/project', 'fruits', 'Pear.js'),
         rootDir,
@@ -76,7 +76,7 @@ describe('worker', () => {
     });
 
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: true,
         filePath: path.join('/project', 'fruits', 'Strawberry.js'),
         rootDir,
@@ -88,7 +88,7 @@ describe('worker', () => {
 
   it('accepts a custom dependency extractor', async () => {
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: true,
         dependencyExtractor: path.join(__dirname, 'dependencyExtractor.js'),
         filePath: path.join('/project', 'fruits', 'Pear.js'),
@@ -101,7 +101,7 @@ describe('worker', () => {
 
   it('delegates to hasteImplModulePath for getting the id', async () => {
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: true,
         filePath: path.join('/project', 'fruits', 'Pear.js'),
         hasteImplModulePath: require.resolve('./haste_impl.js'),
@@ -114,7 +114,7 @@ describe('worker', () => {
     });
 
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: true,
         filePath: path.join('/project', 'fruits', 'Strawberry.js'),
         rootDir,
@@ -128,7 +128,7 @@ describe('worker', () => {
 
   it('parses package.json files as haste packages', async () => {
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: true,
         filePath: path.join('/project', 'package.json'),
         rootDir,
@@ -144,7 +144,11 @@ describe('worker', () => {
     let error = null;
 
     try {
-      await worker({computeDependencies: true, filePath: '/kiwi.js', rootDir});
+      await extractMetadata({
+        computeDependencies: true,
+        filePath: '/kiwi.js',
+        rootDir,
+      });
     } catch (err) {
       error = err;
     }
@@ -192,7 +196,7 @@ describe('worker', () => {
 
   it('avoids computing dependencies if not requested and Haste does not need it', async () => {
     expect(
-      await worker({
+      await extractMetadata({
         computeDependencies: false,
         filePath: path.join('/project', 'fruits', 'Pear.js'),
         hasteImplModulePath: path.resolve(__dirname, 'haste_impl.js'),

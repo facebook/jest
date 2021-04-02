@@ -11,7 +11,11 @@ import * as fs from 'graceful-fs';
 import blacklist from './blacklist';
 import H from './constants';
 import * as dependencyExtractor from './lib/dependencyExtractor';
-import type {HasteImpl, WorkerMessage, WorkerMetadata} from './types';
+import type {
+  ExtractMetadataDefinition,
+  ExtractedFileMetaData,
+  HasteImpl,
+} from './types';
 
 const PACKAGE_JSON = path.sep + 'package.json';
 
@@ -22,7 +26,9 @@ function sha1hex(content: string | Buffer): string {
   return createHash('sha1').update(content).digest('hex');
 }
 
-export async function worker(data: WorkerMessage): Promise<WorkerMetadata> {
+export async function extractMetadata(
+  data: ExtractMetadataDefinition,
+): Promise<ExtractedFileMetaData> {
   if (
     data.hasteImplModulePath &&
     data.hasteImplModulePath !== hasteImplModulePath
@@ -35,10 +41,10 @@ export async function worker(data: WorkerMessage): Promise<WorkerMetadata> {
   }
 
   let content: string | undefined;
-  let dependencies: WorkerMetadata['dependencies'];
-  let id: WorkerMetadata['id'];
-  let module: WorkerMetadata['module'];
-  let sha1: WorkerMetadata['sha1'];
+  let dependencies: ExtractedFileMetaData['dependencies'];
+  let id: ExtractedFileMetaData['id'];
+  let module: ExtractedFileMetaData['module'];
+  let sha1: ExtractedFileMetaData['sha1'];
 
   const {computeDependencies, computeSha1, rootDir, filePath} = data;
 
@@ -96,7 +102,9 @@ export async function worker(data: WorkerMessage): Promise<WorkerMetadata> {
   return {dependencies, id, module, sha1};
 }
 
-export async function getSha1(data: WorkerMessage): Promise<WorkerMetadata> {
+export async function getSha1(
+  data: ExtractMetadataDefinition,
+): Promise<ExtractedFileMetaData> {
   const sha1 = data.computeSha1
     ? sha1hex(fs.readFileSync(data.filePath))
     : null;

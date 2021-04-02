@@ -16,8 +16,8 @@ import type {Stats} from 'graceful-fs';
 import type {Config} from '@jest/types';
 import {escapePathForRegex} from 'jest-regex-util';
 import serializer from 'jest-serializer';
-import {Worker} from 'jest-worker';
 import HasteFS from './HasteFS';
+import JestWorkerMetadataExtractor from './JetWorkerMetadataExtractor';
 import HasteModuleMap from './ModuleMap';
 import H from './constants';
 import nodeCrawl = require('./crawlers/node');
@@ -30,22 +30,22 @@ import type {
   ChangeEvent,
   CrawlerOptions,
   EventsQueue,
+  ExtractedFileMetaData,
   FileData,
   FileMetaData,
   HasteRegExp,
   InternalHasteMap,
   HasteMap as InternalHasteMapObject,
+  MetadataExtractor,
   MockData,
   ModuleMapData,
   ModuleMetaData,
-  WorkerMetadata,
 } from './types';
 import FSEventsWatcher = require('./watchers/FSEventsWatcher');
 // @ts-expect-error: not converted to TypeScript - it's a fork: https://github.com/facebook/jest/pull/10919
 import NodeWatcher from './watchers/NodeWatcher';
 // @ts-expect-error: not converted to TypeScript - it's a fork: https://github.com/facebook/jest/pull/5387
 import WatchmanWatcher from './watchers/WatchmanWatcher';
-import {getSha1, worker} from './worker';
 // TypeScript doesn't like us importing from outside `rootDir`, but it doesn't
 // understand `require`.
 const {version: VERSION} = require('../package.json');
@@ -61,6 +61,7 @@ type Options = {
   hasteImplModulePath?: string;
   ignorePattern?: HasteRegExp;
   maxWorkers: number;
+  metadataExtractor?: MetadataExtractor;
   mocksPattern?: string;
   name: string;
   platforms: Array<string>;
@@ -83,7 +84,7 @@ type InternalOptions = {
   forceNodeFilesystemAPI: boolean;
   hasteImplModulePath?: string;
   ignorePattern?: HasteRegExp;
-  maxWorkers: number;
+  metadataExtractor: MetadataExtractor;
   mocksPattern: RegExp | null;
   name: string;
   platforms: Array<string>;
@@ -101,12 +102,17 @@ type Watcher = {
   close(): Promise<void>;
 };
 
-type WorkerInterface = {worker: typeof worker; getSha1: typeof getSha1};
-
 export {default as ModuleMap} from './ModuleMap';
 export type {SerializableModuleMap} from './ModuleMap';
 export type {default as FS} from './HasteFS';
-export type {ChangeEvent, HasteMap as HasteMapObject} from './types';
+export type {
+  ChangeEvent,
+  HasteMap as HasteMapObject,
+  MetadataExtractor,
+  ExtractMetadataDefinition,
+  ExtractedFileMetaData,
+} from './types';
+export {extractMetadata, getSha1} from './worker';
 
 const CHANGE_INTERVAL = 30;
 const MAX_WAIT_TIME = 240000;
@@ -209,13 +215,13 @@ function invariant(condition: unknown, message?: string): asserts condition {
  *
  */
 export default class HasteMap extends EventEmitter {
-  private _buildPromise: Promise<InternalHasteMapObject> | null;
+  private _buildPromise: Promise<InternalHasteMapObject> | null = null;
   private _cachePath: Config.Path;
   private _changeInterval?: ReturnType<typeof setInterval>;
   private _console: Console;
   private _options: InternalOptions;
-  private _watchers: Array<Watcher>;
-  private _worker: WorkerInterface | null;
+  private _watchers: Array<Watcher> = [];
+  private _metadataExtractorInitialized = false;
 
   constructor(options: Options) {
     super();
@@ -230,7 +236,9 @@ export default class HasteMap extends EventEmitter {
       extensions: options.extensions,
       forceNodeFilesystemAPI: !!options.forceNodeFilesystemAPI,
       hasteImplModulePath: options.hasteImplModulePath,
-      maxWorkers: options.maxWorkers,
+      metadataExtractor:
+        options.metadataExtractor ??
+        new JestWorkerMetadataExtractor({maxWorkers: options.maxWorkers}),
       mocksPattern: options.mocksPattern
         ? new RegExp(options.mocksPattern)
         : null,
@@ -296,9 +304,6 @@ export default class HasteMap extends EventEmitter {
       hasteImplHash,
       dependencyExtractorHash,
     );
-    this._buildPromise = null;
-    this._watchers = [];
-    this._worker = null;
   }
 
   static getCacheFilePath(
@@ -490,7 +495,7 @@ export default class HasteMap extends EventEmitter {
     const computeSha1 = this._options.computeSha1 && !fileMetadata[H.SHA1];
 
     // Callback called when the response from the worker is successful.
-    const workerReply = (metadata: WorkerMetadata) => {
+    const workerReply = (metadata: ExtractedFileMetaData) => {
       // `1` for truthy values instead of `true` to save cache space.
       fileMetadata[H.VISITED] = 1;
 
@@ -531,7 +536,7 @@ export default class HasteMap extends EventEmitter {
     // reading them if they aren't important (node_modules).
     if (this._options.retainAllFiles && filePath.includes(NODE_MODULES)) {
       if (computeSha1) {
-        return this._getWorker(workerOptions)
+        return this._getMetadataExtractor(workerOptions)
           .getSha1({
             computeDependencies: this._options.computeDependencies,
             computeSha1,
@@ -607,8 +612,8 @@ export default class HasteMap extends EventEmitter {
       }
     }
 
-    return this._getWorker(workerOptions)
-      .worker({
+    return this._getMetadataExtractor(workerOptions)
+      .extractMetadata({
         computeDependencies: this._options.computeDependencies,
         computeSha1,
         dependencyExtractor: this._options.dependencyExtractor,
@@ -679,15 +684,13 @@ export default class HasteMap extends EventEmitter {
   }
 
   private _cleanup() {
-    const worker = this._worker;
+    const metadataExtractor = this._options.metadataExtractor;
 
-    // @ts-expect-error
-    if (worker && typeof worker.end === 'function') {
-      // @ts-expect-error
-      worker.end();
+    if (metadataExtractor != null) {
+      metadataExtractor.end();
     }
 
-    this._worker = null;
+    this._metadataExtractorInitialized = false;
   }
 
   /**
@@ -697,24 +700,14 @@ export default class HasteMap extends EventEmitter {
     serializer.writeFileSync(this._cachePath, hasteMap);
   }
 
-  /**
-   * Creates workers or parses files and extracts metadata in-process.
-   */
-  private _getWorker(options?: {forceInBand: boolean}): WorkerInterface {
-    if (!this._worker) {
-      if ((options && options.forceInBand) || this._options.maxWorkers <= 1) {
-        this._worker = {getSha1, worker};
-      } else {
-        // @ts-expect-error: assignment of a worker with custom properties.
-        this._worker = new Worker(require.resolve('./worker'), {
-          exposedMethods: ['getSha1', 'worker'],
-          maxRetries: 3,
-          numWorkers: this._options.maxWorkers,
-        }) as WorkerInterface;
-      }
+  private _getMetadataExtractor(
+    options = {forceInBand: false},
+  ): MetadataExtractor {
+    if (!this._metadataExtractorInitialized) {
+      this._options.metadataExtractor.setup(options);
     }
 
-    return this._worker;
+    return this._options.metadataExtractor;
   }
 
   private _crawl(hasteMap: InternalHasteMap) {
