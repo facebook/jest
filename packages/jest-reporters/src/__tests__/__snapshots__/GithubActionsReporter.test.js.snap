@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshots all have results (no update) 1`] = `
+"::error file=/home/runner/work/jest/jest/some.test.js,line=123,col=17::%0A                expect(received).toBe(expected) // Object.is equality%0A%0A                Expected: \\"b\\"%0A                Received: \\"a\\"%0A%0A                  121 | %0A                  122 | 		expect( 'a' ).toBe( 'a' );%0A                > 123 | 		expect( 'a' ).toBe( 'b' );%0A                      | 		              ^%0A                  124 | 	} );%0A                  125 | } );%0A                  126 | %0A%0A                  at Object.<anonymous> (/home/runner/work/jest/jest/some.test.js:123:17)%0A              
+"
+`;
