@@ -135,7 +135,7 @@ export default class Resolver {
     moduleName: string,
     options?: ResolveModuleConfig,
   ): Config.Path | null {
-    const paths = (options && options.paths) || this._options.modulePaths;
+    const paths = options?.paths || this._options.modulePaths;
     const moduleDirectory = this._options.moduleDirectories;
     const key = dirname + path.delimiter + moduleName;
     const defaultPlatform = this._options.defaultPlatform;
@@ -253,7 +253,9 @@ export default class Resolver {
   isCoreModule(moduleName: string): boolean {
     return (
       this._options.hasCoreModules &&
-      isBuiltinModule(moduleName) &&
+      (isBuiltinModule(moduleName) ||
+        (moduleName.startsWith('node:') &&
+          isBuiltinModule(moduleName.slice('node:'.length)))) &&
       !this._isAliasModule(moduleName)
     );
   }
@@ -313,10 +315,8 @@ export default class Resolver {
   getModuleID(
     virtualMocks: Map<string, boolean>,
     from: Config.Path,
-    _moduleName?: string,
+    moduleName = '',
   ): string {
-    const moduleName = _moduleName || '';
-
     const key = from + path.delimiter + moduleName;
     const cachedModuleID = this._moduleIDCache.get(key);
     if (cachedModuleID) {

@@ -1327,15 +1327,19 @@ export default class Runtime {
   }
 
   private _requireCoreModule(moduleName: string) {
-    if (moduleName === 'process') {
+    const moduleWithtoutNodePrefix = moduleName.startsWith('node:')
+      ? moduleName.slice('node:'.length)
+      : moduleName;
+
+    if (moduleWithtoutNodePrefix === 'process') {
       return this._environment.global.process;
     }
 
-    if (moduleName === 'module') {
+    if (moduleWithtoutNodePrefix === 'module') {
       return this._getMockedNativeModule();
     }
 
-    return require(moduleName);
+    return require(moduleWithtoutNodePrefix);
   }
 
   private _importCoreModule(moduleName: string, context: VMContext) {
