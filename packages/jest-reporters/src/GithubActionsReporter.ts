@@ -13,7 +13,7 @@ const newLine = /\n/g;
 const encodedNewLine = '%0A';
 const lineAndColumnInStackTrace = /^.*:([0-9]+):([0-9]+).*$/;
 
-export default class GithubActionReporter extends BaseReporter {
+export default class GithubActionsReporter extends BaseReporter {
   onRunComplete(
     _contexts?: Set<Context>,
     aggregatedResults?: AggregatedResult,
