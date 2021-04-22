@@ -3,8 +3,8 @@
 import React from 'react';
 
 export default class Clock extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {seconds: Date.now() / 1000};
   }
@@ -25,7 +25,7 @@ export default class Clock extends React.Component {
 
   render() {
     return (
-      <p>{this.state.seconds} seconds have ellapsed since the UNIX epoch.</p>
+      <p>{this.state.seconds} seconds have elapsed since the UNIX epoch.</p>
     );
   }
 }
