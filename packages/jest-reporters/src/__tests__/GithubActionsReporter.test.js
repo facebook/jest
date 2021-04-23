@@ -118,6 +118,7 @@ test("reporter returns empty string if GITHUB_ACTIONS isn't set", () => {
   testReporter.onRunComplete(new Set(), aggregatedResults);
   expect(results.join('').replace(/\\/g, '/')).toMatchSnapshot();
 });
+
 test('reporter extracts the correct filename, line, and column', () => {
   process.env.GITHUB_ACTIONS = true;
 
