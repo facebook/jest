@@ -34,7 +34,7 @@ afterEach(() => {
   process.stderr.write = write;
 });
 
-test('snapshots all have results (no update)', () => {
+test('reporter extracts the correct filename, line, and column', () => {
   const aggregatedResults = {
     numFailedTestSuites: 1,
     numFailedTests: 1,
