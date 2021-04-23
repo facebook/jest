@@ -18,6 +18,10 @@ export default class GithubActionsReporter extends BaseReporter {
     _contexts?: Set<Context>,
     aggregatedResults?: AggregatedResult,
   ): void {
+    if (!process.env.GITHUB_ACTIONS) {
+      return;
+    }
+
     const messages = getMessages(aggregatedResults?.testResults);
 
     for (const message of messages) {

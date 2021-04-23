@@ -8,6 +8,7 @@
 
 let GithubActionsReporter;
 
+const env = {...process.env};
 const write = process.stderr.write;
 const globalConfig = {
   rootDir: 'root',
@@ -23,11 +24,13 @@ function requireReporter() {
 }
 
 beforeEach(() => {
+  process.env.GITHUB_ACTIONS = true;
   process.stderr.write = result => results.push(result);
 });
 
 afterEach(() => {
   results = [];
+  process.env = env;
   process.stderr.write = write;
 });
 
