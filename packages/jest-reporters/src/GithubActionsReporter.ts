@@ -11,7 +11,7 @@ import type {Context} from './types';
 
 const newLine = /\n/g;
 const encodedNewLine = '%0A';
-const lineAndColumnInStackTrace = /^.*:([0-9]+):([0-9]+).*$/;
+const lineAndColumnInStackTrace = /^.*?:([0-9]+):([0-9]+).*$/;
 
 export default class GithubActionsReporter extends BaseReporter {
   onRunComplete(
