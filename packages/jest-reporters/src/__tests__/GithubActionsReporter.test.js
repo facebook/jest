@@ -87,20 +87,17 @@ test('snapshots all have results (no update)', () => {
             failureDetails: [Array],
             failureMessages: [
               `
-                expect(received).toBe(expected) // Object.is equality
-
-                Expected: "b"
-                Received: "a"
-
-                  121 | 
-                  122 | 		expect( 'a' ).toBe( 'a' );
-                > 123 | 		expect( 'a' ).toBe( 'b' );
-                      | 		              ^
-                  124 | 	} );
-                  125 | } );
-                  126 | 
-
-                  at Object.<anonymous> (/home/runner/work/jest/jest/some.test.js:123:17)
+                Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n
+                \n
+                Expected: \u001b[32m\"b\"\u001b[39m\n
+                Received: \u001b[31m\"a\"\u001b[39m\n
+                    at Object.<anonymous> (/home/runner/work/jest/jest/some.test.js:4:17)\n
+                    at Object.asyncJestTest (/home/runner/work/jest/jest/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:106:37)\n
+                    at /home/runner/work/jest/jest/node_modules/jest-jasmine2/build/queueRunner.js:45:12\n
+                    at new Promise (<anonymous>)\n
+                    at mapper (/home/runner/work/jest/jest/node_modules/jest-jasmine2/build/queueRunner.js:28:19)\n
+                    at /home/runner/work/jest/jest/node_modules/jest-jasmine2/build/queueRunner.js:75:41\n
+                    at processTicksAndRejections (internal/process/task_queues.js:93:5)
               `,
             ],
             fullName: 'asserts that a === b',
