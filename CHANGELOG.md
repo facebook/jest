@@ -62,6 +62,7 @@
 - `[jest-environment]` [**BREAKING**] Drop support for `runScript` for test environments ([#11155](https://github.com/facebook/jest/pull/11155))
 - `[jest-environment-jsdom]` Use inner realm’s `ArrayBuffer` constructor ([#10885](https://github.com/facebook/jest/pull/10885))
 - `[jest-environment-jsdom]` [**BREAKING**] Remove Node globals `setImmediate` and `clearImmediate` [#11222](https://github.com/facebook/jest/pull/11222)
+- `[jest-environment-jsdom]` [**BREAKING**] Remove Node global `Buffer`
 - `[jest-globals]` [**BREAKING**] Disallow return values other than a `Promise` from hooks and tests ([#10512](https://github.com/facebook/jest/pull/10512))
 - `[jest-globals]` [**BREAKING**] Disallow mixing a done callback and returning a `Promise` from hooks and tests ([#10512](https://github.com/facebook/jest/pull/10512))
 - `[jest-haste-map]` Vendor `NodeWatcher` from `sane` ([#10919](https://github.com/facebook/jest/pull/10919))
