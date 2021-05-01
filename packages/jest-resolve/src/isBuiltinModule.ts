@@ -7,19 +7,11 @@
 
 import module = require('module');
 
-// "private" api
-declare const process: NodeJS.Process & {
-  binding(type: string): Record<string, unknown>;
-};
-
+// TODO: remove when we drop support for node v10 - it is included from node v12
 const EXPERIMENTAL_MODULES = ['worker_threads'];
 
 const BUILTIN_MODULES = new Set(
-  module.builtinModules
-    ? module.builtinModules.concat(EXPERIMENTAL_MODULES)
-    : Object.keys(process.binding('natives'))
-        .filter((module: string) => !/^internal\//.test(module))
-        .concat(EXPERIMENTAL_MODULES),
+  module.builtinModules.concat(EXPERIMENTAL_MODULES),
 );
 
 export default function isBuiltinModule(module: string): boolean {
