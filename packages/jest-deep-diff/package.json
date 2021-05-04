@@ -1,0 +1,34 @@
+{
+  "name": "jest-deep-diff",
+  "version": "27.0.0-next.6",
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "exports": {
+    ".": "./build/index.js",
+    "./package.json": "./package.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebook/jest",
+    "directory": "packages/jest-deep-diff"
+  },
+  "engines": {
+    "node": "^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/facebook/jest/issues"
+  },
+  "dependencies": {
+    "chalk": "^4.0.0",
+    "diff-sequences": "^27.0.0-next.0",
+    "expect": "^27.0.0-next.6",
+    "pretty-format": "^27.0.0-next.6"
+  },
+  "devDependencies": {
+    "fast-check": "^1.23.0",
+    "jest-diff": "^26.1.0",
+    "strip-ansi": "^6.0.0"
+  },
+  "homepage": "https://jestjs.io/",
+  "license": "MIT"
+}

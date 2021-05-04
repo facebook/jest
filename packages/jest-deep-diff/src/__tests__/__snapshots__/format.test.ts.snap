@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`circular values (unexpanded) 1`] = `
+  Object {
+    "x": Object {
+-     "y": [Circular to depth 0],
++     "y": [Circular to depth 1],
+    },
+  }
+`;
+
+exports[`circular values nested circular values 1`] = `
+  Object {
+-   "b": 1,
+    "x": Object {
+      "y": [Circular to depth 0],
+    },
+  }
+`;
+
+exports[`circular values only one side has circularity 1`] = `
+  Object {
+    "x": Object {
+-     "y": [Circular to depth 0],
++     "y": Object {
+        "a": Object {
+          "b": 3,
+        },
+      },
+    },
+  }
+`;
+
+exports[`circular values only one side has circularity 2`] = `
+  Object {
+    "x": Object {
+-     "y": Object {
+        "a": Object {
+          "b": 3,
+        },
+      },
++     "y": [Circular to depth 0],
+    },
+  }
+`;
+
+exports[`circular values other side is primitive 1`] = `
+  Object {
+    "x": Object {
+-     "y": Object {
+-       "x": Object {
+-         "y": [Circular],
+-       },
+-     },
++     "y": 3,
+    },
+  }
+`;
+
+exports[`circular values other side is primitive 2`] = `
+  Object {
+    "x": Object {
+-     "y": 3,
++     "y": Object {
++       "x": Object {
++         "y": [Circular],
++       },
++     },
+    },
+  }
+`;

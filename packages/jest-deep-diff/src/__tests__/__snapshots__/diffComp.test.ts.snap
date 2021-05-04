@@ -1,0 +1,155 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`collapses big diffs to patch format 1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;
+
+exports[`context number of lines: -1 (5 default) 1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;
+
+exports[`context number of lines: 0  1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;
+
+exports[`context number of lines: 1  1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;
+
+exports[`context number of lines: 2  1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;
+
+exports[`context number of lines: 3.1 (5 default) 1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;
+
+exports[`context number of lines: undefined (5 default) 1`] = `
+<g>- Expected</>
+<r>+ Received</>
+
+<d>  Object {</>
+<d>    "test": Array [</>
+<d>      1,</>
+<d>      2,</>
+<d>      3,</>
+<d>      4,</>
+<d>      5,</>
+<d>      6,</>
+<d>      7,</>
+<d>      8,</>
+<g>-     9,</>
+<r>+     10,</>
+<g>-     10,</>
+<r>+     9,</>
+<d>    ],</>
+<d>  }</>
+`;

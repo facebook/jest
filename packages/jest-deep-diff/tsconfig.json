@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "build"
+  },
+  "references": [
+    {
+      "path": "../diff-sequences"
+    },
+    {
+      "path": "../expect"
+    },
+    {
+      "path": "../jest-diff"
+    },
+    {
+      "path": "../pretty-format"
+    }
+  ]
+}

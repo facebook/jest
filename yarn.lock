@@ -8610,6 +8610,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diff-sequences@npm:^26.6.2":
+  version: 26.6.2
+  resolution: "diff-sequences@npm:26.6.2"
+  checksum: dd1eb6e52f0a200228b836876a69c90690003b8991cf7d9264d6e6063acde8fe852084b6a196f2a13f169d309e30c24c457e9c8db617aed186c665efb50af1d8
+  languageName: node
+  linkType: hard
+
 "diff@npm:^4.0.1":
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
@@ -9851,7 +9858,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expect@^27.0.0-next.8, expect@workspace:packages/expect":
+"expect@^27.0.0-next.6, expect@^27.0.0-next.8, expect@workspace:packages/expect":
   version: 0.0.0-use.local
   resolution: "expect@workspace:packages/expect"
   dependencies:
@@ -9977,6 +9984,16 @@ __metadata:
   version: 1.4.0
   resolution: "extsprintf@npm:1.4.0"
   checksum: 092e011574324c5cddd78b5a27f869c2703613c1140eb7763aef8f5b0e33769a9b4c7dbcc50acd39b6afebe79bf66adcec73bf3c84e095c5bcfb42306d128ad0
+  languageName: node
+  linkType: hard
+
+"fast-check@npm:^1.23.0":
+  version: 1.26.0
+  resolution: "fast-check@npm:1.26.0"
+  dependencies:
+    pure-rand: ^2.0.0
+    tslib: ^2.0.0
+  checksum: 64d03575df169b110a3efcf531b6d8cc707984bb8a2f0f448f36a86bd73392eb6c3871c3c9512ab2042c8d65d425d22ce162cf18187261d9716d60646c4f6513
   languageName: node
   linkType: hard
 
@@ -12791,6 +12808,20 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
+"jest-deep-diff@workspace:packages/jest-deep-diff":
+  version: 0.0.0-use.local
+  resolution: "jest-deep-diff@workspace:packages/jest-deep-diff"
+  dependencies:
+    chalk: ^4.0.0
+    diff-sequences: ^27.0.0-next.0
+    expect: ^27.0.0-next.6
+    fast-check: ^1.23.0
+    jest-diff: ^26.1.0
+    pretty-format: ^27.0.0-next.6
+    strip-ansi: ^6.0.0
+  languageName: unknown
+  linkType: soft
+
 "jest-diff@^27.0.0-next.8, jest-diff@workspace:packages/jest-diff":
   version: 0.0.0-use.local
   resolution: "jest-diff@workspace:packages/jest-diff"
@@ -12813,6 +12844,18 @@ fsevents@^1.2.7:
     jest-get-type: ^25.2.6
     pretty-format: ^25.5.0
   checksum: 14a2634ecb159a9a2f061239db1cea0c889e7a72ab05bd1fa799db30efca2ce79291372823f5e3468d9bc856f404f312e44e89c171eea8132b5835d12f71d0b3
+  languageName: node
+  linkType: hard
+
+"jest-diff@npm:^26.1.0":
+  version: 26.6.2
+  resolution: "jest-diff@npm:26.6.2"
+  dependencies:
+    chalk: ^4.0.0
+    diff-sequences: ^26.6.2
+    jest-get-type: ^26.3.0
+    pretty-format: ^26.6.2
+  checksum: 05d0f1bdba147a026eab4121a73a69ee3df21aec59ecd34659d665ee0663e518636650b435d248974ab5aceb345de9bfcc035efd01df723fe788756a07c8d046
   languageName: node
   linkType: hard
 
@@ -17603,7 +17646,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pretty-format@^27.0.0-next.8, pretty-format@workspace:packages/pretty-format":
+"pretty-format@^27.0.0-next.6, pretty-format@^27.0.0-next.8, pretty-format@workspace:packages/pretty-format":
   version: 0.0.0-use.local
   resolution: "pretty-format@workspace:packages/pretty-format"
   dependencies:
@@ -17874,6 +17917,13 @@ fsevents@^1.2.7:
   version: 1.3.0
   resolution: "pure-color@npm:1.3.0"
   checksum: 73ceb18cf945bd632e98b068dff16fb50178a067df3af8c7aa5c2bbd847ed3f3d158e7dd0f6ff705c23fe69bf215ca94af36cd4ca7cef4da0ce57031f8238a7a
+  languageName: node
+  linkType: hard
+
+"pure-rand@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "pure-rand@npm:2.0.0"
+  checksum: aa3d2c8f1848b320955c383253e28f512ee22c343fa4e0eda0f4a00326a8cc9cef459516e43c2cc8375b787a22a7d907326928d79cedc6dafe2175d709482bb1
   languageName: node
   linkType: hard
 
