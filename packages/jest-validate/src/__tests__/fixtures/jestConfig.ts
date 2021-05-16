@@ -24,6 +24,7 @@ const defaultConfig = {
   bail: 0,
   browser: false,
   cacheDirectory: path.join(tmpdir(), 'jest'),
+  cacheIdentifier: 'key',
   clearMocks: false,
   coveragePathIgnorePatterns: [NODE_MODULES_REGEXP],
   coverageReporters: ['json', 'text', 'lcov', 'clover'],

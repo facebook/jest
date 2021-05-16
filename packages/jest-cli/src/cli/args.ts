@@ -131,6 +131,11 @@ export const options = {
       ' dependency information.',
     type: 'string',
   },
+  cacheIdentifier: {
+    description:
+      'A unique key, when change, forces the cache key to be changed',
+    type: 'string',
+  },
   changedFilesWithAncestor: {
     default: undefined,
     description:

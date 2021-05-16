@@ -18,6 +18,7 @@ const defaultOptions: Config.DefaultOptions = {
   bail: 0,
   cache: true,
   cacheDirectory: getCacheDirectory(),
+  cacheIdentifier: 'key',
   changedFilesWithAncestor: false,
   clearMocks: false,
   collectCoverage: false,

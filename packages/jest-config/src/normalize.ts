@@ -950,6 +950,7 @@ export default async function normalize(
       }
       case 'automock':
       case 'cache':
+      case 'cacheIdentifier':
       case 'changedSince':
       case 'changedFilesWithAncestor':
       case 'clearMocks':

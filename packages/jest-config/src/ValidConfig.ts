@@ -17,6 +17,7 @@ const initialOptions: Config.InitialOptions = {
   bail: multipleValidOptions(false, 0),
   cache: true,
   cacheDirectory: '/tmp/user/jest',
+  cacheIdentifier: 'key',
   changedFilesWithAncestor: false,
   changedSince: 'master',
   clearMocks: false,
