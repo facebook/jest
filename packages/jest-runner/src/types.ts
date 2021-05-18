@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Emittery = require('emittery');
+import type Emittery = require('emittery');
 import type {JestEnvironment} from '@jest/environment';
 import type {
   AssertionResult,
