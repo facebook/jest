@@ -75,6 +75,9 @@ export type Expect = {
   hasAssertions(): void;
   setState(state: Partial<MatcherState>): void;
 
+  // TODO: this is added by test runners, not `expect` itself
+  deadline(): number;
+
   any(expectedObject: any): AsymmetricMatcher;
   anything(): AsymmetricMatcher;
   arrayContaining(sample: Array<unknown>): AsymmetricMatcher;

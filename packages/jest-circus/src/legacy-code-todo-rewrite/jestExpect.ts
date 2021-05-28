@@ -14,6 +14,7 @@ import {
   toThrowErrorMatchingInlineSnapshot,
   toThrowErrorMatchingSnapshot,
 } from 'jest-snapshot';
+import {deadline} from '../deadlineTimeout';
 
 export type Expect = typeof expect;
 
@@ -27,6 +28,7 @@ export default (config: Pick<Config.GlobalConfig, 'expand'>): Expect => {
   });
 
   expect.addSnapshotSerializer = addSerializer;
+  expect.deadline = deadline;
 
   return expect;
 };
