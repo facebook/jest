@@ -26,7 +26,7 @@ afterEach(() => {
   cleanup(tempDir);
 });
 
-test.skip('handles circular inequality properly', async () => {
+test('handles circular inequality properly', async () => {
   const testFileContent = `
     it('test', () => {
       const foo = {};
