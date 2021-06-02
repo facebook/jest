@@ -8,6 +8,11 @@
 
 ### Performance
 
+## 27.0.4
+
+### Features
+- `[docs]` Add jest-mysql preset guide ([#11223](https://github.com/facebook/jest/pull/11223))
+
 ## 27.0.3
 
 ### Fixes
