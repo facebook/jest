@@ -8,9 +8,11 @@
 import * as fs from 'graceful-fs';
 import pnpResolver from 'jest-pnp-resolver';
 import {AsyncOpts, SyncOpts, sync as resolveSync} from 'resolve';
-import resolveAsync = require('resolve');
 import type {Config} from '@jest/types';
 import {tryRealpath} from 'jest-util';
+
+// QUESTION: What is a better way to import this?
+const resolveAsync = require('resolve/lib/async');
 
 type ResolverOptions = {
   basedir: Config.Path;
