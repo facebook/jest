@@ -419,7 +419,7 @@ export class ResolverAsync extends BaseResolver {
         paths: paths ? (nodePaths || []).concat(paths) : nodePaths,
         rootDir: options.rootDir,
       });
-      return result.path;
+      return result;
     } catch (e) {
       if (options.throwIfNotFound) {
         throw e;

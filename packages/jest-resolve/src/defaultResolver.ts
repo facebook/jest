@@ -11,7 +11,6 @@ import {AsyncOpts, SyncOpts, sync as resolveSync} from 'resolve';
 import resolveAsync = require('resolve');
 import type {Config} from '@jest/types';
 import {tryRealpath} from 'jest-util';
-import type {PackageMeta} from './types';
 
 type ResolverOptions = {
   basedir: Config.Path;
@@ -54,24 +53,25 @@ export default function defaultResolverSync(
 export function defaultResolverAsync(
   path: Config.Path,
   options: ResolverOptions,
-): Promise<{path: Config.Path; meta?: PackageMeta}> {
+): Promise<Config.Path> {
   // Yarn 2 adds support to `resolve` automatically so the pnpResolver is only
   // needed for Yarn 1 which implements version 1 of the pnp spec
   if (process.versions.pnp === '1') {
     // QUESTION: do we need an async version of pnpResolver?
-    return Promise.resolve({path: pnpResolver(path, options)});
+    return Promise.resolve(pnpResolver(path, options));
   }
 
   return new Promise((resolve, reject) => {
-    function resolveCb(err: Error | null, result?: string, meta?: PackageMeta) {
+    function resolveCb(err: Error | null, result?: string) {
       if (err) {
         reject(err);
       }
       if (result) {
-        resolve({meta, path: realpathSync(result)});
+        resolve(realpathSync(result));
       }
     }
-    resolveAsync(path, getAsyncResolveOptions(options), resolveCb);
+    const opts = getAsyncResolveOptions(options);
+    resolveAsync(path, opts, resolveCb);
   });
 }
 
