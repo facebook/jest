@@ -23,3 +23,9 @@ type ModuleNameMapperConfig = {
   regex: RegExp;
   moduleName: string | Array<string>;
 };
+
+export interface PackageMeta {
+  name: string;
+  version: string;
+  [key: string]: any;
+}
