@@ -433,13 +433,8 @@ export class ResolverAsync extends BaseResolver {
     moduleName: string,
     options?: ResolveModuleConfig,
   ): Promise<Config.Path | null> {
-    const {
-      extensions,
-      key,
-      moduleDirectory,
-      paths,
-      skipResolution,
-    } = this._prepareForResolution(dirname, moduleName, options);
+    const {extensions, key, moduleDirectory, paths, skipResolution} =
+      this._prepareForResolution(dirname, moduleName, options);
 
     let module;
 
@@ -711,13 +706,8 @@ export default class Resolver extends BaseResolver {
     moduleName: string,
     options?: ResolveModuleConfig,
   ): Config.Path | null {
-    const {
-      extensions,
-      key,
-      moduleDirectory,
-      paths,
-      skipResolution,
-    } = this._prepareForResolution(dirname, moduleName, options);
+    const {extensions, key, moduleDirectory, paths, skipResolution} =
+      this._prepareForResolution(dirname, moduleName, options);
 
     let module;
 
