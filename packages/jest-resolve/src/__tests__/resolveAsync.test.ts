@@ -89,12 +89,12 @@ describe('findNodeModuleAsync', () => {
     userResolverAsync.mockImplementation(() => Promise.resolve('module'));
 
     const newPath = await ResolverAsync.findNodeModuleAsync('test', {
+      asyncResolver: require.resolve('../__mocks__/userResolverAsync'),
       basedir: '/',
       browser: true,
       extensions: ['js'],
       moduleDirectory: ['node_modules'],
       paths: ['/something'],
-      asyncResolver: require.resolve('../__mocks__/userResolverAsync'),
     });
 
     expect(newPath).toBe('module');
@@ -119,8 +119,8 @@ describe('findNodeModuleAsync', () => {
     );
 
     await ResolverAsync.findNodeModuleAsync('test', {
-      basedir: '/',
       asyncResolver: require.resolve('../__mocks__/userResolverAsync'),
+      basedir: '/',
     });
 
     expect(mockResolveSync).toHaveBeenCalledWith(
@@ -230,11 +230,12 @@ describe('resolveModuleAsync', () => {
 });
 
 describe('getMockModuleAsync', () => {
-  it.only('is possible to use custom resolver to resolve deps inside mock modules with moduleNameMapper', async () => {
+  it('is possible to use custom resolver to resolve deps inside mock modules with moduleNameMapper', async () => {
     userResolverAsync.mockImplementation(() => Promise.resolve('module'));
 
     const moduleMap = ModuleMap.create('/');
     const resolver = new ResolverAsync(moduleMap, {
+      asyncResolver: require.resolve('../__mocks__/userResolverAsync'),
       extensions: ['.js'],
       moduleNameMapper: [
         {
@@ -242,7 +243,6 @@ describe('getMockModuleAsync', () => {
           regex: /(.*)/,
         },
       ],
-      asyncResolver: require.resolve('../__mocks__/userResolverAsync'),
     } as ResolverConfig);
     const src = require.resolve('../');
 

@@ -10,7 +10,6 @@ import pnpResolver from 'jest-pnp-resolver';
 import {AsyncOpts, SyncOpts, sync as resolveSync} from 'resolve';
 import type {Config} from '@jest/types';
 import {tryRealpath} from 'jest-util';
-
 // QUESTION: What is a better way to import this?
 const resolveAsync = require('resolve/lib/async');
 
