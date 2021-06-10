@@ -285,22 +285,19 @@ const runPrettier = (
   // Snapshots have now been inserted. Run prettier to make sure that the code is
   // formatted, except snapshot indentation. Snapshots cannot be formatted until
   // after the initial format because we don't know where the call expression
-  // will be placed (specifically its indentation).
-  let newSourceFile = prettier.format(sourceFileWithSnapshots, {
-    ...config,
-    filepath: sourceFilePath,
-  });
-
-  if (newSourceFile !== sourceFileWithSnapshots) {
-    // prettier moved things around, run it again to fix snapshot indentations.
-    newSourceFile = prettier.format(newSourceFile, {
+  // will be placed (specifically its indentation), so we have to do two
+  // prettier.format calls back-to-back.
+  return prettier.format(
+    prettier.format(sourceFileWithSnapshots, {
+      ...config,
+      filepath: sourceFilePath,
+    }),
+    {
       ...config,
       filepath: sourceFilePath,
       parser: createFormattingParser(snapshotMatcherNames, inferredParser),
-    });
-  }
-
-  return newSourceFile;
+    },
+  );
 };
 
 // This parser formats snapshots to the correct indentation.
