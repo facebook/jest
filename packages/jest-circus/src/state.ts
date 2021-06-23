@@ -8,10 +8,10 @@
 import type {Circus} from '@jest/types';
 import eventHandler from './eventHandler';
 import formatNodeAssertErrors from './formatNodeAssertErrors';
-import {STATE_SYM} from './types';
+import {EVENT_HANDLERS, STATE_SYM} from './types';
 import {makeDescribe} from './utils';
 
-const eventHandlers: Array<Circus.EventHandler> = [
+global[EVENT_HANDLERS] = global[EVENT_HANDLERS] || [
   eventHandler,
   formatNodeAssertErrors,
 ];
@@ -46,17 +46,24 @@ export const setState = (state: Circus.State): Circus.State =>
   (global[STATE_SYM] = state);
 
 export const dispatch = async (event: Circus.AsyncEvent): Promise<void> => {
-  for (const handler of eventHandlers) {
+  for (const handler of global[EVENT_HANDLERS]) {
     await handler(event, getState());
   }
 };
 
 export const dispatchSync = (event: Circus.SyncEvent): void => {
-  for (const handler of eventHandlers) {
+  for (const handler of global[EVENT_HANDLERS]) {
     handler(event, getState());
   }
 };
 
 export const addEventHandler = (handler: Circus.EventHandler): void => {
-  eventHandlers.push(handler);
+  global[EVENT_HANDLERS].push(handler);
+};
+
+export const removeEventHandler = (handler: Circus.EventHandler): void => {
+  const index = global[EVENT_HANDLERS].lastIndexOf(handler);
+  if (index !== -1) {
+    global[EVENT_HANDLERS].splice(index, 1);
+  }
 };

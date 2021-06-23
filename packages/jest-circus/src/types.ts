@@ -19,6 +19,9 @@ export const RETRY_TIMES = Symbol.for(
 export const TEST_TIMEOUT_SYMBOL = Symbol.for(
   'TEST_TIMEOUT_SYMBOL',
 ) as unknown as 'TEST_TIMEOUT_SYMBOL';
+export const EVENT_HANDLERS = Symbol.for(
+  'EVENT_HANDLERS',
+) as unknown as 'EVENT_HANDLERS';
 
 declare global {
   module NodeJS {
@@ -26,6 +29,7 @@ declare global {
       STATE_SYM_SYMBOL: Circus.State;
       RETRY_TIMES_SYMBOL: string;
       TEST_TIMEOUT_SYMBOL: number;
+      EVENT_HANDLERS: Array<Circus.EventHandler>;
       expect: typeof expect;
     }
   }

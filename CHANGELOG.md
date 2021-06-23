@@ -4,6 +4,8 @@
 
 ### Fixes
 
+- `[jest-circus]` Shares events with event handlers among imports ([#11483](https://github.com/facebook/jest/pull/11483))
+
 ### Chore & Maintenance
 
 ### Performance
