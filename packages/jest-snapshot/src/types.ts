@@ -20,8 +20,15 @@ export type MatchSnapshotConfig = {
   inlineSnapshot?: string;
   isInline: boolean;
   matcherName: string;
+  snapshotName?: string;
   properties?: object;
   received: any;
+};
+
+export type SnapshotNameConfig = {
+  hint?: string;
+  snapshotName?: string;
+  currentTestName?: string;
 };
 
 export type SnapshotData = Record<string, string>;

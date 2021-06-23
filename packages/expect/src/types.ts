@@ -322,6 +322,19 @@ export interface Matchers<R> {
    */
   toMatchSnapshot(snapshotName?: string): R;
   /**
+   * This ensures that a value matches the most recent snapshot.
+   * Check out [the Snapshot Testing guide](https://jestjs.io/docs/snapshot-testing) for more information.
+   */
+  toMatchNamedSnapshot<T extends {[P in keyof R]: unknown}>(
+    propertyMatchers: Partial<T>,
+    snapshot?: string,
+  ): R;
+  /**
+   * This ensures that a value matches the most recent snapshot.
+   * Check out [the Snapshot Testing guide](https://jestjs.io/docs/snapshot-testing) for more information.
+   */
+  toMatchNamedSnapshot(snapshotName?: string): R;
+  /**
    * This ensures that a value matches the most recent snapshot with property matchers.
    * Instead of writing the snapshot value to a .snap file, it will be written into the source code automatically.
    * Check out [the Snapshot Testing guide](https://jestjs.io/docs/snapshot-testing) for more information.

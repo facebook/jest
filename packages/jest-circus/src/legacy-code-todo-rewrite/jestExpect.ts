@@ -10,6 +10,7 @@ import expect = require('expect');
 import {
   addSerializer,
   toMatchInlineSnapshot,
+  toMatchNamedSnapshot,
   toMatchSnapshot,
   toThrowErrorMatchingInlineSnapshot,
   toThrowErrorMatchingSnapshot,
@@ -21,6 +22,7 @@ export default (config: Pick<Config.GlobalConfig, 'expand'>): Expect => {
   expect.setState({expand: config.expand});
   expect.extend({
     toMatchInlineSnapshot,
+    toMatchNamedSnapshot,
     toMatchSnapshot,
     toThrowErrorMatchingInlineSnapshot,
     toThrowErrorMatchingSnapshot,

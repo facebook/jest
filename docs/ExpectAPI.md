@@ -1238,6 +1238,16 @@ You can provide an optional `propertyMatchers` object argument, which has asymme
 
 You can provide an optional `hint` string argument that is appended to the test name. Although Jest always appends a number at the end of a snapshot name, short descriptive hints might be more useful than numbers to differentiate **multiple** snapshots in a **single** `it` or `test` block. Jest sorts snapshots by name in the corresponding `.snap` file.
 
+### `.toMatchNamedSnapshot(propertyMatchers?, snapshotName?)`
+
+This ensures that a value matches the most recent snapshot. Check out [the Snapshot Testing guide](SnapshotTesting.md) for more information.
+
+You can provide an optional `propertyMatchers` object argument, which has asymmetric matchers as values of a subset of expected properties, **if** the received value will be an **object** instance. It is like `toMatchObject` with flexible criteria for a subset of properties, followed by a snapshot test as exact criteria for the rest of the properties.
+
+You can provide an optional `snapshotName` string argument that functions as the test name. By providing a snapshot name (as opposed to letting Jest infer the name from context) snapshot names can be guaranteed to be consistent across test runs, whatever the context at the time of evaluation. Jest always appends a number at the end of a snapshot name.
+
+Jest sorts snapshots by name in the corresponding `.snap` file.
+
 ### `.toMatchInlineSnapshot(propertyMatchers?, inlineSnapshot)`
 
 Ensures that a value matches the most recent snapshot.

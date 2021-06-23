@@ -143,7 +143,7 @@ it('will fail every time', () => {
   const user = {
     createdAt: new Date(),
     id: Math.floor(Math.random() * 20),
-    name: 'LeBron James',
+    name: 'Ben Simmons',
   };
 
   expect(user).toMatchSnapshot();
@@ -154,7 +154,7 @@ exports[`will fail every time 1`] = `
 Object {
   "createdAt": 2018-05-19T23:36:09.816Z,
   "id": 3,
-  "name": "LeBron James",
+  "name": "Ben Simmons",
 }
 `;
 ```
@@ -166,7 +166,7 @@ it('will check the matchers and pass', () => {
   const user = {
     createdAt: new Date(),
     id: Math.floor(Math.random() * 20),
-    name: 'LeBron James',
+    name: 'Ben Simmons',
   };
 
   expect(user).toMatchSnapshot({
@@ -180,7 +180,7 @@ exports[`will check the matchers and pass 1`] = `
 Object {
   "createdAt": Any<Date>,
   "id": Any<Number>,
-  "name": "LeBron James",
+  "name": "Ben Simmons",
 }
 `;
 ```
@@ -238,6 +238,8 @@ Now, every time the snapshot test case runs, `Date.now()` will return `148236336
 ### 3. Use descriptive snapshot names
 
 Always strive to use descriptive test and/or snapshot names for snapshots. The best names describe the expected snapshot content. This makes it easier for reviewers to verify the snapshots during review, and for anyone to know whether or not an outdated snapshot is the correct behavior before updating.
+
+The default matcher, `toMatchSnapshot`, infers the name based on the test function context when the snapshot is evaluated. This can cause snapshots in tests that are run concurrently to have different names on each test run. If you want to guarantee consistent names, you can use `toMatchNamedSnapshot` as an alternative matcher.
 
 For example, compare:
 
