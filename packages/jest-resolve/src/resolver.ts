@@ -252,7 +252,7 @@ export default class Resolver {
 
   isCoreModule(moduleName: string): boolean {
     if (moduleName.startsWith('node:')) {
-      return true;
+      moduleName = moduleName.replace('node:', '');
     }
     return (
       this._options.hasCoreModules &&
