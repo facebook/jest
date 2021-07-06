@@ -13,9 +13,9 @@ import deepCyclicCopy from './deepCyclicCopy';
 const DTRACE = Object.keys(global).filter(key => key.startsWith('DTRACE'));
 
 export default function (
-  globalObject: NodeJS.Global,
+  globalObject: typeof globalThis,
   globals: Config.ConfigGlobals,
-): NodeJS.Global & Config.ConfigGlobals {
+): typeof globalThis & Config.ConfigGlobals {
   globalObject.process = createProcessObject();
 
   const symbol = globalObject.Symbol as unknown as SymbolConstructor;

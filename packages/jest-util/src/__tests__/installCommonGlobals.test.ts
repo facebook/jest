@@ -10,7 +10,7 @@ import {createContext, runInContext} from 'vm';
 let installCommonGlobals: typeof import('../installCommonGlobals').default;
 let fake: jest.Mock;
 
-function getGlobal(): NodeJS.Global {
+function getGlobal(): typeof globalThis {
   return runInContext('this', createContext());
 }
 

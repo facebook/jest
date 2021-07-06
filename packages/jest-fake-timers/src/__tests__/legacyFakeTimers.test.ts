@@ -31,7 +31,7 @@ describe('FakeTimers', () => {
 
   describe('construction', () => {
     it('installs setTimeout mock', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -43,7 +43,7 @@ describe('FakeTimers', () => {
     });
 
     it('accepts to promisify setTimeout mock', async () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -57,7 +57,7 @@ describe('FakeTimers', () => {
     });
 
     it('installs clearTimeout mock', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -69,7 +69,7 @@ describe('FakeTimers', () => {
     });
 
     it('installs setInterval mock', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -81,7 +81,7 @@ describe('FakeTimers', () => {
     });
 
     it('installs clearInterval mock', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -98,7 +98,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick: origNextTick,
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -114,7 +114,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setImmediate: origSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -132,7 +132,7 @@ describe('FakeTimers', () => {
         clearImmediate: origClearImmediate,
         process,
         setImmediate: origSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -146,7 +146,7 @@ describe('FakeTimers', () => {
     it('does not mock requestAnimationFrame if not available', () => {
       const global = {
         process,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -162,7 +162,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         requestAnimationFrame: origRequestAnimationFrame,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -177,7 +177,7 @@ describe('FakeTimers', () => {
     it('does not mock cancelAnimationFrame if not available on global', () => {
       const global = {
         process,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -193,7 +193,7 @@ describe('FakeTimers', () => {
       const global = {
         cancelAnimationFrame: origCancelAnimationFrame,
         process,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -212,7 +212,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick: () => {},
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -245,7 +245,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick,
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -264,7 +264,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick: () => {},
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -292,7 +292,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick: nativeNextTick,
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -320,7 +320,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setImmediate: nativeSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -348,7 +348,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick: nativeNextTick,
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -376,7 +376,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setImmediate: nativeSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -404,7 +404,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setImmediate: nativeSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -432,7 +432,7 @@ describe('FakeTimers', () => {
         process: {
           nextTick: () => {},
         },
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -465,7 +465,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: () => {},
         process,
         requestAnimationFrame: () => {},
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -531,7 +531,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -544,7 +544,7 @@ describe('FakeTimers', () => {
     });
 
     it('only runs a setTimeout callback once (ever)', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -565,7 +565,7 @@ describe('FakeTimers', () => {
     });
 
     it('runs callbacks with arguments after the interval', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -588,7 +588,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
 
       const timers = new FakeTimers({
         config,
@@ -607,7 +607,7 @@ describe('FakeTimers', () => {
     });
 
     it('throws before allowing infinite recursion', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -632,7 +632,7 @@ describe('FakeTimers', () => {
     });
 
     it('also clears ticks', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -658,7 +658,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: () => {},
         process,
         requestAnimationFrame: () => {},
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -728,7 +728,7 @@ describe('FakeTimers', () => {
     });
 
     it('does nothing when no timers have been scheduled', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -740,7 +740,7 @@ describe('FakeTimers', () => {
       timers.advanceTimersByTime(100);
     });
     it('throws before allowing infinite recursion', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -771,7 +771,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: () => {},
         process,
         requestAnimationFrame: () => {},
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -834,7 +834,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: () => {},
         process,
         requestAnimationFrame: () => {},
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -880,7 +880,7 @@ describe('FakeTimers', () => {
     });
 
     it('setTimeout inside setTimeout', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -908,7 +908,7 @@ describe('FakeTimers', () => {
     });
 
     it('does nothing when no timers have been scheduled', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -923,7 +923,7 @@ describe('FakeTimers', () => {
 
   describe('reset', () => {
     it('resets all pending setTimeouts', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -941,7 +941,7 @@ describe('FakeTimers', () => {
     });
 
     it('resets all pending setIntervals', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -963,7 +963,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: () => {},
         process,
         requestAnimationFrame: () => {},
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -986,7 +986,7 @@ describe('FakeTimers', () => {
           nextTick: () => {},
         },
         setImmediate: () => {},
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1006,7 +1006,7 @@ describe('FakeTimers', () => {
     });
 
     it('resets current advanceTimersByTime time cursor', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1036,7 +1036,7 @@ describe('FakeTimers', () => {
         process,
         requestAnimationFrame: () => {},
         setImmediate: nativeSetImmediate,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
 
       const timers = new FakeTimers({
         config,
@@ -1104,7 +1104,7 @@ describe('FakeTimers', () => {
     });
 
     it('does not run timers that were cleared in another timer', () => {
-      const global = {process} as unknown as NodeJS.Global;
+      const global = {process} as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1137,7 +1137,7 @@ describe('FakeTimers', () => {
         process,
         setInterval: nativeSetInterval,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1187,7 +1187,7 @@ describe('FakeTimers', () => {
         process,
         setInterval: nativeSetInterval,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1246,7 +1246,7 @@ describe('FakeTimers', () => {
       const global = {
         process,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1283,7 +1283,7 @@ describe('FakeTimers', () => {
         process,
         setInterval: nativeSetInterval,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1312,7 +1312,7 @@ describe('FakeTimers', () => {
 
       const global = {
         process: {nextTick: nativeProcessNextTick},
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1338,7 +1338,7 @@ describe('FakeTimers', () => {
         clearImmediate: nativeClearImmediate,
         process,
         setImmediate: nativeSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1366,7 +1366,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: nativeCancelAnimationFrame,
         process,
         requestAnimationFrame: nativeRequestAnimationFrame,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,
@@ -1402,7 +1402,7 @@ describe('FakeTimers', () => {
         process,
         setInterval: nativeSetInterval,
         setTimeout: nativeSetTimeout,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1431,7 +1431,7 @@ describe('FakeTimers', () => {
 
       const global = {
         process: {nextTick: nativeProcessNextTick},
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const timers = new FakeTimers({
         config,
         global,
@@ -1457,7 +1457,7 @@ describe('FakeTimers', () => {
         clearImmediate: nativeClearImmediate,
         process,
         setImmediate: nativeSetImmediate,
-      } as unknown as NodeJS.Global;
+      } as unknown as typeof globalThis;
       const fakeTimers = new FakeTimers({
         config,
         global,
@@ -1485,7 +1485,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: nativeCancelAnimationFrame,
         process,
         requestAnimationFrame: nativeRequestAnimationFrame,
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const fakeTimers = new FakeTimers({
         config,
         global,
@@ -1573,7 +1573,7 @@ describe('FakeTimers', () => {
         cancelAnimationFrame: () => {},
         process,
         requestAnimationFrame: () => {},
-      } as unknown as NodeJS.Global & Window;
+      } as unknown as typeof globalThis & Window;
       const timers = new FakeTimers({
         config,
         global,

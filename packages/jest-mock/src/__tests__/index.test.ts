@@ -14,7 +14,7 @@ import {ModuleMocker, fn, spyOn} from '../';
 describe('moduleMocker', () => {
   let moduleMocker: ModuleMocker;
   let mockContext: Context;
-  let mockGlobals: NodeJS.Global;
+  let mockGlobals: typeof globalThis;
 
   beforeEach(() => {
     mockContext = vm.createContext();
