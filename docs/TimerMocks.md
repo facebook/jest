@@ -24,6 +24,7 @@ module.exports = timerGame;
 // __tests__/timerGame-test.js
 'use strict';
 
+// Allows invocation without running the timer
 jest.useFakeTimers();
 
 test('waits 1 second before ending the game', () => {
