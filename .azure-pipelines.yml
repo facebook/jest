@@ -1,7 +1,13 @@
 #
 # Azure Pipelines configuration for building and testing Jest on Linux, Windows, and macOS.
 #
-
+    
+trigger:
+  branches:
+    include:
+    - '*'  
+    - refs/tags/*
+    
 jobs:
   - job: Linux
     pool:
@@ -28,6 +34,24 @@ jobs:
         displayName: 'Install Mercurial'
       - template: .azure-pipelines-steps.yml
 
+  - job: GitHub_Release
+    displayName: Release on GitHub
+    dependsOn: 
+    - Windows
+    - macOs
+    - Linux
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v24.'))  
+    steps:
+    - task: GitHubRelease@0
+      displayName: 'GitHub release (create)'
+      inputs:
+        gitHubConnection: 'github-zenithworks'
+        title: Jest Release- $(Build.SourceBranchName)
+        releaseNotesSource: input
+        releaseNotes: |            
+          Jest - Javascript Testing Framework 
+          [Release notes](https://github.com/facebook/jest/blob/master/CHANGELOG.md)   |   [Documentation](https://jestjs.io/docs/en/getting-started.html)  |   [Jest Website](https://jestjs.io/en/)     
+                    
 variables:
   # Used by chalk. Ensures output from Jest includes ANSI escape characters that are needed to match test snapshots.
   FORCE_COLOR: 1
