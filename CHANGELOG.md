@@ -808,6 +808,7 @@
 - `[jest-validate]` [**BREAKING**] Use ESM exports ([#8874](https://github.com/facebook/jest/pull/8874))
 - `[jest-types]` Mark `InitialOptions` as `Partial` ([#8848](https://github.com/facebook/jest/pull/8848))
 - `[jest-config]` Refactor `normalize` to be more type safe ([#8848](https://github.com/facebook/jest/pull/8848))
+- `[*]` Added Dockerfile for Jest Development ([#9109](https://github.com/facebook/jest/pull/9109))
 
 ## 24.9.0
 

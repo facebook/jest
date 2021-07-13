@@ -32,6 +32,28 @@ _Before_ submitting a pull request, please make sure the following is done…
 
     Note: Replace `<your_username>` with your GitHub username
 
+1.  Run Jest with [Docker](https://docs.docker.com/engine/docker-overview/) (Optional) or continue reading for manual instructions.
+
+    1. If you haven't already, [Install Docker](https://docs.docker.com/install/).
+
+    1. Navigate to the `/jest` directory. You should be able to see the `Dockerfile` file when you run `ls`.
+
+    1. Build the Jest image (may take a few minutes):
+
+    ```sh
+    docker build -t jest .
+    ```
+
+    1. Run the Jest image:
+
+    ```sh
+    docker run --volume="YOUR_PATH_TO_JEST:/usr/src/app" --rm jest:latest
+    ```
+
+    1. The `yarn run watch` command will watch the `/packages` directory for file changes. See `package.json` for a full list of commands. [Learn how to run commands in a container](https://docs.docker.com/engine/reference/commandline/exec/) or visit the [official Docker docs](https://docs.docker.com/) for other Docker related questions.
+
+    1. **Skip to step #8 and continue reading.**
+
 1.  Jest uses [Yarn](https://code.facebook.com/posts/1840075619545360) for running development scripts. If you haven't already done so, please [install yarn](https://yarnpkg.com/en/docs/install).
 
 1.  Make sure you have `python` installed. Python is required by [node-gyp](https://github.com/nodejs/node-gyp) that is used when running `yarn install`.
