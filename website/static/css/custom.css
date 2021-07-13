@@ -333,3 +333,10 @@ circle.run-circle:nth-child(3) {
 circle.run-circle:nth-child(4) {
   animation-delay: -3.3s;
 }
+[data-theme='light'] .shiki.nord {
+  display: none;
+}
+
+[data-theme='dark'] .shiki.min-light {
+  display: none;
+}

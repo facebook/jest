@@ -5095,6 +5095,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript/twoslash@npm:2.0.1":
+  version: 2.0.1
+  resolution: "@typescript/twoslash@npm:2.0.1"
+  dependencies:
+    "@typescript/vfs": 1.3.4
+    debug: ^4.1.1
+    lz-string: ^1.4.4
+  checksum: 3e83eed413334c655dc94d2d7abde2030773e1eaa5fe99ee1a31f6f1e050ec94a355d9f97ba9087b718cd7f86de6ac15d8f5679a4716872479f10048cf5ed9df
+  languageName: node
+  linkType: hard
+
+"@typescript/vfs@npm:1.3.4":
+  version: 1.3.4
+  resolution: "@typescript/vfs@npm:1.3.4"
+  dependencies:
+    debug: ^4.1.1
+  checksum: b817019ea9581485707269d2ddc798307a19fa7d0e7387a0c9633e1b016b0a16db4d00793dd3cbecce726fb8e5d09419ea2087e25df94ad7aa043cd0ae559195
+  languageName: node
+  linkType: hard
+
 "@webassemblyjs/ast@npm:1.11.0":
   version: 1.11.0
   resolution: "@webassemblyjs/ast@npm:1.11.0"
@@ -8653,6 +8673,17 @@ __metadata:
   dependencies:
     esutils: ^2.0.2
   checksum: 2eae469bd2889ceee9892083a67340b3622568fe5290edce620e5d5ddab23d644b2a780e9a7c68ad9c8a62716a70c5e484402ac93a398fa78b54b7505592aa7f
+  languageName: node
+  linkType: hard
+
+"docusaurus-preset-shiki-twoslash@npm:^1.1.11":
+  version: 1.1.11
+  resolution: "docusaurus-preset-shiki-twoslash@npm:1.1.11"
+  dependencies:
+    copy-text-to-clipboard: ^3.0.1
+    remark-shiki-twoslash: 1.5.5
+    typescript: ">3"
+  checksum: e6b20a4067d9efe7e970de9483c2f9ad0f5326e52ababdf239015de0792ed5454cffe394e2976388573c6d273cddfc0a2a291afd7f76ab763b43eb9b08f8b465
   languageName: node
   linkType: hard
 
@@ -13349,6 +13380,7 @@ fsevents@^1.2.7:
     "@docusaurus/preset-classic": ^2.0.0-beta.0
     "@types/react": ^17.0.3
     clsx: ^1.1.1
+    docusaurus-preset-shiki-twoslash: ^1.1.11
     fs-extra: ^9.0.1
     globby: ^11.0.1
     graphql: ^15.3.0
@@ -14326,6 +14358,15 @@ fsevents@^1.2.7:
   version: 2.0.0
   resolution: "lowercase-keys@npm:2.0.0"
   checksum: 4da67f41865a25360bb05749a66a83c60987c7efa0b8ec443941a19978c21ba916ae9fedca25b96fc652026c4264a437d3fec099d1949716b5483eec42395ec9
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "lru-cache@npm:5.1.1"
+  dependencies:
+    yallist: ^3.0.2
+  checksum: ffd9a280fa3400e731265db502270c2a65432f3fbfac23d480c72f675ec16dbbeddd57d4baf7aca70ab7af49949fad1bcaaf5a5e6e1cfed7316de71bb5dddf1c
   languageName: node
   linkType: hard
 
@@ -16218,6 +16259,15 @@ fsevents@^1.2.7:
   dependencies:
     mimic-fn: ^2.1.0
   checksum: e425f6caeb20cf2598ffece94be5663932e34d074f1631b682b13d5f01cc1e0712a7dc711eff1706bb5a5aaab8a52e37bd5edcf560334e3222219d7e8b09c21c
+  languageName: node
+  linkType: hard
+
+"onigasm@npm:^2.2.5":
+  version: 2.2.5
+  resolution: "onigasm@npm:2.2.5"
+  dependencies:
+    lru-cache: ^5.1.1
+  checksum: 9db74810f55bc0b9718991d36ea445e2095f09743f22d5e76bc37a31e34b9b5204b1224ea2fb30253e810fe57222bf86274d5b38073b1c14534fee4c6da300b4
   languageName: node
   linkType: hard
 
@@ -18650,7 +18700,7 @@ react-native@0.64.0:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.13.2, regenerator-runtime@npm:^0.13.4":
+"regenerator-runtime@npm:^0.13.2, regenerator-runtime@npm:^0.13.4, regenerator-runtime@npm:^0.13.7":
   version: 0.13.8
   resolution: "regenerator-runtime@npm:0.13.8"
   checksum: 20178f5753f181d59691e5c3b4c59a2769987f75c7ccf325777673b5478acca61a553b10e895585086c222f72f5ee428090acf50320264de4b79f630f7388653
@@ -18859,6 +18909,22 @@ react-native@0.64.0:
   dependencies:
     mdast-util-from-markdown: ^0.8.0
   checksum: ca34e41b0c65afa4b987e7236994645f59b615100b4fe95f5d79c1bfda4f19ba4817e93cba3ca9c46eb244d68119e1e855702cc6da1bbee422ea2daffab1bbc1
+  languageName: node
+  linkType: hard
+
+"remark-shiki-twoslash@npm:1.5.5":
+  version: 1.5.5
+  resolution: "remark-shiki-twoslash@npm:1.5.5"
+  dependencies:
+    "@typescript/twoslash": 2.0.1
+    "@typescript/vfs": 1.3.4
+    regenerator-runtime: ^0.13.7
+    shiki: 0.9.3
+    shiki-twoslash: 2.0.0
+    tslib: 2.1.0
+    typescript: ">3"
+    unist-util-visit: ^2.0.0
+  checksum: 2ded72f897c0709c5818d98f1709ca3eb6bb4f39faac106db49fd43104d3f8e5d7e72839a5872f78ecef60fa678700966a9fa79005db4dfbe513bba6e75564cb
   languageName: node
   linkType: hard
 
@@ -19687,6 +19753,28 @@ react-native@0.64.0:
   version: 0.1.1
   resolution: "shellwords@npm:0.1.1"
   checksum: 3559ff550917ece921d252edf42eb54827540e9676e537137ace236df8f9b78e48c542ae0b3f8876fea0faf5826c97629d5b8cb9ac7dee287260e9804fb8132c
+  languageName: node
+  linkType: hard
+
+"shiki-twoslash@npm:2.0.0":
+  version: 2.0.0
+  resolution: "shiki-twoslash@npm:2.0.0"
+  dependencies:
+    "@typescript/twoslash": 2.0.1
+    "@typescript/vfs": 1.3.4
+    shiki: 0.9.3
+    typescript: ">3"
+  checksum: 6a97ef6b9a14a10df988181d45c837c1184a23dc3b8098d7d47940f03dd6b672750f65b19e1dc05e0fa503993c5169edf420edb081707821b782cd8e2c3ce702
+  languageName: node
+  linkType: hard
+
+"shiki@npm:0.9.3":
+  version: 0.9.3
+  resolution: "shiki@npm:0.9.3"
+  dependencies:
+    onigasm: ^2.2.5
+    vscode-textmate: ^5.2.0
+  checksum: fce8084727491c496187abe5b8f831dbecdada11ebcc2861335a31fb7eb3d3ebceaf50aec2f2d855f76af626ddb66dabd860536e334b3cb9feff7e79d61ccde0
   languageName: node
   linkType: hard
 
@@ -21137,6 +21225,13 @@ react-native@0.64.0:
   languageName: node
   linkType: hard
 
+"tslib@npm:2.1.0":
+  version: 2.1.0
+  resolution: "tslib@npm:2.1.0"
+  checksum: d8f5bdd067611651c6b846c2388f4dc8ba1f5af124e66105f5263d1ad56da17f4b8c6566887ca2f205c5a9758451871ceca87d5d06087af2dca1699c5e33db69
+  languageName: node
+  linkType: hard
+
 "tslib@npm:^1.8.1, tslib@npm:^1.9.0":
   version: 1.14.1
   resolution: "tslib@npm:1.14.1"
@@ -21309,6 +21404,16 @@ react-native@0.64.0:
   languageName: node
   linkType: hard
 
+typescript@>3:
+  version: 4.3.5
+  resolution: "typescript@npm:4.3.5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: d9a8e78d72dd19896e6bfa73ab2a0fcea6eca2700d1d6e7c33f67a970af54a3e0fed8f715a8c4e6a0ff7fc0995067b394b2003518ab0aa84cd396377e54b760c
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@*#builtin<compat/typescript>, typescript@patch:typescript@^4.0.2#builtin<compat/typescript>, typescript@patch:typescript@^4.0.3#builtin<compat/typescript>":
   version: 4.1.5
   resolution: "typescript@patch:typescript@npm%3A4.1.5#builtin<compat/typescript>::version=4.1.5&hash=ddfc1b"
@@ -21316,6 +21421,16 @@ react-native@0.64.0:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 9c57e19536e978f130694888fbda2f8fe60f92c388c6b2945881dd7c912078bf52663dcb3278100cf9f4689805fbaec86b3de42ef600fb9672545b24fc1b7b15
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@>3#builtin<compat/typescript>":
+  version: 4.3.5
+  resolution: "typescript@patch:typescript@npm%3A4.3.5#builtin<compat/typescript>::version=4.3.5&hash=ddfc1b"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 7f0b8343f71ecac18095be1476b398aca420ab60dc207cc1efe078f381eef5527b80a518297720257114cdbda65612f8839e4b63e85dc95e67ac5cbbade8bdf0
   languageName: node
   linkType: hard
 
@@ -22069,6 +22184,13 @@ react-native@0.64.0:
   version: 1.0.1
   resolution: "vlq@npm:1.0.1"
   checksum: a15c2b8ed499d7ebf16fb5826738988fe177fe9f47e79c5a90da49c0408fce1aab7d22d83101603ff6b64d158b1e0662506f3305ca50c7f36e34bf18da2e1b56
+  languageName: node
+  linkType: hard
+
+"vscode-textmate@npm:^5.2.0":
+  version: 5.4.0
+  resolution: "vscode-textmate@npm:5.4.0"
+  checksum: 7f1e6f534d478126967cb3230a363dcd2d82374f9e0bd1e9b1f35f540d1bb515eeaa2e20b61c09ec337a245a236ea8fee2beaf5f3590b7d83be1821c2d898c4b
   languageName: node
   linkType: hard
 
@@ -22943,7 +23065,7 @@ react-native@0.64.0:
   languageName: node
   linkType: hard
 
-"yallist@npm:^3.0.0, yallist@npm:^3.0.3":
+"yallist@npm:^3.0.0, yallist@npm:^3.0.2, yallist@npm:^3.0.3":
   version: 3.1.1
   resolution: "yallist@npm:3.1.1"
   checksum: f352c93b92f601bb0399210bca37272e669c961e9bd886bac545380598765cbfdfb4f166e7b6c57ca4ec8a5af4ab3fa0fd78a47f9a7d655a3d580ff0fc9e7d79

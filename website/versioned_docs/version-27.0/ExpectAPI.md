@@ -23,7 +23,9 @@ The `expect` function is used every time you want to test a value. You will rare
 
 It's easier to understand this with an example. Let's say you have a method `bestLaCroixFlavor()` which is supposed to return the string `'grapefruit'`. Here's how you would test that:
 
-```js
+```ts twoslash
+declare function bestLaCroixFlavor(): string;
+/// ---cut---
 test('the best flavor is grapefruit', () => {
   expect(bestLaCroixFlavor()).toBe('grapefruit');
 });
@@ -37,7 +39,7 @@ The argument to `expect` should be the value that your code produces, and any ar
 
 You can use `expect.extend` to add your own matchers to Jest. For example, let's say that you're testing a number utility library and you're frequently asserting that numbers appear within particular ranges of other numbers. You could abstract that into a `toBeWithinRange` matcher:
 
-```js
+```js twoslash
 expect.extend({
   toBeWithinRange(received, floor, ceiling) {
     const pass = received >= floor && received <= ceiling;
@@ -83,7 +85,25 @@ declare global {
 
 `expect.extend` also supports async matchers. Async matchers return a Promise so you will need to await the returned value. Let's use an example matcher to illustrate the usage of them. We are going to implement a matcher called `toBeDivisibleByExternalValue`, where the divisible number is going to be pulled from an external source.
 
-```js
+```twoslash include async-setup
+declare const recording: boolean;
+declare function observe(fn: () => void): Promise<any>;
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toMatchTrimmedInlineSnapshot: (chars?: number) => void;
+      toBeDivisibleByExternalValue: () => void;
+      toMatchTrimmedSnapshot: (chars?: number) => void
+    }
+  }
+}
+export {};
+```
+
+```ts twoslash
+// @include: async-setup
+declare function getExternalValueFromRemoteSource(): Promise<number>;
+// ---cut---
 expect.extend({
   async toBeDivisibleByExternalValue(received) {
     const externalValue = await getExternalValueFromRemoteSource();
@@ -116,7 +136,7 @@ Matchers should return an object (or a Promise of an object) with two keys. `pas
 
 Matchers are called with the argument passed to `expect(x)` followed by the arguments passed to `.yourMatcher(y, z)`:
 
-```js
+```ts twoslash
 expect.extend({
   yourMatcher(x, y, z) {
     return {
@@ -155,8 +175,9 @@ There are a number of helpful tools exposed on `this.utils` primarily consisting
 
 The most useful ones are `matcherHint`, `printExpected` and `printReceived` to format the error messages nicely. For example, take a look at the implementation for the `toBe` matcher:
 
-```js
+```ts twoslash
 const {diff} = require('jest-diff');
+
 expect.extend({
   toBe(received, expected) {
     const options = {
@@ -211,7 +232,9 @@ To use snapshot testing inside of your custom matcher you can import `jest-snaps
 
 Here's a snapshot matcher that trims a string to store for a given length, `.toMatchTrimmedSnapshot(length)`:
 
-```js
+```ts twoslash
+// @include: async-setup
+// ---cut---
 const {toMatchSnapshot} = require('jest-snapshot');
 
 expect.extend({
@@ -237,7 +260,9 @@ exports[`stores only 10 characters: toMatchTrimmedSnapshot 1`] = `"extra long"`;
 
 It's also possible to create custom matchers for inline snapshots, the snapshots will be correctly added to the custom matchers. However, inline snapshot will always try to append to the first argument or the second when the first argument is the property matcher, so it's not possible to accept custom arguments in the custom matchers.
 
-```js
+```ts twoslash
+// @include: async-setup
+// ---cut---
 const {toMatchInlineSnapshot} = require('jest-snapshot');
 
 expect.extend({
@@ -261,7 +286,9 @@ it('stores only 10 characters', () => {
 
 If your custom inline snapshot matcher is async i.e. uses `async`-`await` you might encounter an error like "Multiple inline snapshots for the same call are not supported". Jest needs additional context information to find where the custom inline snapshot matcher was used to update the snapshots properly.
 
-```js
+```ts twoslash
+// @include: async-setup
+// ---cut---
 const {toMatchInlineSnapshot} = require('jest-snapshot');
 
 expect.extend({
@@ -300,7 +327,7 @@ Sometimes it might not make sense to continue the test if a prior snapshot faile
 
 In that case you can implement a custom snapshot matcher that throws on the first mismatch instead of collecting every mismatch.
 
-```js
+```js twoslash
 const {toMatchInlineSnapshot} = require('jest-snapshot');
 
 expect.extend({
@@ -338,7 +365,7 @@ it('transitions as expected', () => {
 
 `expect.anything()` matches anything but `null` or `undefined`. You can use it inside `toEqual` or `toBeCalledWith` instead of a literal value. For example, if you want to check that a mock function is called with a non-null argument:
 
-```js
+```js twoslash
 test('map calls its argument with a non-null argument', () => {
   const mock = jest.fn();
   [1].map(x => mock(x));
@@ -371,7 +398,7 @@ You can use it instead of a literal value:
 - in `toEqual` or `toBeCalledWith`
 - to match a property in `objectContaining` or `toMatchObject`
 
-```js
+```js twoslash
 describe('arrayContaining', () => {
   const expected = ['Alice', 'Bob'];
   it('matches even if received contains additional elements', () => {
@@ -383,7 +410,7 @@ describe('arrayContaining', () => {
 });
 ```
 
-```js
+```js twoslash
 describe('Beware of a misunderstanding! A sequence of dice rolls', () => {
   const expected = [1, 2, 3, 4, 5, 6];
   it('matches even with an unexpected number 7', () => {
@@ -405,7 +432,7 @@ describe('Beware of a misunderstanding! A sequence of dice rolls', () => {
 
 For example, let's say that we have a function `doAsync` that receives two callbacks `callback1` and `callback2`, it will asynchronously call both of them in an unknown order. We can test this with:
 
-```js
+```js twoslash
 test('doAsync calls both callbacks', async () => {
   expect.assertions(2);
   function callback1(data) {
@@ -427,7 +454,12 @@ The `expect.assertions(2)` call ensures that both callbacks actually get called.
 
 For example, let's say that we have a few functions that all deal with state. `prepareState` calls a callback with a state object, `validateState` runs on that state object, and `waitOnState` returns a promise that waits until all `prepareState` callbacks complete. We can test this with:
 
-```js
+```ts twoslash
+type StateReady = (state: {}) => void;
+declare function prepareState(state: StateReady): boolean;
+declare function validateState(state: any): boolean;
+declare function waitOnState(): Promise<void>;
+// ---cut---
 test('prepareState prepares a valid state', () => {
   expect.hasAssertions();
   prepareState(state => {
@@ -445,7 +477,7 @@ The `expect.hasAssertions()` call ensures that the `prepareState` callback actua
 
 It is the inverse of `expect.arrayContaining`.
 
-```js
+```js twoslash
 describe('not.arrayContaining', () => {
   const expected = ['Samantha'];
 
@@ -463,7 +495,7 @@ describe('not.arrayContaining', () => {
 
 It is the inverse of `expect.objectContaining`.
 
-```js
+```js twoslash
 describe('not.objectContaining', () => {
   const expected = {foo: 'bar'};
 
@@ -479,7 +511,7 @@ describe('not.objectContaining', () => {
 
 It is the inverse of `expect.stringContaining`.
 
-```js
+```js twoslash
 describe('not.stringContaining', () => {
   const expected = 'Hello world!';
 
@@ -495,7 +527,7 @@ describe('not.stringContaining', () => {
 
 It is the inverse of `expect.stringMatching`.
 
-```js
+```js twoslash
 describe('not.stringMatching', () => {
   const expected = /Hello world!/;
 
@@ -513,7 +545,7 @@ Instead of literal property values in the expected object, you can use matchers,
 
 For example, let's say that we expect an `onPress` function to be called with an `Event` object, and all we need to verify is that the event has `event.x` and `event.y` properties. We can do that with:
 
-```js
+```js twoslash
 test('onPress gets called with the right thing', () => {
   const onPress = jest.fn();
   simulatePresses(onPress);
@@ -542,7 +574,7 @@ You can use it instead of a literal value:
 
 This example also shows how you can nest multiple asymmetric matchers, with `expect.stringMatching` inside the `expect.arrayContaining`.
 
-```js
+```js twoslash
 describe('stringMatching in arrayContaining', () => {
   const expected = [
     expect.stringMatching(/^Alic/),
@@ -585,7 +617,9 @@ See [configuring Jest](Configuration.md#snapshotserializers-arraystring) for mor
 
 If you know how to test something, `.not` lets you test its opposite. For example, this code tests that the best La Croix flavor is not coconut:
 
-```js
+```ts twoslash
+declare function bestLaCroixFlavor(): string;
+// ---cut---
 test('the best flavor is not coconut', () => {
   expect(bestLaCroixFlavor()).not.toBe('coconut');
 });
@@ -597,7 +631,7 @@ Use `resolves` to unwrap the value of a fulfilled promise so any other matcher c
 
 For example, this code tests that the promise resolves and that the resulting value is `'lemon'`:
 
-```js
+```js twoslash
 test('resolves to lemon', () => {
   // make sure to add a return statement
   return expect(Promise.resolve('lemon')).resolves.toBe('lemon');
@@ -608,7 +642,7 @@ Note that, since you are still testing promises, the test is still asynchronous.
 
 Alternatively, you can use `async/await` in combination with `.resolves`:
 
-```js
+```js twoslash
 test('resolves to lemon', async () => {
   await expect(Promise.resolve('lemon')).resolves.toBe('lemon');
   await expect(Promise.resolve('lemon')).resolves.not.toBe('octopus');
@@ -621,7 +655,7 @@ Use `.rejects` to unwrap the reason of a rejected promise so any other matcher c
 
 For example, this code tests that the promise rejects with reason `'octopus'`:
 
-```js
+```js twoslash
 test('rejects to octopus', () => {
   // make sure to add a return statement
   return expect(Promise.reject(new Error('octopus'))).rejects.toThrow(
@@ -634,7 +668,7 @@ Note that, since you are still testing promises, the test is still asynchronous.
 
 Alternatively, you can use `async/await` in combination with `.rejects`.
 
-```js
+```js twoslash
 test('rejects to octopus', async () => {
   await expect(Promise.reject(new Error('octopus'))).rejects.toThrow('octopus');
 });
@@ -646,7 +680,7 @@ Use `.toBe` to compare primitive values or to check referential identity of obje
 
 For example, this code will validate some properties of the `can` object:
 
-```js
+```js twoslash
 const can = {
   name: 'pamplemousse',
   ounces: 12,
@@ -678,7 +712,7 @@ Use `.toHaveBeenCalled` to ensure that a mock function got called.
 
 For example, let's say you have a `drinkAll(drink, flavour)` function that takes a `drink` function and applies it to all available beverages. You might want to check that `drink` gets called for `'lemon'`, but not for `'octopus'`, because `'octopus'` flavour is really weird and why would anything be octopus-flavoured? You can do that with this test suite:
 
-```js
+```js twoslash
 function drinkAll(callback, flavour) {
   if (flavour !== 'octopus') {
     callback(flavour);
@@ -708,7 +742,7 @@ Use `.toHaveBeenCalledTimes` to ensure that a mock function got called exact num
 
 For example, let's say you have a `drinkEach(drink, Array<flavor>)` function that takes a `drink` function and applies it to array of passed beverages. You might want to check that drink function was called exact number of times. You can do that with this test suite:
 
-```js
+```js twoslash
 test('drinkEach drinks each drink', () => {
   const drink = jest.fn();
   drinkEach(drink, ['lemon', 'octopus']);
@@ -724,7 +758,13 @@ Use `.toHaveBeenCalledWith` to ensure that a mock function was called with speci
 
 For example, let's say that you can register a beverage with a `register` function, and `applyToAll(f)` should apply the function `f` to all registered beverages. To make sure this works, you could write:
 
-```js
+```ts twoslash
+class LaCroix {
+  constructor(public flavor: string) {}
+}
+declare function register(drink: LaCroix): void;
+declare function applyToAll(f: Function): void;
+// ---cut---
 test('registration applies correctly to orange La Croix', () => {
   const beverage = new LaCroix('orange');
   register(beverage);
@@ -740,7 +780,9 @@ Also under the alias: `.lastCalledWith(arg1, arg2, ...)`
 
 If you have a mock function, you can use `.toHaveBeenLastCalledWith` to test what arguments it was last called with. For example, let's say you have a `applyToAllFlavors(f)` function that applies `f` to a bunch of flavors, and you want to ensure that when you call it, the last flavor it operates on is `'mango'`. You can write:
 
-```js
+```ts twoslash
+declare function applyToAllFlavors(f: Function): void;
+// ---cut---
 test('applying to all flavors does mango last', () => {
   const drink = jest.fn();
   applyToAllFlavors(drink);
@@ -754,7 +796,9 @@ Also under the alias: `.nthCalledWith(nthCall, arg1, arg2, ...)`
 
 If you have a mock function, you can use `.toHaveBeenNthCalledWith` to test what arguments it was nth called with. For example, let's say you have a `drinkEach(drink, Array<flavor>)` function that applies `f` to a bunch of flavors, and you want to ensure that when you call it, the first flavor it operates on is `'lemon'` and the second one is `'octopus'`. You can write:
 
-```js
+```ts twoslash
+declare function drinkEach(drink: any, flavors: string[]): void;
+// ---cut---
 test('drinkEach drinks each drink', () => {
   const drink = jest.fn();
   drinkEach(drink, ['lemon', 'octopus']);
@@ -789,7 +833,7 @@ Use `.toHaveReturnedTimes` to ensure that a mock function returned successfully 
 
 For example, let's say you have a mock `drink` that returns `true`. You can write:
 
-```js
+```js twoslash
 test('drink returns twice', () => {
   const drink = jest.fn(() => true);
 
@@ -808,7 +852,7 @@ Use `.toHaveReturnedWith` to ensure that a mock function returned a specific val
 
 For example, let's say you have a mock `drink` that returns the name of the beverage that was consumed. You can write:
 
-```js
+```js twoslash
 test('drink returns La Croix', () => {
   const beverage = {name: 'La Croix'};
   const drink = jest.fn(beverage => beverage.name);
@@ -827,7 +871,7 @@ Use `.toHaveLastReturnedWith` to test the specific value that a mock function la
 
 For example, let's say you have a mock `drink` that returns the name of the beverage that was consumed. You can write:
 
-```js
+```js twoslash
 test('drink returns La Croix (Orange) last', () => {
   const beverage1 = {name: 'La Croix (Lemon)'};
   const beverage2 = {name: 'La Croix (Orange)'};
@@ -848,7 +892,7 @@ Use `.toHaveNthReturnedWith` to test the specific value that a mock function ret
 
 For example, let's say you have a mock `drink` that returns the name of the beverage that was consumed. You can write:
 
-```js
+```js twoslash
 test('drink returns expected nth calls', () => {
   const beverage1 = {name: 'La Croix (Lemon)'};
   const beverage2 = {name: 'La Croix (Orange)'};
@@ -870,7 +914,7 @@ Use `.toHaveLength` to check that an object has a `.length` property and it is s
 
 This is especially useful for checking arrays or strings size.
 
-```js
+```js twoalsh
 expect([1, 2, 3]).toHaveLength(3);
 expect('abc').toHaveLength(3);
 expect('').not.toHaveLength(5);
@@ -884,7 +928,7 @@ You can provide an optional `value` argument to compare the received property va
 
 The following example contains a `houseForSale` object with nested properties. We are using `toHaveProperty` to check for the existence and values of various properties in the object.
 
-```js
+```js twoslash
 // Object containing house features to be tested
 const houseForSale = {
   bath: true,
@@ -938,7 +982,7 @@ The optional `numDigits` argument limits the number of digits to check **after**
 
 Intuitive equality comparisons often fail, because arithmetic on decimal (base 10) values often have rounding errors in limited precision binary (base 2) representation. For example, this test fails:
 
-```js
+```js twoslash
 test('adding works sanely with decimals', () => {
   expect(0.2 + 0.1).toBe(0.3); // Fails!
 });
@@ -948,7 +992,7 @@ It fails because in JavaScript, `0.2 + 0.1` is actually `0.30000000000000004`.
 
 For example, this test passes with a precision of 5 digits:
 
-```js
+```js twoslash
 test('adding works sanely with decimals', () => {
   expect(0.2 + 0.1).toBeCloseTo(0.3, 5);
 });
@@ -960,7 +1004,9 @@ Because floating point errors are the problem that `toBeCloseTo` solves, it does
 
 Use `.toBeDefined` to check that a variable is not undefined. For example, if you want to check that a function `fetchNewFlavorIdea()` returns _something_, you can write:
 
-```js
+```ts twoslash
+declare function fetchNewFlavorIdea(): string;
+// ---cut---
 test('there is a new flavor idea', () => {
   expect(fetchNewFlavorIdea()).toBeDefined();
 });
@@ -972,7 +1018,11 @@ You could write `expect(fetchNewFlavorIdea()).not.toBe(undefined)`, but it's bet
 
 Use `.toBeFalsy` when you don't care what a value is and you want to ensure a value is false in a boolean context. For example, let's say you have some application code that looks like:
 
-```js
+```ts twoslash
+declare function drinkSomeLaCroix(): string;
+declare function drinkMoreLaCroix(): string;
+declare function getErrors(): boolean;
+// ---cut---
 drinkSomeLaCroix();
 if (!getErrors()) {
   drinkMoreLaCroix();
@@ -981,7 +1031,10 @@ if (!getErrors()) {
 
 You may not care what `getErrors` returns, specifically - it might return `false`, `null`, or `0`, and your code would still work. So if you want to test there are no errors after drinking some La Croix, you could write:
 
-```js
+```ts twoslash
+declare function drinkSomeLaCroix(): string;
+declare function getErrors(): boolean;
+// ---cut---
 test('drinking La Croix does not lead to errors', () => {
   drinkSomeLaCroix();
   expect(getErrors()).toBeFalsy();
@@ -994,7 +1047,9 @@ In JavaScript, there are six falsy values: `false`, `0`, `''`, `null`, `undefine
 
 Use `toBeGreaterThan` to compare `received > expected` for number or big integer values. For example, test that `ouncesPerCan()` returns a value of more than 10 ounces:
 
-```js
+```ts twoslash
+declare function ouncesPerCan(): number;
+// ---cut---
 test('ounces per can is more than 10', () => {
   expect(ouncesPerCan()).toBeGreaterThan(10);
 });
@@ -1004,7 +1059,9 @@ test('ounces per can is more than 10', () => {
 
 Use `toBeGreaterThanOrEqual` to compare `received >= expected` for number or big integer values. For example, test that `ouncesPerCan()` returns a value of at least 12 ounces:
 
-```js
+```ts twoslash
+declare function ouncesPerCan(): number;
+// ---cut---
 test('ounces per can is at least 12', () => {
   expect(ouncesPerCan()).toBeGreaterThanOrEqual(12);
 });
@@ -1014,7 +1071,9 @@ test('ounces per can is at least 12', () => {
 
 Use `toBeLessThan` to compare `received < expected` for number or big integer values. For example, test that `ouncesPerCan()` returns a value of less than 20 ounces:
 
-```js
+```ts twoslash
+declare function ouncesPerCan(): number;
+// ---cut---
 test('ounces per can is less than 20', () => {
   expect(ouncesPerCan()).toBeLessThan(20);
 });
@@ -1024,7 +1083,9 @@ test('ounces per can is less than 20', () => {
 
 Use `toBeLessThanOrEqual` to compare `received <= expected` for number or big integer values. For example, test that `ouncesPerCan()` returns a value of at most 12 ounces:
 
-```js
+```ts twoslash
+declare function ouncesPerCan(): number;
+// ---cut---
 test('ounces per can is at most 12', () => {
   expect(ouncesPerCan()).toBeLessThanOrEqual(12);
 });
@@ -1034,7 +1095,7 @@ test('ounces per can is at most 12', () => {
 
 Use `.toBeInstanceOf(Class)` to check that an object is an instance of a class. This matcher uses `instanceof` underneath.
 
-```js
+```js twoslash
 class A {}
 
 expect(new A()).toBeInstanceOf(A);
@@ -1046,7 +1107,7 @@ expect(new A()).toBeInstanceOf(Function); // throws
 
 `.toBeNull()` is the same as `.toBe(null)` but the error messages are a bit nicer. So use `.toBeNull()` when you want to check that something is null.
 
-```js
+```js twoslash
 function bloop() {
   return null;
 }
@@ -1060,7 +1121,11 @@ test('bloop returns null', () => {
 
 Use `.toBeTruthy` when you don't care what a value is and you want to ensure a value is true in a boolean context. For example, let's say you have some application code that looks like:
 
-```js
+```ts twoslash
+declare function drinkSomeLaCroix(): number;
+declare function thirstInfo(): number;
+declare function drinkMoreLaCroix(): number;
+// ---cut---
 drinkSomeLaCroix();
 if (thirstInfo()) {
   drinkMoreLaCroix();
@@ -1069,7 +1134,11 @@ if (thirstInfo()) {
 
 You may not care what `thirstInfo` returns, specifically - it might return `true` or a complex object, and your code would still work. So if you want to test that `thirstInfo` will be truthy after drinking some La Croix, you could write:
 
-```js
+```ts twoslash
+declare function drinkSomeLaCroix(): number;
+declare function thirstInfo(): number;
+declare function drinkMoreLaCroix(): number;
+// ---cut---
 test('drinking La Croix leads to having thirst info', () => {
   drinkSomeLaCroix();
   expect(thirstInfo()).toBeTruthy();
@@ -1083,6 +1152,8 @@ In JavaScript, there are six falsy values: `false`, `0`, `''`, `null`, `undefine
 Use `.toBeUndefined` to check that a variable is undefined. For example, if you want to check that a function `bestDrinkForFlavor(flavor)` returns `undefined` for the `'octopus'` flavor, because there is no good octopus-flavored drink:
 
 ```js
+declare function bestDrinkForFlavor(flavour: string): string | undefined;
+// ---cut---
 test('the best drink for octopus flavor is undefined', () => {
   expect(bestDrinkForFlavor('octopus')).toBeUndefined();
 });
@@ -1094,7 +1165,7 @@ You could write `expect(bestDrinkForFlavor('octopus')).toBe(undefined)`, but it'
 
 Use `.toBeNaN` when checking a value is `NaN`.
 
-```js
+```js twoskash
 test('passes when value is NaN', () => {
   expect(NaN).toBeNaN();
   expect(1).not.toBeNaN();
@@ -1107,7 +1178,9 @@ Use `.toContain` when you want to check that an item is in an array. For testing
 
 For example, if `getAllFlavors()` returns an array of flavors and you want to be sure that `lime` is in there, you can write:
 
-```js
+```ts twoslash
+declare function getAllFlavors(): string[];
+// ---cut---
 test('the flavor list contains lime', () => {
   expect(getAllFlavors()).toContain('lime');
 });
@@ -1117,7 +1190,10 @@ test('the flavor list contains lime', () => {
 
 Use `.toContainEqual` when you want to check that an item with a specific structure and values is contained in an array. For testing the items in the array, this matcher recursively checks the equality of all fields, rather than checking for object identity.
 
-```js
+```ts twoslash
+declare function myBeverages(): any[];
+// ---cut---
+
 describe('my beverage', () => {
   test('is delicious and not sour', () => {
     const myBeverage = {delicious: true, sour: false};
@@ -1132,7 +1208,7 @@ Use `.toEqual` to compare recursively all properties of object instances (also k
 
 For example, `.toEqual` and `.toBe` behave differently in this test suite, so all the tests pass:
 
-```js
+```js twoslash
 const can1 = {
   flavor: 'grapefruit',
   ounces: 12,
@@ -1165,7 +1241,9 @@ Use `.toMatch` to check that a string matches a regular expression.
 
 For example, you might not know what exactly `essayOnTheBestFlavor()` returns, but you know it's a really long string, and the substring `grapefruit` should be in there somewhere. You can test this with:
 
-```js
+```ts twoslash
+declare function essayOnTheBestFlavor(): string;
+// ---cut---
 describe('an essay on the best flavor', () => {
   test('mentions grapefruit', () => {
     expect(essayOnTheBestFlavor()).toMatch(/grapefruit/);
@@ -1176,7 +1254,7 @@ describe('an essay on the best flavor', () => {
 
 This matcher also accepts a string, which it will try to match:
 
-```js
+```js twoslash
 describe('grapefruits are healthy', () => {
   test('grapefruits are a fruit', () => {
     expect('grapefruits').toMatch('fruit');
@@ -1192,7 +1270,7 @@ You can also pass an array of objects, in which case the method will return true
 
 You can match properties against values or against matchers.
 
-```js
+```js twoslash
 const houseForSale = {
   bath: true,
   bedrooms: 4,
@@ -1215,7 +1293,7 @@ test('the house has my desired features', () => {
 });
 ```
 
-```js
+```js twoslash
 describe('toMatchObject applied to arrays', () => {
   test('the number of elements must match exactly', () => {
     expect([{foo: 'bar'}, {baz: 1}]).toMatchObject([{foo: 'bar'}, {baz: 1}]);
@@ -1258,7 +1336,7 @@ Differences from `.toEqual`:
 - Array sparseness is checked. e.g. `[, 1]` does not match `[undefined, 1]` when using `.toStrictEqual`.
 - Object types are checked to be equal. e.g. A class instance with fields `a` and `b` will not equal a literal object with fields `a` and `b`.
 
-```js
+```js twoslash
 class LaCroix {
   constructor(flavor) {
     this.flavor = flavor;
@@ -1279,7 +1357,9 @@ Also under the alias: `.toThrowError(error?)`
 
 Use `.toThrow` to test that a function throws when it is called. For example, if we want to test that `drinkFlavor('octopus')` throws, because octopus flavor is too disgusting to drink, we could write:
 
-```js
+```ts twoslash
+declare function drinkFlavor(flavour: string): number;
+// ---cut---
 test('throws on octopus', () => {
   expect(() => {
     drinkFlavor('octopus');
@@ -1298,7 +1378,9 @@ You can provide an optional argument to test that a specific error is thrown:
 
 For example, let's say that `drinkFlavor` is coded like this:
 
-```js
+```js twoslash
+class DisgustingFlavorError extends Error {}
+// ---cut---
 function drinkFlavor(flavor) {
   if (flavor == 'octopus') {
     throw new DisgustingFlavorError('yuck, octopus flavor');
@@ -1309,7 +1391,10 @@ function drinkFlavor(flavor) {
 
 We could test this error gets thrown in several ways:
 
-```js
+```ts twoslash
+class DisgustingFlavorError extends Error {}
+declare function drinkFlavor(flavour: string): void;
+// ---cut---
 test('throws on octopus', () => {
   function drinkOctopus() {
     drinkFlavor('octopus');
@@ -1336,7 +1421,9 @@ You can provide an optional `hint` string argument that is appended to the test 
 
 For example, let's say you have a `drinkFlavor` function that throws whenever the flavor is `'octopus'`, and is coded like this:
 
-```js
+```js twoslash
+class DisgustingFlavorError extends Error {}
+// ---cut---
 function drinkFlavor(flavor) {
   if (flavor == 'octopus') {
     throw new DisgustingFlavorError('yuck, octopus flavor');
@@ -1347,7 +1434,9 @@ function drinkFlavor(flavor) {
 
 The test for this function will look this way:
 
-```js
+```ts twoslash
+declare function drinkFlavor(flavour: string): void;
+// ---cut---
 test('throws on octopus', () => {
   function drinkOctopus() {
     drinkFlavor('octopus');
