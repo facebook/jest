@@ -177,3 +177,14 @@ test('require of ESM should throw correct error', () => {
     }),
   );
 });
+
+test('can mock module', async () => {
+  jestObject.mockModule('../mockedModule.mjs', () => ({foo: 'bar'}), {
+    virtual: true,
+  });
+
+  const importedMock = await import('../mockedModule.mjs');
+
+  expect(Object.keys(importedMock)).toEqual(['foo']);
+  expect(importedMock.foo).toEqual('bar');
+});

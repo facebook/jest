@@ -10,7 +10,7 @@ Ran all test suites matching /native-esm.tla.test.js/i.
 
 exports[`on node ^12.16.0 || >=13.7.0 runs test with native ESM 1`] = `
 Test Suites: 1 passed, 1 total
-Tests:       19 passed, 19 total
+Tests:       20 passed, 20 total
 Snapshots:   0 total
 Time:        <<REPLACED>>
 Ran all test suites matching /native-esm.test.js/i.

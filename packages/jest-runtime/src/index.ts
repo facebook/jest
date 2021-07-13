@@ -156,6 +156,7 @@ export default class Runtime {
   private _currentlyExecutingModulePath: string;
   private readonly _environment: JestEnvironment;
   private readonly _explicitShouldMock: Map<string, boolean>;
+  private readonly _explicitShouldMockModule: Map<string, boolean>;
   private _fakeTimersImplementation:
     | LegacyFakeTimers<unknown>
     | ModernFakeTimers
@@ -170,6 +171,8 @@ export default class Runtime {
   >;
   private _mockRegistry: Map<string, any>;
   private _isolatedMockRegistry: Map<string, any> | null;
+  private _moduleMockRegistry: Map<string, VMModule>;
+  private readonly _moduleMockFactories: Map<string, () => unknown>;
   private readonly _moduleMocker: ModuleMocker;
   private _isolatedModuleRegistry: ModuleRegistry | null;
   private _moduleRegistry: ModuleRegistry;
@@ -193,6 +196,7 @@ export default class Runtime {
   private readonly _transitiveShouldMock: Map<string, boolean>;
   private _unmockList: RegExp | undefined;
   private readonly _virtualMocks: Map<string, boolean>;
+  private readonly _virtualModuleMocks: Map<string, boolean>;
   private _moduleImplementation?: typeof nativeModule.Module;
   private readonly jestObjectCaches: Map<string, Jest>;
   private jestGlobals?: JestGlobals;
@@ -212,11 +216,14 @@ export default class Runtime {
     this._currentlyExecutingModulePath = '';
     this._environment = environment;
     this._explicitShouldMock = new Map();
+    this._explicitShouldMockModule = new Map();
     this._internalModuleRegistry = new Map();
     this._isCurrentlyExecutingManualMock = null;
     this._mainModule = null;
     this._mockFactories = new Map();
     this._mockRegistry = new Map();
+    this._moduleMockRegistry = new Map();
+    this._moduleMockFactories = new Map();
     invariant(
       this._environment.moduleMocker,
       '`moduleMocker` must be set on an environment when created',
@@ -236,6 +243,7 @@ export default class Runtime {
     this._fileTransforms = new Map();
     this._fileTransformsMutex = new Map();
     this._virtualMocks = new Map();
+    this._virtualModuleMocks = new Map();
     this.jestObjectCaches = new Map();
 
     this._mockMetaDataCache = new Map();
@@ -499,6 +507,16 @@ export default class Runtime {
 
     const [path, query] = specifier.split('?');
 
+    if (
+      this._shouldMock(
+        referencingIdentifier,
+        path,
+        this._explicitShouldMockModule,
+      )
+    ) {
+      return this.importMock(referencingIdentifier, path, context);
+    }
+
     const resolved = this._resolveModule(referencingIdentifier, path);
 
     if (
@@ -539,6 +557,8 @@ export default class Runtime {
   async unstable_importModule(
     from: Config.Path,
     moduleName?: string,
+    // TODO: implement this
+    _isImportActual = false,
   ): Promise<void> {
     invariant(
       runtimeSupportsVmModules,
@@ -588,6 +608,46 @@ export default class Runtime {
     return evaluateSyntheticModule(module);
   }
 
+  private async importMock<T = unknown>(
+    from: Config.Path,
+    moduleName: string,
+    context: VMContext,
+  ): Promise<T> {
+    const moduleID = this._resolver.getModuleID(
+      this._virtualModuleMocks,
+      from,
+      moduleName,
+    );
+
+    if (this._moduleMockRegistry.has(moduleID)) {
+      return this._moduleMockRegistry.get(moduleID);
+    }
+
+    if (this._moduleMockFactories.has(moduleID)) {
+      const invokedFactory: any = await this._moduleMockFactories.get(
+        moduleID,
+        // has check above makes this ok
+      )!();
+
+      const module = new SyntheticModule(
+        Object.keys(invokedFactory),
+        function () {
+          Object.entries(invokedFactory).forEach(([key, value]) => {
+            // @ts-expect-error: TS doesn't know what `this` is
+            this.setExport(key, value);
+          });
+        },
+        {context, identifier: moduleName},
+      );
+
+      this._moduleMockRegistry.set(moduleID, module);
+
+      return evaluateSyntheticModule(module);
+    }
+
+    throw new Error('Attempting to import a mock without a factory');
+  }
+
   private getExportsOfCjs(modulePath: Config.Path) {
     const cachedNamedExports = this._cjsNamedExports.get(modulePath);
 
@@ -619,7 +679,7 @@ export default class Runtime {
     from: Config.Path,
     moduleName?: string,
     options?: InternalModuleOptions,
-    isRequireActual?: boolean | null,
+    isRequireActual = false,
   ): T {
     const moduleID = this._resolver.getModuleID(
       this._virtualMocks,
@@ -743,16 +803,11 @@ export default class Runtime {
       moduleName,
     );
 
-    if (
-      this._isolatedMockRegistry &&
-      this._isolatedMockRegistry.get(moduleID)
-    ) {
-      return this._isolatedMockRegistry.get(moduleID);
-    } else if (this._mockRegistry.get(moduleID)) {
-      return this._mockRegistry.get(moduleID);
-    }
-
     const mockRegistry = this._isolatedMockRegistry || this._mockRegistry;
+
+    if (mockRegistry.get(moduleID)) {
+      return mockRegistry.get(moduleID);
+    }
 
     if (this._mockFactories.has(moduleID)) {
       // has check above makes this ok
@@ -869,7 +924,7 @@ export default class Runtime {
     }
 
     try {
-      if (this._shouldMock(from, moduleName)) {
+      if (this._shouldMock(from, moduleName, this._explicitShouldMock)) {
         return this.requireMock<T>(from, moduleName);
       } else {
         return this.requireModule<T>(from, moduleName);
@@ -925,6 +980,7 @@ export default class Runtime {
     this._moduleRegistry.clear();
     this._esmoduleRegistry.clear();
     this._cjsNamedExports.clear();
+    this._moduleMockRegistry.clear();
 
     if (this._environment) {
       if (this._environment.global) {
@@ -1014,6 +1070,26 @@ export default class Runtime {
     this._mockFactories.set(moduleID, mockFactory);
   }
 
+  private setModuleMock(
+    from: string,
+    moduleName: string,
+    mockFactory: () => Promise<unknown> | unknown,
+    options?: {virtual?: boolean},
+  ): void {
+    if (options?.virtual) {
+      const mockPath = this._resolver.getModulePath(from, moduleName);
+
+      this._virtualModuleMocks.set(mockPath, true);
+    }
+    const moduleID = this._resolver.getModuleID(
+      this._virtualModuleMocks,
+      from,
+      moduleName,
+    );
+    this._explicitShouldMockModule.set(moduleID, true);
+    this._moduleMockFactories.set(moduleID, mockFactory);
+  }
+
   restoreAllMocks(): void {
     this._moduleMocker.restoreAllMocks();
   }
@@ -1034,12 +1110,15 @@ export default class Runtime {
     this._internalModuleRegistry.clear();
     this._mainModule = null;
     this._mockFactories.clear();
+    this._moduleMockFactories.clear();
     this._mockMetaDataCache.clear();
     this._shouldMockModuleCache.clear();
     this._shouldUnmockTransitiveDependenciesCache.clear();
     this._explicitShouldMock.clear();
+    this._explicitShouldMockModule.clear();
     this._transitiveShouldMock.clear();
     this._virtualMocks.clear();
+    this._virtualModuleMocks.clear();
     this._cacheFS.clear();
     this._unmockList = undefined;
 
@@ -1479,8 +1558,11 @@ export default class Runtime {
     );
   }
 
-  private _shouldMock(from: Config.Path, moduleName: string): boolean {
-    const explicitShouldMock = this._explicitShouldMock;
+  private _shouldMock(
+    from: Config.Path,
+    moduleName: string,
+    explicitShouldMock: Map<string, boolean>,
+  ): boolean {
     const moduleID = this._resolver.getModuleID(
       this._virtualMocks,
       from,
@@ -1650,6 +1732,24 @@ export default class Runtime {
       this.setMock(from, moduleName, mockFactory, options);
       return jestObject;
     };
+    const mockModule: Jest['mockModule'] = (
+      moduleName,
+      mockFactory,
+      options,
+    ) => {
+      if (mockFactory !== undefined) {
+        this.setModuleMock(from, moduleName, mockFactory, options);
+        return jestObject;
+      }
+
+      const moduleID = this._resolver.getModuleID(
+        this._virtualMocks,
+        from,
+        moduleName,
+      );
+      this._explicitShouldMockModule.set(moduleID, true);
+      return jestObject;
+    };
     const clearAllMocks = () => {
       this.clearAllMocks();
       return jestObject;
@@ -1748,6 +1848,7 @@ export default class Runtime {
       isMockFunction: this._moduleMocker.isMockFunction,
       isolateModules,
       mock,
+      mockModule,
       requireActual: this.requireActual.bind(this, from),
       requireMock: this.requireMock.bind(this, from),
       resetAllMocks,
