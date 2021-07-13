@@ -99,6 +99,28 @@ or the following for Windows:
 }
 ```
 
+To run a single test file of Jest use this configuration: 
+
+```json
+{
+  "type": "node",
+  "request": "launch",
+  "name": "Jest Current File",
+  "program": "${workspaceFolder}/node_modules/.bin/jest",
+  "args": [
+    "${file}",
+    "--config",
+    "jest.config.js"
+  ],
+  "console": "integratedTerminal",
+  "internalConsoleOptions": "neverOpen",
+  "disableOptimisticBPs": true,
+  "windows": {
+    "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+  }
+}
+```
+
 If you are using Facebook's [`create-react-app`](https://github.com/facebookincubator/create-react-app), you can debug your Jest tests with the following configuration:
 
 ```json
