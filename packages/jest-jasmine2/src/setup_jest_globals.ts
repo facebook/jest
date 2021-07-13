@@ -106,12 +106,14 @@ export default async ({
 
   patchJasmine();
   const {expand, updateSnapshot} = globalConfig;
-  const {prettierPath} = config;
+  const {prettierPath, inlineSnapshotFormat, snapshotFormat} = config;
   const snapshotResolver = await buildSnapshotResolver(config, localRequire);
   const snapshotPath = snapshotResolver.resolveSnapshotPath(testPath);
   const snapshotState = new SnapshotState(snapshotPath, {
     expand,
+    inlineSnapshotFormat,
     prettierPath,
+    snapshotFormat,
     updateSnapshot,
   });
   // @ts-expect-error: snapshotState is a jest extension of `expect`

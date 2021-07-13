@@ -8,6 +8,7 @@
 import * as fs from 'graceful-fs';
 import type {Config} from '@jest/types';
 import {getStackTraceLines, getTopFrame} from 'jest-message-util';
+import type {OptionsReceived as PrettyFormatOptions} from 'pretty-format';
 import {InlineSnapshot, saveInlineSnapshots} from './InlineSnapshots';
 import type {SnapshotData} from './types';
 import {
@@ -25,6 +26,8 @@ export type SnapshotStateOptions = {
   updateSnapshot: Config.SnapshotUpdateState;
   prettierPath: Config.Path;
   expand?: boolean;
+  snapshotFormat: PrettyFormatOptions;
+  inlineSnapshotFormat: PrettyFormatOptions;
 };
 
 export type SnapshotMatchOptions = {
@@ -61,6 +64,8 @@ export default class SnapshotState {
   private _inlineSnapshots: Array<InlineSnapshot>;
   private _uncheckedKeys: Set<string>;
   private _prettierPath: Config.Path;
+  private _snapshotFormat: PrettyFormatOptions;
+  private _inlineSnapshotFormat: PrettyFormatOptions;
 
   added: number;
   expand: boolean;
@@ -88,6 +93,9 @@ export default class SnapshotState {
     this.unmatched = 0;
     this._updateSnapshot = options.updateSnapshot;
     this.updated = 0;
+
+    this._snapshotFormat = options.snapshotFormat;
+    this._inlineSnapshotFormat = options.inlineSnapshotFormat;
   }
 
   markSnapshotsAsCheckedForTest(testName: string): void {
@@ -201,7 +209,13 @@ export default class SnapshotState {
       this._uncheckedKeys.delete(key);
     }
 
-    const receivedSerialized = addExtraLineBreaks(serialize(received));
+    const customFormat = isInline
+      ? this._inlineSnapshotFormat
+      : this._snapshotFormat;
+
+    const receivedSerialized = addExtraLineBreaks(
+      serialize(received, undefined, customFormat),
+    );
     const expected = isInline ? inlineSnapshot : this._snapshotData[key];
     const pass = expected === receivedSerialized;
     const hasSnapshot = expected !== undefined;

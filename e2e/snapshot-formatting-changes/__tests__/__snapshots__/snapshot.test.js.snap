@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`snapshot serializer uses 8 chars for indent, and shows no prototypes for object and array in a snapshot: no prototypes 1`] = `
+{
+        "array": [
+                {
+                        "hello": "Danger",
+                },
+        ],
+}
+`;

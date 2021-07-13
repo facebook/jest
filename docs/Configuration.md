@@ -537,6 +537,43 @@ test('some test', () => {
 
 _Note: This option is only supported using the default `jest-circus`. test runner_
 
+### `inlineSnapshotFormat` \[object]
+
+Default: `undefined`
+
+Allows to overriding specific snapshot formatting options documented in the [pretty-format readme](https://www.npmjs.com/package/pretty-format#usage-with-options). For example, this config would have the inline snapshot formatter not print a prefix for "Object" and "Array":
+
+```json
+{
+  "jest": {
+    "inlineSnapshotFormat": {
+      "printBasicPrototype": false
+    }
+  }
+}
+```
+
+```ts
+import {expect, test} from '@jest/globals';
+
+test('does not show prototypes for object and array inline', () => {
+  const object = {
+    array: [{hello: 'Danger'}],
+  };
+  expect(object).toMatchInlineSnapshot(`
+{
+  "array": [
+    {
+      "hello": "Danger",
+    },
+  ],
+}
+    `);
+});
+```
+
+There is a corresponding [`snapshotFormat`](#snapshotformat-object) option for separate file snapshots.
+
 ### `maxConcurrency` \[number]
 
 Default: `5`
@@ -944,6 +981,24 @@ jest.setTimeout(10000); // in milliseconds
 Default: `5`
 
 The number of seconds after which a test is considered as slow and reported as such in the results.
+
+### `snapshotFormat` \[object]
+
+Default: `undefined`
+
+Allows to overriding specific snapshot formatting options documented in the [pretty-format readme](https://www.npmjs.com/package/pretty-format#usage-with-options). For example, this config would have the snapshot formatter which prints with 4 spaces instead of 2:
+
+```json
+{
+  "jest": {
+    "snapshotFormat": {
+      "indent": 4
+    }
+  }
+}
+```
+
+There is a corresponding [`inlineSnapshotFormat`](#inlinesnapshotformat-object) option for inline snapshots.
 
 ### `snapshotResolver` \[string]
 

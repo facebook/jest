@@ -1,0 +1,12 @@
+{
+  "jest": {
+    "testEnvironment": "node",
+    "inlineSnapshotFormat": {
+      "printBasicPrototype": false
+    },
+    "snapshotFormat": {
+      "printBasicPrototype": false,
+      "indent": 8
+    }
+  }
+}

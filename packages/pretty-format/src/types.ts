@@ -46,7 +46,7 @@ export type Options = {
   theme: Theme;
 };
 
-export type OptionsReceived = {
+export interface PrettyFormatOptions {
   callToJSON?: boolean;
   escapeRegex?: boolean;
   escapeString?: boolean;
@@ -58,7 +58,9 @@ export type OptionsReceived = {
   printBasicPrototype?: boolean;
   printFunctionName?: boolean;
   theme?: ThemeReceived;
-};
+}
+
+export type OptionsReceived = PrettyFormatOptions;
 
 export type Config = {
   callToJSON: boolean;

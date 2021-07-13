@@ -970,6 +970,7 @@ export default async function normalize(
       case 'extensionsToTreatAsEsm':
       case 'extraGlobals':
       case 'globals':
+      case 'inlineSnapshotFormat':
       case 'findRelatedTests':
       case 'forceCoverageMatch':
       case 'forceExit':
@@ -997,6 +998,7 @@ export default async function normalize(
       case 'skipFilter':
       case 'skipNodeResolution':
       case 'slowTestThreshold':
+      case 'snapshotFormat':
       case 'testEnvironment':
       case 'testEnvironmentOptions':
       case 'testFailureExitCode':

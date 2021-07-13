@@ -60,6 +60,9 @@ export interface ConfigGlobals {
   [K: string]: unknown;
 }
 
+// This interface gets filled out when pretty-format is included
+interface PrettyFormatOptions {}
+
 export type DefaultOptions = {
   automock: boolean;
   bail: number;
@@ -171,6 +174,7 @@ export type InitialOptions = Partial<{
   globalTeardown: string | null | undefined;
   haste: HasteConfig;
   injectGlobals: boolean;
+  inlineSnapshotFormat: PrettyFormatOptions;
   reporters: Array<string | ReporterConfig>;
   logHeapUsage: boolean;
   lastCommit: boolean;
@@ -216,6 +220,7 @@ export type InitialOptions = Partial<{
   slowTestThreshold: number;
   snapshotResolver: Path;
   snapshotSerializers: Array<Path>;
+  snapshotFormat: PrettyFormatOptions;
   errorOnDeprecated: boolean;
   testEnvironment: string;
   testEnvironmentOptions: Record<string, unknown>;
@@ -292,6 +297,7 @@ export type GlobalConfig = {
   json: boolean;
   globalSetup?: string;
   globalTeardown?: string;
+  inlineSnapshotFormat: PrettyFormatOptions;
   lastCommit: boolean;
   logHeapUsage: boolean;
   listTests: boolean;
@@ -313,6 +319,7 @@ export type GlobalConfig = {
   rootDir: Path;
   silent?: boolean;
   skipFilter: boolean;
+  snapshotFormat: PrettyFormatOptions;
   errorOnDeprecated: boolean;
   testFailureExitCode: number;
   testNamePattern?: string;
@@ -352,6 +359,7 @@ export type ProjectConfig = {
   globalTeardown?: string;
   globals: ConfigGlobals;
   haste: HasteConfig;
+  inlineSnapshotFormat: PrettyFormatOptions;
   injectGlobals: boolean;
   moduleDirectories: Array<string>;
   moduleFileExtensions: Array<string>;
@@ -375,6 +383,7 @@ export type ProjectConfig = {
   slowTestThreshold: number;
   snapshotResolver?: Path;
   snapshotSerializers: Array<Path>;
+  snapshotFormat: PrettyFormatOptions;
   testEnvironment: string;
   testEnvironmentOptions: Record<string, unknown>;
   testMatch: Array<Glob>;

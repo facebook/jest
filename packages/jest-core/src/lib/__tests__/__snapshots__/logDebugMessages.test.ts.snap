@@ -18,6 +18,7 @@ exports[`prints the config object 1`] = `
     "globals": {},
     "haste": {},
     "injectGlobals": true,
+    "inlineSnapshotFormat": {},
     "moduleDirectories": [],
     "moduleFileExtensions": [
       "js"
@@ -41,6 +42,7 @@ exports[`prints the config object 1`] = `
     "skipFilter": false,
     "skipNodeResolution": false,
     "slowTestThreshold": 5,
+    "snapshotFormat": {},
     "snapshotSerializers": [],
     "testEnvironment": "node",
     "testEnvironmentOptions": {},
@@ -75,6 +77,7 @@ exports[`prints the config object 1`] = `
     "expand": false,
     "findRelatedTests": false,
     "forceExit": false,
+    "inlineSnapshotFormat": {},
     "json": false,
     "lastCommit": false,
     "listTests": false,
@@ -94,6 +97,7 @@ exports[`prints the config object 1`] = `
     "runTestsByPath": false,
     "silent": false,
     "skipFilter": false,
+    "snapshotFormat": {},
     "testFailureExitCode": 1,
     "testNamePattern": "",
     "testPathPattern": "",
