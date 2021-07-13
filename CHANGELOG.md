@@ -4,6 +4,8 @@
 
 ### Fixes
 
+- `[jest-resolve]` Allow usage of `node:` URLs to load Node.js builtin modules. ([#11638](https://github.com/facebook/jest/pull/11638))
+
 ### Chore & Maintenance
 
 ### Performance

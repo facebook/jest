@@ -74,6 +74,20 @@ describe('isCoreModule', () => {
     const isCore = resolver.isCoreModule('constants');
     expect(isCore).toEqual(false);
   });
+
+  it('returns true if using `node:` URLs and `moduleName` is a core module.', () => {
+    const moduleMap = ModuleMap.create('/');
+    const resolver = new Resolver(moduleMap, {} as ResolverConfig);
+    const isCore = resolver.isCoreModule('node:assert');
+    expect(isCore).toEqual(true);
+  });
+
+  it('returns false if using `node:` URLs and `moduleName` is not a core module.', () => {
+    const moduleMap = ModuleMap.create('/');
+    const resolver = new Resolver(moduleMap, {} as ResolverConfig);
+    const isCore = resolver.isCoreModule('node:not-a-core-module');
+    expect(isCore).toEqual(false);
+  });
 });
 
 describe('findNodeModule', () => {
