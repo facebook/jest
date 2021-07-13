@@ -50,10 +50,15 @@ export const createDidYouMeanMessage = (
   unrecognized: string,
   allowedOptions: Array<string>,
 ): string => {
-  const suggestion = allowedOptions.find(option => {
-    const steps: number = leven(option, unrecognized);
-    return steps < 3;
-  });
+  let isBestMatch: boolean;
+  let suggestion: string = '';
 
+  allowedOptions.forEach(option => {
+    isBestMatch =
+      leven(option, unrecognized) < leven(suggestion || '', unrecognized);
+    if (leven(option, unrecognized) < option.length * 0.4 && isBestMatch) {
+      suggestion = option;
+    }
+  });
   return suggestion ? `Did you mean ${chalk.bold(format(suggestion))}?` : '';
 };
