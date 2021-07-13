@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
 
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 14.x
 
@@ -54,7 +54,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.4
-      - uses: actions/setup-node@v2.1.5
+      - uses: actions/setup-node@v2.2.0
         with:
           node-version: 12.x
       - name: Get yarn cache
@@ -101,7 +101,7 @@ jobs:
         if: runner.os == 'Windows'
       - uses: actions/checkout@v2.3.4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.2.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: Get yarn cache
@@ -141,7 +141,7 @@ jobs:
         if: runner.os == 'Windows'
       - uses: actions/checkout@v2.3.4
       - name: Use Node.js 14.x
-        uses: actions/setup-node@v2.1.5
+        uses: actions/setup-node@v2.2.0
         with:
           node-version: 14.x
       - name: Get yarn cache
