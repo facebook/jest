@@ -85,12 +85,12 @@ export type HasteImpl = {
 export type FileData = Map<Config.Path, FileMetaData>;
 
 export type FileMetaData = [
-  /* id */ string,
-  /* mtime */ number,
-  /* size */ number,
-  /* visited */ 0 | 1,
-  /* dependencies */ string,
-  /* sha1 */ string | null | undefined,
+  id: string,
+  mtime: number,
+  size: number,
+  visited: 0 | 1,
+  dependencies: string,
+  sha1: string | null | undefined,
 ];
 
 export type MockData = Map<string, Config.Path>;
@@ -130,7 +130,7 @@ export type RawModuleMap = {
 };
 
 type ModuleMapItem = {[platform: string]: ModuleMetaData};
-export type ModuleMetaData = [Config.Path, /* type */ number];
+export type ModuleMetaData = [path: Config.Path, type: number];
 
 export type HType = {
   ID: 0;
