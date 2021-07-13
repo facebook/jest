@@ -79,7 +79,15 @@ test('calls the callback after 1 second', () => {
 
 ## Run Pending Timers
 
-There are also scenarios where you might have a recursive timer -- that is a timer that sets a new timer in its own callback. For these, running all the timers would be an endless loop… so something like `jest.runAllTimers()` is not desirable. For these cases you might use `jest.runOnlyPendingTimers()`:
+There are also scenarios where you might have a recursive timer -- that is a timer that sets a new timer in its own callback. 
+
+For these, running all the timers would be an endless loop, throwing the following error:
+
+```Ran 100000 timers, and there are still more! Assuming we've hit an infinite recursion and bailing out...```
+
+So something like `jest.runAllTimers()` is not desirable.
+
+For these cases you might use `jest.runOnlyPendingTimers()`:
 
 ```javascript
 // infiniteTimerGame.js
