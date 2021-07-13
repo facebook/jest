@@ -43,10 +43,10 @@ export default <EachCallback extends Global.TestCallback>(
           ? buildArrayTests(title, table)
           : buildTemplateTests(title, table, taggedTemplateData);
 
-        return tests.forEach(row =>
+        return tests.forEach((row, index) =>
           cb(
             row.title,
-            applyArguments(supportsDone, row.arguments, test),
+            applyArguments(supportsDone, row.arguments, test, index),
             timeout,
           ),
         );
@@ -82,7 +82,8 @@ const applyArguments = <EachCallback extends Global.TestCallback>(
   supportsDone: boolean,
   params: Array<unknown>,
   test: Global.EachTestFn<EachCallback>,
+  index: number,
 ): Global.EachTestFn<any> =>
   supportsDone && params.length < test.length
-    ? (done: Global.DoneFn) => test(...params, done)
-    : () => test(...params);
+    ? (done: Global.DoneFn) => test(...params, done, index)
+    : () => test(...params, index);

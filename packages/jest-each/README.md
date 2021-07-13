@@ -123,7 +123,7 @@ const each = require('jest-each').default;
     - To inject nested object values use you can supply a keyPath i.e. `$variable.path.to.value`
     - You can use `$#` to inject the index of the test case
     - You cannot use `$variable` with the `printf` formatting except for `%%`
-- testFn: `Function` the test logic, this is the function that will receive the parameters of each row as function arguments
+- testFn: `Function` the test logic, this is the function that will receive the parameters of each row as function arguments as well as the `index` of row as an optional argument.
 
 #### `each([parameters]).describe(name, suiteFn)`
 
@@ -149,13 +149,19 @@ const each = require('jest-each').default;
     - To inject nested object values use you can supply a keyPath i.e. `$variable.path.to.value`
     - You can use `$#` to inject the index of the test case
     - You cannot use `$variable` with the `printf` formatting except for `%%`
-- suiteFn: `Function` the suite of `test`/`it`s to be ran, this is the function that will receive the parameters in each row as function arguments
+- suiteFn: `Function` the suite of `test`/`it`s to be ran, this is the function that will receive the parameters in each row as function arguments as well as the `index` of row as an optional argument.
 
 ### Usage
 
 #### `.test(name, fn)`
 
 Alias: `.it(name, fn)`
+
+```js
+each([0, 1, 2]).test('match the index', (a, index) => {
+  expect(a).toBe(index);
+});
+```
 
 ```js
 each([
@@ -274,6 +280,15 @@ each([['hello'], ['mr'], ['spy']]).test(
 ```
 
 #### `.describe(name, fn)`
+
+
+```js
+each([0, 1, 2]).describe('match the index with row', (a, index) => {
+  test(`matching ${index}`, () => {
+    expect(a).toBe(index);
+  });
+});
+```
 
 ```js
 each([

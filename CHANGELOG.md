@@ -80,6 +80,7 @@
 - `[jest-changed-files]` Use '--' to separate paths from revisions ([#11160](https://github.com/facebook/jest/pull/11160))
 - `[jest-circus]` [**BREAKING**] Fail tests when multiple `done()` calls are made ([#10624](https://github.com/facebook/jest/pull/10624))
 - `[jest-circus, jest-jasmine2]` [**BREAKING**] Fail the test instead of just warning when describe returns a value ([#10947](https://github.com/facebook/jest/pull/10947))
+- `[jest-each]` Now `index` is available as an optional argument in callback function ([#11415](https://github.com/facebook/jest/pull/11415))
 - `[jest-config]` [**BREAKING**] Default to Node testing environment instead of browser (JSDOM) ([#9874](https://github.com/facebook/jest/pull/9874))
 - `[jest-config]` [**BREAKING**] Use `jest-circus` as default test runner ([#10686](https://github.com/facebook/jest/pull/10686))
 - `[jest-config]` Add support for `preset` written in ESM ([#11200](https://github.com/facebook/jest/pull/11200))
