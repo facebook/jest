@@ -25,16 +25,25 @@ test('Any.asymmetricMatch()', () => {
 
   [
     any(String).asymmetricMatch('jest'),
+    any('string').asymmetricMatch('jest'),
     any(Number).asymmetricMatch(1),
+    any('number').asymmetricMatch(1),
     any(Function).asymmetricMatch(() => {}),
+    any('function').asymmetricMatch(() => {}),
     any(Boolean).asymmetricMatch(true),
+    any('boolean').asymmetricMatch(true),
     /* global BigInt */
     any(BigInt).asymmetricMatch(1n),
+    any('bigint').asymmetricMatch(1n),
     any(Symbol).asymmetricMatch(Symbol()),
+    any('symbol').asymmetricMatch(Symbol()),
     any(Object).asymmetricMatch({}),
+    any('object').asymmetricMatch({}),
     any(Object).asymmetricMatch(null),
+    any('object').asymmetricMatch(null),
     any(Array).asymmetricMatch([]),
     any(Thing).asymmetricMatch(new Thing()),
+    any('Thing').asymmetricMatch(new Thing()),
   ].forEach(test => {
     jestExpect(test).toBe(true);
   });
