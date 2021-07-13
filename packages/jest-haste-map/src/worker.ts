@@ -8,7 +8,6 @@
 import {createHash} from 'crypto';
 import * as path from 'path';
 import * as fs from 'graceful-fs';
-import blacklist from './blacklist';
 import H from './constants';
 import * as dependencyExtractor from './lib/dependencyExtractor';
 import type {HasteImpl, WorkerMessage, WorkerMetadata} from './types';
@@ -63,7 +62,7 @@ export async function worker(data: WorkerMessage): Promise<WorkerMetadata> {
     } catch (err) {
       throw new Error(`Cannot parse ${filePath} as JSON: ${err.message}`);
     }
-  } else if (!blacklist.has(filePath.substr(filePath.lastIndexOf('.')))) {
+  } else {
     // Process a random file that is returned as a MODULE.
     if (hasteImpl) {
       id = hasteImpl.getHasteName(filePath);
@@ -78,7 +77,7 @@ export async function worker(data: WorkerMessage): Promise<WorkerMetadata> {
               filePath,
               dependencyExtractor.extract,
             )
-          : dependencyExtractor.extract(content),
+          : dependencyExtractor.extract(content, filePath),
       );
     }
 

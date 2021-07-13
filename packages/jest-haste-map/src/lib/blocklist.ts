@@ -13,7 +13,7 @@
 // reflected in the list. Adding "application/" is too risky since some text
 // file formats (like ".js" and ".json") have an "application/" MIME type.
 //
-// Feel free to add any extensions that cannot be a Haste module.
+// Feel free to add any extensions that cannot extract dependencies.
 
 const extensions: Set<string> = new Set([
   // JSONs are never haste modules, except for "package.json", which is handled.

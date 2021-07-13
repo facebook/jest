@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import blocklist from './blocklist';
 import isRegExpSupported from './isRegExpSupported';
 
 // Negative look behind is only supported in Node 9+
@@ -73,8 +74,13 @@ const JEST_EXTENSIONS_RE = createRegExp(
   'g',
 );
 
-export function extract(code: string): Set<string> {
+export function extract(code: string, filePath: string): Set<string> {
   const dependencies = new Set<string>();
+
+  // MIME types do not have dependencies by default
+  if (blocklist.has(filePath.substr(filePath.lastIndexOf('.')))) {
+    return dependencies;
+  }
 
   const addDependency = (match: string, _: string, dep: string) => {
     dependencies.add(dep);

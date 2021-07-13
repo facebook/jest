@@ -36,7 +36,7 @@ jest.mock('../crawlers/watchman', () =>
   jest.fn(options => {
     const path = require('path');
 
-    const {data, ignore, rootDir, roots, computeSha1} = options;
+    const {data, ignore, rootDir, roots, computeSha1, extensions} = options;
     const list = mockChangedFiles || mockFs;
     const removedFiles = new Map();
 
@@ -45,7 +45,8 @@ jest.mock('../crawlers/watchman', () =>
     for (const file in list) {
       if (
         new RegExp(roots.join('|').replace(/\\/g, '\\\\')).test(file) &&
-        !ignore(file)
+        !ignore(file) &&
+        extensions.includes(file.substr(file.lastIndexOf('.') + 1))
       ) {
         const relativeFilePath = path.relative(rootDir, file);
         if (list[file]) {
@@ -300,6 +301,38 @@ describe('HasteMap', () => {
     expect(hasteFS.matchFiles(/__mocks__/)).toEqual([
       path.join('/', 'project', 'fruits', '__mocks__', 'Pear.js'),
     ]);
+  });
+
+  it('respects extensions', async () => {
+    mockFs[path.join('/', 'project', 'fruits', 'Kiwi.gif')] = `
+      // Kiwi!
+    `;
+    mockFs[path.join('/', 'project', 'fruits', 'Apple.json')] = `
+      // Apple!
+    `;
+    const {moduleMap} = await new HasteMap(defaultConfig).build();
+    expect(moduleMap.getModule('Apple.json')).toEqual(
+      '/project/fruits/Apple.json',
+    );
+    expect(moduleMap.getModule('Kiwi.gif')).toEqual(null);
+  });
+
+  it('allows non-js file extensions', async () => {
+    const config = {
+      ...defaultConfig,
+      extensions: ['json', 'gif'],
+    };
+    mockFs[path.join('/', 'project', 'fruits', 'Kiwi.gif')] = `
+      // Kiwi!
+    `;
+    mockFs[path.join('/', 'project', 'fruits', 'Apple.json')] = `
+      // Apple!
+    `;
+    const {moduleMap} = await new HasteMap(config).build();
+    expect(moduleMap.getModule('Apple.json')).toEqual(
+      '/project/fruits/Apple.json',
+    );
+    expect(moduleMap.getModule('Kiwi.gif')).toEqual('/project/fruits/Kiwi.gif');
   });
 
   it('ignores files given a pattern', async () => {
@@ -646,27 +679,6 @@ describe('HasteMap', () => {
 
       expect(useBuitinsInContext(hasteMap.read())).toEqual(data);
     });
-  });
-
-  it('does not crawl native files even if requested to do so', async () => {
-    mockFs[path.join('/', 'project', 'video', 'IRequireAVideo.js')] = `
-      module.exports = require("./video.mp4");
-    `;
-
-    const hasteMap = new HasteMap({
-      ...defaultConfig,
-      extensions: [...defaultConfig.extensions],
-      roots: [...defaultConfig.roots, path.join('/', 'project', 'video')],
-    });
-
-    const {__hasteMapForTest: data} = await hasteMap.build();
-
-    expect(data.map.get('IRequireAVideo')).toBeDefined();
-    expect(data.files.get(path.join('video', 'video.mp4'))).toBeDefined();
-    expect(fs.readFileSync).not.toBeCalledWith(
-      path.join('video', 'video.mp4'),
-      'utf8',
-    );
   });
 
   it('retains all files if `retainAllFiles` is specified', async () => {
