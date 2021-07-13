@@ -42,7 +42,7 @@ const setupFiles = (input: Array<{keys: Array<string>}>) => {
 };
 
 test('can press "p" to filter by file name', () => {
-  const input = [{keys: ['p', 'b', 'a', 'r', '\r']}, {keys: ['q']}];
+  const input = [{keys: ['p', 'bar', '\r']}, {keys: ['q']}];
   setupFiles(input);
 
   const {exitCode, stdout, stderr} = runJest(DIR, [

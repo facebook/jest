@@ -1,18 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`can press "p" to filter by file name 1`] = `
-
+"
 Pattern Mode Usage
  › Press Esc to exit pattern mode.
  › Press Enter to filter by a filenames regex pattern.
 
- pattern › 
- pattern › b
- pattern › ba
- pattern › bar
+ pattern ›  pattern › bar
 
-
-
+"
 `;
 
 exports[`can press "p" to filter by file name: test results 1`] = `
@@ -43,16 +39,14 @@ Ran all test suites matching /bar/i.
 `;
 
 exports[`can press "t" to filter by test name 1`] = `
-
+"
 Pattern Mode Usage
  › Press Esc to exit pattern mode.
  › Press Enter to filter by a tests regex pattern.
 
- pattern › 
- pattern › 2
+ pattern ›  pattern › 2
 
-
-
+"
 `;
 
 exports[`can press "t" to filter by test name: test results 1`] = `
