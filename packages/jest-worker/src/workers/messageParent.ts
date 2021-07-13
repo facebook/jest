@@ -29,7 +29,9 @@ export default function messageParent(
     // ! is safe due to `null` check in `isWorkerThread`
     parentPort!.postMessage([PARENT_MESSAGE_CUSTOM, message]);
   } else if (typeof parentProcess.send === 'function') {
-    parentProcess.send([PARENT_MESSAGE_CUSTOM, message]);
+    const m = {stringifiedMessage: require('flatted').stringify(message)};
+    // const m = message;
+    parentProcess.send([PARENT_MESSAGE_CUSTOM, m]);
   } else {
     throw new Error('"messageParent" can only be used inside a worker');
   }

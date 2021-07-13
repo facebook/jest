@@ -197,7 +197,18 @@ export default class ChildProcessWorker implements WorkerInterface {
         this._onProcessEnd(error, null);
         break;
       case PARENT_MESSAGE_CUSTOM:
-        this._onCustomMessage(response[1]);
+        const getResponse = ([, re]:
+          | Array<unknown>
+          | [unknown, {stringifiedMessage: string}]) => {
+          if (typeof re === 'object' && re && 'stringifiedMessage' in re) {
+            // @ts-expect-error
+            return require('flatted').parse(re.stringifiedMessage);
+          }
+
+          return re;
+        };
+
+        this._onCustomMessage(getResponse(response));
         break;
       default:
         throw new TypeError('Unexpected response from worker: ' + response[0]);
