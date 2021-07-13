@@ -133,7 +133,6 @@ export interface GlobalAdditions extends TestFrameworkGlobals {
 
 export interface Global
   extends GlobalAdditions,
-    // TODO: Maybe add `| Window` in the future?
-    Omit<NodeJS.Global, keyof GlobalAdditions> {
+    Omit<typeof globalThis, keyof GlobalAdditions> {
   [extras: string]: unknown;
 }

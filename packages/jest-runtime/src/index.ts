@@ -929,7 +929,7 @@ export default class Runtime {
     if (this._environment) {
       if (this._environment.global) {
         const envGlobal = this._environment.global;
-        (Object.keys(envGlobal) as Array<keyof NodeJS.Global>).forEach(key => {
+        (Object.keys(envGlobal) as Array<keyof typeof globalThis>).forEach(key => {
           const globalMock = envGlobal[key];
           if (
             ((typeof globalMock === 'object' && globalMock !== null) ||

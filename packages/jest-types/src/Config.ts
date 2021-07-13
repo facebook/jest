@@ -345,7 +345,7 @@ export type ProjectConfig = {
   displayName?: DisplayName;
   errorOnDeprecated: boolean;
   extensionsToTreatAsEsm: Array<Path>;
-  extraGlobals: Array<keyof NodeJS.Global>;
+  extraGlobals: Array<keyof typeof globalThis>;
   filter?: Path;
   forceCoverageMatch: Array<Glob>;
   globalSetup?: string;

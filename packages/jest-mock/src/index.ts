@@ -7,7 +7,7 @@
 
 /* eslint-disable local/ban-types-eventually, local/prefer-rest-params-eventually */
 
-type Global = NodeJS.Global; // | Window – add once TS improves typings;
+type Global = typeof globalThis; // | Window – add once TS improves typings;
 
 export type MockFunctionMetadataType =
   | 'object'

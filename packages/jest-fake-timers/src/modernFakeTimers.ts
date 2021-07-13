@@ -16,7 +16,7 @@ export default class FakeTimers {
   private _clock!: InstalledClock;
   private _config: StackTraceConfig;
   private _fakingTime: boolean;
-  private _global: NodeJS.Global;
+  private _global: typeof globalThis;
   private _fakeTimers: FakeTimerWithContext;
   private _maxLoops: number;
 
@@ -25,7 +25,7 @@ export default class FakeTimers {
     config,
     maxLoops,
   }: {
-    global: NodeJS.Global;
+    global: typeof globalThis;
     config: StackTraceConfig;
     maxLoops?: number;
   }) {

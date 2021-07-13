@@ -9,7 +9,7 @@ import {formatTime} from 'jest-util';
 import PCancelable from './PCancelable';
 import pTimeout from './pTimeout';
 
-type Global = NodeJS.Global;
+type Global = typeof globalThis;
 
 export type Options = {
   clearTimeout: Global['clearTimeout'];

@@ -10,8 +10,8 @@
 export default function pTimeout(
   promise: Promise<void>,
   ms: number,
-  clearTimeout: NodeJS.Global['clearTimeout'],
-  setTimeout: NodeJS.Global['setTimeout'],
+  clearTimeout: typeof globalThis['clearTimeout'],
+  setTimeout: typeof globalThis['setTimeout'],
   onTimeout: () => void,
 ): Promise<void> {
   return new Promise((resolve, reject) => {

@@ -6,7 +6,7 @@
  */
 
 export default (
-  globalToMutate: NodeJS.Global | Window,
+  globalToMutate: typeof globalThis,
   key: string,
   value: unknown,
 ): void => {

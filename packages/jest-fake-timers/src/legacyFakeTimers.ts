@@ -48,9 +48,11 @@ type TimerConfig<Ref> = {
 
 const MS_IN_A_YEAR = 31536000000;
 
-interface FakeTimersGlobal extends NodeJS.Global {
-  cancelAnimationFrame?: (handle: number) => void;
-  requestAnimationFrame?: (callback: (time: number) => void) => number;
+type GlobalThis = typeof globalThis;
+
+interface FakeTimersGlobal extends GlobalThis {
+  cancelAnimationFrame: (handle: number) => void;
+  requestAnimationFrame: (callback: (time: number) => void) => number;
 }
 
 export default class FakeTimers<TimerRef> {
@@ -76,7 +78,7 @@ export default class FakeTimers<TimerRef> {
     config,
     maxLoops,
   }: {
-    global: FakeTimersGlobal;
+    global: typeof globalThis;
     moduleMocker: ModuleMocker;
     timerConfig: TimerConfig<TimerRef>;
     config: StackTraceConfig;
