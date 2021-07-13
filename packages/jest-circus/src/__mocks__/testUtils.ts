@@ -46,6 +46,7 @@ export const runTest = (source: string) => {
 
     const testEventHandler = require('${TEST_EVENT_HANDLER_PATH}').default;
     const addEventHandler = require('${CIRCUS_STATE_PATH}').addEventHandler;
+    const removeEventHandler = require('${CIRCUS_STATE_PATH}').removeEventHandler;
     addEventHandler(testEventHandler);
 
     ${source};

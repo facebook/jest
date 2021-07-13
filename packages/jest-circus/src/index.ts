@@ -10,7 +10,13 @@ import {bind as bindEach} from 'jest-each';
 import {ErrorWithStack, isPromise} from 'jest-util';
 import {dispatchSync} from './state';
 
-export {setState, getState, resetState} from './state';
+export {
+  setState,
+  getState,
+  resetState,
+  addEventHandler,
+  removeEventHandler,
+} from './state';
 export {default as run} from './run';
 
 type THook = (fn: Circus.HookFn, timeout?: number) => void;
