@@ -464,7 +464,7 @@ Example:
 
 ```js
 // setup.js
-module.exports = async () => {
+module.exports = () => {
   // ...
   // Set reference to mongod in order to close the server during teardown.
   global.__MONGOD__ = mongod;
