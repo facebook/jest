@@ -70,7 +70,7 @@ Since we just updated our component to point to a different address, it's reason
 To resolve this, we will need to update our snapshot artifacts. You can run Jest with a flag that will tell it to re-generate snapshots:
 
 ```bash
-jest --updateSnapshot
+jest --update-snapshot
 ```
 
 Go ahead and accept the changes by running the above command. You may also use the equivalent single-character `-u` flag to re-generate snapshots if you prefer. This will re-generate snapshot artifacts for all failing snapshot tests. If we had any additional failing snapshot tests due to an unintentional bug, we would need to fix the bug before re-generating snapshots to avoid recording snapshots of the buggy behavior.
