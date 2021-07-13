@@ -798,6 +798,30 @@ describe('FakeTimers', () => {
       expect(global.setImmediate).not.toBe(nativeSetImmediate);
       expect(global.clearImmediate).not.toBe(nativeClearImmediate);
     });
+
+    it('ignores timer functions from the ignore option', () => {
+      const nativeSetTimeout = jest.fn();
+      const nativeClearTimeout = jest.fn();
+      const nativeNextTick = jest.fn();
+      process.nextTick = nativeNextTick;
+      const global = {
+        Date,
+        clearTimeout: nativeClearTimeout,
+        process,
+        setTimeout: nativeSetTimeout,
+      };
+
+      const timers = new FakeTimers({global});
+      timers.useFakeTimers({
+        ignore: ['nextTick', 'clearTimeout'],
+      });
+
+      // Ignored functions don't get mocked
+      expect(global.process.nextTick).toBe(nativeNextTick);
+      expect(global.clearTimeout).toBe(nativeClearTimeout);
+      // check if other functions are still being mocked
+      expect(global.setTimeout).not.toBe(nativeSetTimeout);
+    });
   });
 
   describe('getTimerCount', () => {

@@ -1,6 +1,7 @@
 ## master
 
 ### Features
+- `[@jest/fake-timers]` Add options object with ignore property to modern useFakeTimers function. ([#11661](https://github.com/facebook/jest/pull/11661))
 
 ### Fixes
 

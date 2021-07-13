@@ -12,6 +12,10 @@ import {
 } from '@sinonjs/fake-timers';
 import {StackTraceConfig, formatStackTrace} from 'jest-message-util';
 
+interface ModernFakeTimersOptions {
+  ignore?: Array<string>;
+}
+
 export default class FakeTimers {
   private _clock!: InstalledClock;
   private _config: StackTraceConfig;
@@ -93,11 +97,13 @@ export default class FakeTimers {
     }
   }
 
-  useFakeTimers(): void {
+  useFakeTimers(options: ModernFakeTimersOptions = {}): void {
     if (!this._fakingTime) {
-      const toFake = Object.keys(this._fakeTimers.timers) as Array<
-        keyof FakeTimerWithContext['timers']
-      >;
+      const toFake = Object.keys(this._fakeTimers.timers).filter(
+        // This is a simple attempt to fix the issue when using fakeTimers in combination with promises
+        // Developers can now add the nextTick function to the list timers not to mock
+        timerFunc => !(options?.ignore || []).includes(timerFunc),
+      ) as Array<keyof FakeTimerWithContext['timers']>;
 
       this._clock = this._fakeTimers.install({
         loopLimit: this._maxLoops,
