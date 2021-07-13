@@ -1,0 +1,802 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "$id": "https://jestjs.io/jest.schema.json",
+  "id": "https://jestjs.io/jest.schema.json",
+  "title": "Jest Config schema. Merged from Jest Docs and default config",
+  "description": "For a detailed explanation regarding each configuration property, visit: https://jestjs.io/docs/en/configuration.html",
+  "type": "object",
+  "additionalProperties": false,
+  "patternProperties": {
+    "^-": {
+      "$comment": "Funny CLI-only decline",
+      "const": "null"
+    }
+  },
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri-reference",
+      "default": "https://jestjs.io/jest.schema.json"
+    },
+    "automock": {
+      "type": "boolean",
+      "default": false,
+      "description": "This option tells Jest that all imported modules in your tests should be mocked automatically. All modules used in your tests will have a replacement implementation, keeping the API surface.",
+      "title": "All imported modules in your tests should be mocked automatically"
+    },
+    "browser": {
+      "type": "boolean",
+      "default": false,
+      "description": "Respect Browserify's \"browser\" field in package.json when resolving modules. Some modules export different versions based on whether they are operating in Node or a browser.",
+      "title": "Respect \"browser\" field in package.json when resolving modules"
+    },
+    "cacheDirectory": {
+      "type": "string",
+      "default": "/tmp/<path>",
+      "description": "The directory where Jest should store its cached dependency information.",
+      "title": "The directory where Jest should store its cached dependency information"
+    },
+    "clearMocks": {
+      "type": "boolean",
+      "default": false,
+      "description": "Automatically clear mock calls and instances between every test. Equivalent to calling jest.clearAllMocks() between each test. This does not remove any mock implementation that may have been provided.",
+      "title": "Automatically clear mock calls and instances between every test"
+    },
+    "collectCoverage": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indicates whether the coverage information should be collected while executing the test. Because this retrofits all executed files with coverage collection statements, it may significantly slow down your tests.",
+      "title": "Indicates whether the coverage information should be collected while executing the test"
+    },
+    "collectCoverageFrom": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "description": "An array of glob patterns indicating a set of files for which coverage information should be collected. If a file matches the specified glob pattern, coverage information will be collected for it even if no tests exist for this file and it's never required in the test suite.",
+      "title": "An array of glob patterns indicating a set of files for which coverage information should be collected",
+      "items": {
+        "type": "string",
+        "format": "uri-reference"
+      }
+    },
+    "coverageDirectory": {
+      "type": "string",
+      "description": "The directory where Jest should output its coverage files.",
+      "title": "The directory where Jest should output its coverage files",
+      "examples": [
+        "coverage"
+      ]
+    },
+    "coveragePathIgnorePatterns": {
+      "type": "array",
+      "default": [
+        "/node_modules/"
+      ],
+      "description": "An array of regexp pattern strings that are matched against all file paths before executing the test. If the file path matches any of the patterns, coverage information will be skipped.",
+      "items": {
+        "type": "string",
+        "format": "regex"
+      },
+      "title": "An array of regexp pattern strings used to skip coverage collection"
+    },
+    "coverageReporters": {
+      "type": "array",
+      "default": [
+        "json",
+        "lcov",
+        "text",
+        "clover"
+      ],
+      "description": "A list of reporter names that Jest uses when writing coverage reports. Any istanbul reporter can be used.",
+      "items": {
+        "type": "string"
+      },
+      "title": "A list of reporter names that Jest uses when writing coverage reports"
+    },
+    "coverageThreshold": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "description": "This will be used to configure minimum threshold enforcement for coverage results. Thresholds can be specified as global, as a glob, and as a directory or file path. If thresholds aren't met, jest will fail. Thresholds specified as a positive number are taken to be the minimum percentage required. Thresholds specified as a negative number represent the maximum number of uncovered entities allowed.",
+      "title": "An object that configures minimum threshold enforcement for coverage results",
+      "examples": [
+        {
+          "global": {
+            "branches": 100,
+            "functions": 100,
+            "lines": 100,
+            "statements": 100
+          }
+        }
+      ]
+    },
+    "dependencyExtractor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "This option allows the use of a custom dependency extractor. It must be a node module that exports an object with an extract function. E.g.:",
+      "title": "A path to a custom dependency extractor"
+    },
+    "errorOnDeprecated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Make calling deprecated APIs throw helpful error messages. Useful for easing the upgrade process.",
+      "title": "Make calling deprecated APIs throw helpful error messages"
+    },
+    "extraGlobals": {
+      "type": "array",
+      "description": "Test files run inside a vm, which slows calls to global context properties (e.g. Math). With this option you can specify extra properties to be defined inside the vm for faster lookups.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "forceCoverageMatch": {
+      "type": "array",
+      "default": [
+        ""
+      ],
+      "description": "Test files are normally ignored from collecting code coverage. With this option, you can overwrite this behavior and include otherwise ignored files in code coverage.",
+      "items": {
+        "type": "string",
+        "format": "uri-reference"
+      },
+      "title": "Force coverage collection from ignored files using an array of glob patterns"
+    },
+    "globals": {
+      "type": "object",
+      "default": [],
+      "description": "A set of global variables that need to be available in all test environments.",
+      "title": "A set of global variables that need to be available in all test environments"
+    },
+    "globalSetup": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "This option allows the use of a custom global setup module which exports an async function that is triggered once before all test suites. This function gets Jest's globalConfig object as a parameter.",
+      "title": "A path to a module which exports an async function that is triggered once before all test suites"
+    },
+    "globalTeardown": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "This option allows the use of a custom global teardown module which exports an async function that is triggered once after all test suites. This function gets Jest's globalConfig object as a parameter.",
+      "title": "A path to a module which exports an async function that is triggered once after all test suites"
+    },
+    "maxConcurrency": {
+      "type": "number",
+      "default": 5,
+      "description": "A number limiting the number of tests that are allowed to run at the same time when using test.concurrent. Any test above this limit will be queued and executed once a slot is released."
+    },
+    "moduleDirectories": {
+      "type": "array",
+      "default": [
+        "node_modules"
+      ],
+      "description": "An array of directory names to be searched recursively up from the requiring module's location. Setting this option will override the default, if you wish to still search node_modules for packages include it along with any other options: [\"node_modules\", \"bower_components\"]",
+      "items": {
+        "type": "string"
+      },
+      "title": "An array of directory names to be searched recursively up from the requiring module's location"
+    },
+    "moduleFileExtensions": {
+      "type": "array",
+      "default": [
+        "js",
+        "json",
+        "jsx",
+        "ts",
+        "tsx",
+        "node"
+      ],
+      "description": "An array of file extensions your modules use. If you require modules without specifying a file extension, these are the extensions Jest will look for, in left-to-right order.",
+      "items": {
+        "type": "string"
+      },
+      "title": "An array of file extensions your modules use"
+    },
+    "modulePathIgnorePatterns": {
+      "type": "array",
+      "default": [],
+      "description": "An array of regexp pattern strings that are matched against all module paths before those paths are to be considered 'visible' to the module loader. If a given module's path matches any of the patterns, it will not be require()-able in the test environment.",
+      "items": {
+        "type": "string",
+        "format": "regex"
+      },
+      "title": "An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader"
+    },
+    "modulePaths": {
+      "type": "array",
+      "default": [],
+      "description": "An alternative API to setting the NODE_PATH env variable, modulePaths is an array of absolute paths to additional locations to search when resolving modules. Use the <rootDir> string token to include the path to your project's root directory. Example: [\"<rootDir>/app/\"].",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notify": {
+      "type": "boolean",
+      "default": false,
+      "description": "Activates notifications for test results.",
+      "title": "Activates notifications for test results"
+    },
+    "notifyMode": {
+      "type": "string",
+      "default": "failure-change",
+      "description": "Specifies notification mode. Requires notify: true.",
+      "title": "An enum that specifies notification mode. Requires { notify: true }"
+    },
+    "preset": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "A preset that is used as a base for Jest's configuration. A preset should point to an npm module that has a jest-preset.json or jest-preset.js file at the root.",
+      "title": "A preset that is used as a base for Jest's configuration"
+    },
+    "prettierPath": {
+      "type": "string",
+      "default": "'prettier'",
+      "description": "Sets the path to the prettier node module used to update inline snapshots."
+    },
+    "resetMocks": {
+      "type": "boolean",
+      "default": false,
+      "description": "Automatically reset mock state between every test. Equivalent to calling jest.resetAllMocks() between each test. This will lead to any mocks having their fake implementations removed but does not restore their initial implementation.",
+      "title": "Automatically reset mock state between every test"
+    },
+    "resetModules": {
+      "type": "boolean",
+      "default": false,
+      "description": "By default, each test file gets its own independent module registry. Enabling resetModules goes a step further and resets the module registry before running each individual test. This is useful to isolate modules for every test so that local module state doesn't conflict between tests. This can be done programmatically using jest.resetModules().",
+      "title": "Reset the module registry before running each individual test"
+    },
+    "resolver": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "This option allows the use of a custom resolver. This resolver must be a node module that exports a function expecting a string as the first argument for the path to resolve and an object with the following structure as the second argument:",
+      "title": "A path to a custom resolver"
+    },
+    "restoreMocks": {
+      "type": "boolean",
+      "default": false,
+      "description": "Automatically restore mock state between every test. Equivalent to calling jest.restoreAllMocks() between each test. This will lead to any mocks having their fake implementations removed and restores their initial implementation.",
+      "title": "Automatically restore mock state between every test"
+    },
+    "rootDir": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": "The root of the directory containing your Jest config file or the package.json or the pwd if no package.json is found",
+      "description": "The root directory that Jest should scan for tests and modules within. If you put your Jest config inside your package.json and want the root directory to be the root of your repo, the value for this config param will default to the directory of the package.json.",
+      "title": "The root directory that Jest should scan for tests and modules within"
+    },
+    "roots": {
+      "type": "array",
+      "default": [
+        "<rootDir>"
+      ],
+      "description": "A list of paths to directories that Jest should use to search for files in.",
+      "items": {
+        "type": "string"
+      },
+      "title": "A list of paths to directories that Jest should use to search for files in"
+    },
+    "runner": {
+      "type": "string",
+      "default": "jest-runner",
+      "description": "This option allows you to use a custom runner instead of Jest's default test runner. Examples of runners include:",
+      "title": "Allows you to use a custom runner instead of Jest's default test runner"
+    },
+    "setupFiles": {
+      "type": "array",
+      "default": [],
+      "description": "A list of paths to modules that run some code to configure or set up the testing environment. Each setupFile will be run once per test file. Since every test runs in its own environment, these scripts will be executed in the testing environment immediately before executing the test code itself.",
+      "title": "The paths to modules that run some code to configure or set up the testing environment before each test"
+    },
+    "setupFilesAfterEnv": {
+      "type": "array",
+      "default": [],
+      "description": "A list of paths to modules that run some code to configure or set up the testing framework before each test. Since setupFiles executes before the test framework is installed in the environment, this script file presents you the opportunity of running some code immediately after the test framework has been installed in the environment.",
+      "title": "A list of paths to modules that run some code to configure or set up the testing framework before each test"
+    },
+    "snapshotResolver": {
+      "type": "string",
+      "description": "The path to a module that can resolve test<->snapshot path. This config option lets you customize where Jest stores snapshot files on disk."
+    },
+    "snapshotSerializers": {
+      "type": "array",
+      "default": [],
+      "description": "A list of paths to snapshot serializer modules Jest should use for snapshot testing.",
+      "items": {
+        "type": "string"
+      },
+      "title": "A list of paths to snapshot serializer modules Jest should use for snapshot testing"
+    },
+    "testEnvironment": {
+      "type": "string",
+      "default": "jsdom",
+      "description": "The test environment that will be used for testing. The default environment in Jest is a browser-like environment through jsdom. If you are building a node service, you can use the node option to use a node-like environment instead.",
+      "title": "The test environment that will be used for testing"
+    },
+    "testMatch": {
+      "type": "array",
+      "default": [
+        "**/__tests__/**/*.[jt]s?(x)",
+        "**/?(*.)+(spec|test).[jt]s?(x)"
+      ],
+      "description": "The glob patterns Jest uses to detect test files. By default it looks for .js, .jsx, .ts and .tsx files inside of __tests__ folders, as well as any files with a suffix of .test or .spec (e.g. Component.test.js or Component.spec.js). It will also find files called test.js or spec.js.",
+      "items": {
+        "type": "string",
+        "format": "uri-reference"
+      },
+      "title": "The glob patterns Jest uses to detect test files"
+    },
+    "testPathIgnorePatterns": {
+      "type": "array",
+      "default": [
+        "/node_modules/"
+      ],
+      "description": "An array of regexp pattern strings that are matched against all test paths before executing the test. If the test path matches any of the patterns, it will be skipped.",
+      "items": {
+        "type": "string",
+        "format": "regex"
+      },
+      "title": "An array of regexp pattern strings that are matched against all test paths, matched tests are skipped"
+    },
+    "testResultsProcessor": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "This option allows the use of a custom results processor. This processor must be a node module that exports a function expecting an object with the following structure as the first argument and return it:",
+      "title": "This option allows the use of a custom results processor"
+    },
+    "testRunner": {
+      "type": "string",
+      "default": "jasmine2",
+      "description": "This option allows use of a custom test runner. The default is jasmine2. A custom test runner can be provided by specifying a path to a test runner implementation.",
+      "title": "This option allows use of a custom test runner"
+    },
+    "testSequencer": {
+      "type": "string",
+      "default": "@jest/test-sequencer",
+      "description": "This option allows you to use a custom sequencer instead of Jest's default. sort may optionally return a Promise."
+    },
+    "testURL": {
+      "type": "string",
+      "default": "http://localhost",
+      "description": "This option sets the URL for the jsdom environment. It is reflected in properties such as location.href.",
+      "title": "This option sets the URL for the jsdom environment. It is reflected in properties such as location.href"
+    },
+    "timers": {
+      "type": "string",
+      "default": "real",
+      "description": "Setting this value to fake allows the use of fake timers for functions such as setTimeout. Fake timers are useful when a piece of code sets a long timeout that we don't want to wait for in a test.",
+      "title": "Setting this value to \"fake\" allows the use of fake timers for functions such as \"setTimeout\""
+    },
+    "transformIgnorePatterns": {
+      "type": "array",
+      "default": [
+        "/node_modules/"
+      ],
+      "description": "An array of regexp pattern strings that are matched against all source file paths before transformation. If the test path matches any of the patterns, it will not be transformed.",
+      "items": {
+        "type": "string",
+        "format": "regex"
+      },
+      "title": "An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation"
+    },
+    "unmockedModulePathPatterns": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "default": [],
+      "description": "An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them. If a module's path matches any of the patterns in this list, it will not be automatically mocked by the module loader.",
+      "items": {
+        "type": "string"
+      },
+      "title": "An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them"
+    },
+    "verbose": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": false,
+      "description": "Indicates whether each individual test should be reported during the run. All errors will also still be shown on the bottom after execution.",
+      "title": "Indicates whether each individual test should be reported during the run"
+    },
+    "watchPathIgnorePatterns": {
+      "type": "array",
+      "default": [],
+      "description": "An array of RegExp patterns that are matched against all source file paths before re-running tests in watch mode. If the file path matches any of the patterns, when it is updated, it will not trigger a re-run of tests.",
+      "items": {
+        "type": "string",
+        "format": "regex"
+      },
+      "title": "An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode"
+    },
+    "bail": {
+      "title": "Stop running tests after `n` failures",
+      "type": [
+        "number",
+        "boolean"
+      ]
+    },
+    "cache": {
+      "type": "boolean"
+    },
+    "changedFilesWithAncestor": {
+      "type": "boolean"
+    },
+    "expand": {
+      "type": "boolean"
+    },
+    "filter": {},
+    "haste": {
+      "type": "object"
+    },
+    "maxWorkers": {
+      "title": "The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.",
+      "type": "string"
+    },
+    "moduleNameMapper": {
+      "title": "A map from regular expressions to module names that allow to stub out resources with a single module",
+      "type": "object"
+    },
+    "noStackTrace": {
+      "type": "boolean"
+    },
+    "projects": {
+      "title": "Run tests from one or more projects",
+      "type": "null"
+    },
+    "runTestsByPath": {
+      "type": "boolean"
+    },
+    "skipFilter": {
+      "type": "boolean"
+    },
+    "testEnvironmentOptions": {
+      "title": "Options that will be passed to the testEnvironment",
+      "type": "object"
+    },
+    "testFailureExitCode": {
+      "type": "number"
+    },
+    "testLocationInResults": {
+      "title": "Adds a location field to test results",
+      "type": "boolean"
+    },
+    "testRegex": {
+      "title": "The regexp pattern or array of patterns that Jest uses to detect test files",
+      "type": [
+        "string",
+        "array"
+      ],
+      "items": {
+        "type": "string",
+        "format": "regex"
+      },
+      "format": "regex"
+    },
+    "transform": {
+      "title": "A map from regular expressions to paths to transformers",
+      "type": [
+        "null",
+        "object"
+      ],
+      "propertyNames": {
+        "type": "string",
+        "format": "regex"
+      },
+      "additionalProperties": {
+        "type": [
+          "string",
+          "array"
+        ],
+        "items": [
+          {
+            "type": "string"
+          }
+        ],
+        "additionalItems": {
+          "type": "object"
+        }
+      },
+      "examples": [
+        {
+          "^.+\\.[tj]sx?$": "ts-jest"
+        },
+        {
+          "\\.[tj]sx?$": [
+            "babel-jest",
+            {
+              "presets": [
+                [
+                  "@babel/preset-env",
+                  {
+                    "targets": {
+                      "node": 10
+                    }
+                  }
+                ]
+              ],
+              "plugins": [
+                "@babel/plugin-proposal-class-properties",
+                "@babel/plugin-transform-typescript"
+              ]
+            }
+          ]
+        },
+        {}
+      ]
+    },
+    "useStderr": {
+      "type": "boolean"
+    },
+    "watch": {
+      "type": "boolean"
+    },
+    "watchman": {
+      "title": "Whether to use watchman for file crawling",
+      "type": "boolean"
+    },
+    "reporters": {
+      "title": "Use this configuration option to add custom reporters to Jest",
+      "type": "null"
+    },
+    "--all": {
+      "description": "The opposite of `onlyChanged`. If `onlyChanged` is set by default, running jest with `--all` will force Jest to run all tests instead of running only tests related to changed files. ",
+      "type": "boolean",
+      "const": null,
+      "title": "CLI only. "
+    },
+    "--collectCoverageOnlyFrom": {
+      "description": "Explicit list of paths coverage will be restricted to.",
+      "type": "array",
+      "const": null,
+      "title": "CLI only. "
+    },
+    "--color": {
+      "description": "Forces test results output color highlighting (even if stdout is not a TTY). Set to false if you would like to have no colors.",
+      "type": "boolean",
+      "const": null,
+      "title": "CLI only. "
+    },
+    "--detectLeaks": {
+      "description": "**EXPERIMENTAL**: Detect memory leaks in tests. After executing a test, it will try to garbage collect the global object used, and fail if it was leaked",
+      "type": "boolean",
+      "default": false,
+      "const": null,
+      "title": "CLI only. "
+    },
+    "--mapCoverage": {
+      "description": "Maps code coverage reports against original source code when transformers supply source maps.  DEPRECATED",
+      "type": "boolean",
+      "const": null,
+      "title": "CLI only. "
+    },
+    "--onlyFailures": {
+      "description": "Run tests that failed in the previous execution. ",
+      "type": "boolean",
+      "const": null,
+      "title": "CLI only. "
+    },
+    "--help": {
+      "type": "boolean",
+      "title": "Show help",
+      "description": "Show the help information, similar to this page."
+    },
+    "--version": {
+      "type": "boolean",
+      "title": "Print the version and exit",
+      "description": "Alias: -v. Print the version and exit."
+    },
+    "--changedSince": {
+      "type": "string",
+      "title": "Runs tests related to the changes since the provided branch. If the current branch has diverged from the given branch, then only changes made locally will be tested. Behaves similarly to --onlyChanged.",
+      "description": "Runs tests related to the changes since the provided branch. If the current branch has diverged from the given branch, then only changes made locally will be tested. Behaves similarly to `--onlyChanged`."
+    },
+    "--ci": {
+      "type": "boolean",
+      "default": false,
+      "title": "Whether to run Jest in continuous integration (CI) mode. This option is on by default in most popular CI environments. It will prevent snapshots from being written unless explicitly requested.",
+      "description": "When this option is provided, Jest will assume it is running in a CI environment. This changes the behavior when a new snapshot is encountered. Instead of the regular behavior of storing a new snapshot automatically, it will fail the test and require Jest to be run with --updateSnapshot."
+    },
+    "--clearCache": {
+      "type": "boolean",
+      "title": "Clears the configured Jest cache directory and then exits. Default directory can be found by calling jest --showConfig",
+      "description": "Deletes the Jest cache directory and then exits without running tests. Will delete cacheDirectory if the option is passed, or Jest's default cache directory. The default cache directory can be found by calling jest --showConfig. Note: clearing the cache will reduce performance."
+    },
+    "--colors": {
+      "type": "boolean",
+      "title": "Alias for `--color`.",
+      "description": "Forces test results output highlighting even if stdout is not a TTY."
+    },
+    "--config": {
+      "format": "uri-reference",
+      "type": "string",
+      "title": "The path to a jest config file specifying how to find and execute tests. If no rootDir is set in the config, the directory containing the config file is assumed to be the rootDir for the project.This can also be a JSON encoded value which Jest will use as configuration.",
+      "description": "Alias: -c. The path to a Jest config file specifying how to find and execute tests. If no rootDir is set in the config, the directory containing the config file is assumed to be the rootDir for the project. This can also be a JSON-encoded value which Jest will use as configuration."
+    },
+    "--coverage": {
+      "type": "boolean",
+      "title": "Indicates that test coverage information should be collected and reported in the output. ",
+      "description": "Alias: --collectCoverage. Indicates that test coverage information should be collected and reported in the output. Optionally pass <boolean> to override option set in configuration."
+    },
+    "--coverageProvider": {
+      "type": "string",
+      "enum": [
+        "babel",
+        "v8"
+      ],
+      "title": "Select between Babel and V8 to collect coverage [choices: \"babel\", \"v8\"]",
+      "description": "Indicates which provider should be used to instrument code for coverage. Allowed values are babel (default) or v8. Note that using v8 is considered experimental. This uses V8's builtin code coverage rather than one based on Babel and comes with a few caveats Your node version must include vm.compileFunction, which was introduced in node 10.10 Tests needs to run in Node test environment (support for jsdom requires jest-environment-jsdom-sixteen) V8 has way better data in the later versions, so using the latest versions of node (v13 at the time of this writing) will yield better results"
+    },
+    "--debug": {
+      "type": "boolean",
+      "title": "Print debugging info about your Jest config.",
+      "description": "Print debugging info about your jest config. "
+    },
+    "--detectOpenHandles": {
+      "type": "boolean",
+      "default": false,
+      "title": "Print out remaining open handles preventing Jest from exiting at the end of a test run. Implies `runInBand`.",
+      "description": "Attempt to collect and print open handles preventing Jest from exiting cleanly. Use this in cases where you need to use --forceExit in order for Jest to exit to potentially track down the reason. This implies --runInBand, making tests run serially. Implemented using async_hooks. This option has a significant performance penalty and should only be used for debugging."
+    },
+    "--env": {
+      "type": "string",
+      "title": "The test environment used for all tests. This can point to any file or node module. Examples: jsdom, node or path/to/my-environment.js.",
+      "description": "The test environment used for all tests. This can point to any file or node module. Examples: `jsdom`, `node` or `path/to/my-environment.js` "
+    },
+    "--findRelatedTests": {
+      "type": [
+        "array",
+        "boolean"
+      ],
+      "items": {
+        "format": "uri-reference",
+        "type": "string"
+      },
+      "title": "Find related tests for a list of source files that were passed in as arguments. Useful for pre-commit hook integration to run the minimal amount of tests necessary.",
+      "description": "Find and run the tests that cover a space separated list of source files that were passed in as arguments. Useful for pre-commit hook integration to run the minimal amount of tests necessary. Can be used together with --coverage to include a test coverage for the source files, no duplicate --collectCoverageFrom arguments needed."
+    },
+    "--forceExit": {
+      "type": "boolean",
+      "title": "Force Jest to exit after all tests have completed running. This is useful when resources set up by test code cannot be adequately cleaned up.",
+      "description": "Force Jest to exit after all tests have completed running. This is useful when resources set up by test code cannot be adequately cleaned up. Note: This feature is an escape-hatch. If Jest doesn't exit at the end of a test run, it means external resources are still being held on to or timers are still pending in your code. It is advised to tear down external resources after each test to make sure Jest can shut down cleanly. You can use --detectOpenHandles to help track it down."
+    },
+    "--init": {
+      "type": "boolean",
+      "title": "Generate a basic configuration file",
+      "description": "Generate a basic configuration file. Based on your project, Jest will ask you a few questions that will help to generate a jest.config.js file with a short description for each option."
+    },
+    "--json": {
+      "type": "boolean",
+      "title": "Prints the test results in JSON. This mode will send all other test output and user messages to stderr.",
+      "description": "Prints the test results in JSON. This mode will send all other test output and user messages to stderr."
+    },
+    "--lastCommit": {
+      "type": "boolean",
+      "title": "Run all tests affected by file changes in the last commit made. Behaves similarly to --onlyChanged.",
+      "description": "Run all tests affected by file changes in the last commit made. Behaves similarly to `--onlyChanged`."
+    },
+    "--listTests": {
+      "type": "boolean",
+      "default": false,
+      "title": "Lists all tests as JSON that Jest will run given the arguments, and exits. This can be used together with --findRelatedTests to know which tests Jest will run.",
+      "description": "Lists all tests Jest will run given the arguments and exits. Most useful in a CI system together with `--findRelatedTests` to determine the tests Jest will run based on specific files "
+    },
+    "--logHeapUsage": {
+      "type": "boolean",
+      "title": "Logs the heap usage after every test. Useful to debug memory leaks. Use together with --runInBand and --expose-gc in node.",
+      "description": "Logs the heap usage after every test. Useful to debug memory leaks. Use together with `--runInBand` and `--expose-gc` in node. "
+    },
+    "--onlyChanged": {
+      "type": "boolean",
+      "title": "Attempts to identify which tests to run based on which files have changed in the current repository. Only works if you're running tests in a git or hg repository at the moment. ",
+      "description": "Alias: -o. Attempts to identify which tests to run based on which files have changed in the current repository. Only works if you're running tests in a git/hg repository at the moment and requires a static dependency graph (ie. no dynamic requires)."
+    },
+    "--outputFile": {
+      "format": "uri-reference",
+      "type": "string",
+      "title": "Write test results to a file when the --json option is also specified.",
+      "description": "Write test results to a file when the --json option is also specified. The returned JSON structure is documented in testResultsProcessor."
+    },
+    "--passWithNoTests": {
+      "type": "boolean",
+      "default": false,
+      "title": "Allows the test suite to pass when no files are found.",
+      "description": "Will not fail if no tests are found (for example while using `--testPathPattern`.) "
+    },
+    "--runInBand": {
+      "type": "boolean",
+      "title": "Alias: -i. Run all tests serially in the current process, rather than creating a worker pool of child processes that run tests. This can be useful for debugging.",
+      "description": "Run all tests serially in the current process (rather than creating a worker pool of child processes that run tests). This is sometimes useful for debugging, but such use cases are pretty rare."
+    },
+    "--showConfig": {
+      "type": "boolean",
+      "title": "Print your jest config and then exits.",
+      "description": "Print your Jest config and then exits."
+    },
+    "--silent": {
+      "type": "boolean",
+      "title": "Prevent tests from printing messages through the console.",
+      "description": "Prevent tests from printing messages through the console."
+    },
+    "--testNamePattern": {
+      "format": "regex",
+      "type": "string",
+      "title": "Run only tests with a name that matches the regex pattern.",
+      "description": "Alias: -t. Run only tests with a name that matches the regex. For example, suppose you want to run only tests related to authorization which will have names like $1GET /api/posts with auth$1, then you can use jest -t=auth. Note: The regex is matched against the full name, which is a combination of the test name and all its surrounding describe blocks."
+    },
+    "--testPathPattern": {
+      "format": "uri-reference",
+      "type": "string",
+      "title": "A regexp pattern string that is matched against all tests paths before executing the test. ",
+      "description": "A regexp pattern string that is matched against all tests paths before executing the test. On Windows, you will need to use / as a path separator or escape $1 as $1$1."
+    },
+    "--testTimeout": {
+      "type": "number",
+      "title": "This option sets the default timeouts of test cases.",
+      "description": "Default timeout of a test in milliseconds. Default value: 5000."
+    },
+    "--updateSnapshot": {
+      "type": "boolean",
+      "title": "Use this flag to re-record snapshots. Can be used together with a test suite pattern or with `--testNamePattern` to re-record snapshot for test matching the pattern",
+      "description": "Alias: -u. Use this flag to re-record every snapshot that fails during this test run. Can be used together with a test suite pattern or with --testNamePattern to re-record snapshots."
+    },
+    "--watchAll": {
+      "type": "boolean",
+      "title": "Watch files for changes and rerun all tests. If you want to re-run only the tests related to the changed files, use the `--watch` option. ",
+      "description": "Watch files for changes and rerun all tests when something changes. If you want to re-run only the tests that depend on the changed files, use the --watch option."
+    }
+  },
+  "examples": [
+    {
+      "preset": "ts-jest",
+      "testEnvironment": "node"
+    },
+    {
+      "transform": {
+        "\\.[tj]sx?$": [
+          "babel-jest",
+          {
+            "presets": [
+              [
+                "@babel/preset-env",
+                {
+                  "targets": {
+                    "node": 10
+                  }
+                }
+              ]
+            ],
+            "plugins": [
+              "@babel/plugin-proposal-class-properties",
+              "@babel/plugin-transform-typescript"
+            ]
+          }
+        ]
+      },
+      "testEnvironment": "node"
+    },
+    {
+      "transform": {
+        "^.+\\.[tj]sx?$": "ts-jest"
+      }
+    }
+  ],
+  "default": {
+    "testEnvironment": "node"
+  }
+}
