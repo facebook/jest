@@ -132,6 +132,19 @@ expect.addSnapshotSerializer({
   },
 });
 
+let customSerializer: format.NewPlugin | null = null;
+jestSnapshot.addSerializer({
+  serialize(...args) {
+    return customSerializer!.serialize(...args);
+  },
+  test(val) {
+    if (!customSerializer) {
+      return false;
+    }
+    return customSerializer.test(val);
+  },
+});
+
 const {
   toMatchInlineSnapshot,
   toMatchSnapshot,
@@ -1267,6 +1280,51 @@ describe('printSnapshotAndReceived', () => {
       };
 
       expect(testWithStringify(expected, received, false)).toMatchSnapshot();
+    });
+
+    test('ignores custom indentation of unchanged line', () => {
+      try {
+        const pluginGeneratedContent = `  **some plugin-generated string with custom leading whitespace**\n\n`;
+        const seen = new WeakSet();
+
+        const plugin: format.NewPlugin = {
+          test: val => typeof val === 'object' && val.props && !seen.has(val),
+          serialize: (val, config, indentation, depth, refs, printer) => {
+            seen.add(val);
+            const serialized = printer(val, config, indentation, depth, refs);
+            seen.delete(val);
+            return pluginGeneratedContent + serialized;
+          },
+        };
+
+        customSerializer = plugin;
+
+        const snapshot = {
+          props: {
+            alt: 'Jest logo',
+            class: 'logo',
+            src: '/img/jest.svg',
+          },
+          type: 'img',
+        };
+        const received = {
+          ...snapshot,
+          props: {
+            ...snapshot.props,
+            class: 'logo round',
+          },
+        };
+        expect(
+          printSnapshotAndReceived(
+            serialize(snapshot),
+            serialize(received),
+            received,
+            true,
+          ),
+        ).toMatchSnapshot();
+      } finally {
+        customSerializer = null;
+      }
     });
 
     describe('object', () => {

@@ -375,6 +375,24 @@ Snapshot: <m>"delete"</>
 Received: <t>"insert"</>
 `;
 
+exports[`printSnapshotAndReceived ignore indentation ignores custom indentation of unchanged line 1`] = `
+<m>- Snapshot  - 2</>
+<t>+ Received  + 2</>
+
+<m>-   **some plugin-generated string with custom leading whitespace**</>
+<t>+   **some plugin-generated string with custom leading whitespace**</>
+
+<d>  Object {</>
+<d>    "props": Object {</>
+<d>      "alt": "Jest logo",</>
+<m>-     "class": "logo",</>
+<t>+     "class": "logo round",</>
+<d>      "src": "/img/jest.svg",</>
+<d>    },</>
+<d>    "type": "img",</>
+<d>  }</>
+`;
+
 exports[`printSnapshotAndReceived ignore indentation markup delete 1`] = `
 <m>- Snapshot  - 2</>
 <t>+ Received  + 0</>
