@@ -37,6 +37,6 @@ FAIL __tests__/test.js
         |                  ^
       9 |
 
-      at Resolver.resolveModule (../../packages/jest-resolve/build/resolver.js:311:11)
+      at Resolver._throwModNotFoundError (../../packages/jest-resolve/build/resolver.js:249:11)
       at Object.require (index.js:8:18)
 `;

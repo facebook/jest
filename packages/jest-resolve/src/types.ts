@@ -16,6 +16,7 @@ export type ResolverConfig = {
   modulePaths?: Array<Config.Path>;
   platforms?: Array<string>;
   resolver?: Config.Path | null;
+  asyncResolver?: Config.Path | null;
   rootDir: Config.Path;
 };
 
