@@ -1,0 +1,6 @@
+{
+    "jest": {
+      "testEnvironment": "node"
+    }
+  }
+  
