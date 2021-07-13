@@ -134,6 +134,8 @@ it('renders correctly', () => {
 
 That's all there is to it! You can even update the snapshots with `--updateSnapshot` or using the `u` key in `--watch` mode.
 
+By default, Jest handles the writing of snapshots into your source code. However, if you're using [prettier](https://www.npmjs.com/package/prettier) in your project, Jest will detect this and delegate the work to prettier instead (including honoring your configuration).
+
 ### Property Matchers
 
 Often there are fields in the object you want to snapshot which are generated (like IDs and Dates). If you try to snapshot these objects, they will force the snapshot to fail on every run:
