@@ -8,7 +8,7 @@
 /* eslint-disable local/prefer-spread-eventually */
 
 import type {Global} from '@jest/types';
-import expect = require('expect');
+import expect, {MatcherState} from 'expect';
 import {
   addSerializer,
   toMatchInlineSnapshot,
@@ -42,7 +42,7 @@ export default (config: {expand: boolean}): void => {
     const jestMatchersObject = Object.create(null);
     Object.keys(jasmineMatchersObject).forEach(name => {
       jestMatchersObject[name] = function (
-        this: expect.MatcherState,
+        this: MatcherState,
         ...args: Array<unknown>
       ): RawMatcherFn {
         // use "expect.extend" if you need to use equality testers (via this.equal)

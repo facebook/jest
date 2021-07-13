@@ -39,8 +39,7 @@ import type {
   AsyncExpectationResult,
   Expect,
   ExpectationResult,
-  MatcherState as JestMatcherState,
-  Matchers as MatcherInterface,
+  MatcherState,
   MatchersObject,
   PromiseMatcherFn,
   RawMatcherFn,
@@ -62,7 +61,7 @@ const createToThrowErrorMatchingSnapshotMatcher = function (
   matcher: RawMatcherFn,
 ) {
   return function (
-    this: JestMatcherState,
+    this: MatcherState,
     received: any,
     testNameOrInlineSnapshot?: string,
   ) {
@@ -251,7 +250,7 @@ const makeThrowingMatcher = (
     let throws = true;
     const utils = {...matcherUtils, iterableEquality, subsetEquality};
 
-    const matcherContext: JestMatcherState = {
+    const matcherContext: MatcherState = {
       // When throws is disabled, the matcher will not throw errors during test
       // execution but instead add them to the global matcher state. If a
       // matcher throws, test execution is normally stopped immediately. The
@@ -422,11 +421,5 @@ expect.getState = getState;
 expect.setState = setState;
 expect.extractExpectedAssertionsErrors = extractExpectedAssertionsErrors;
 
-const expectExport = expect as Expect;
-
-declare namespace expectExport {
-  export type MatcherState = JestMatcherState;
-  export interface Matchers<R> extends MatcherInterface<R> {}
-}
-
-export = expectExport;
+export default expect as Expect;
+export * from './types';

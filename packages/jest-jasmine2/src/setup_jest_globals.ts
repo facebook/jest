@@ -6,7 +6,7 @@
  */
 
 import type {Config, Global} from '@jest/types';
-import {extractExpectedAssertionsErrors, getState, setState} from 'expect';
+import expect from 'expect';
 import {
   SnapshotState,
   SnapshotStateType,
@@ -34,8 +34,8 @@ export type SetupOptions = {
 // test execution and add them to the test result, potentially failing
 // a passing test.
 const addSuppressedErrors = (result: SpecResult) => {
-  const {suppressedErrors} = getState();
-  setState({suppressedErrors: []});
+  const {suppressedErrors} = expect.getState();
+  expect.setState({suppressedErrors: []});
   if (suppressedErrors.length) {
     result.status = 'failed';
 
@@ -53,7 +53,7 @@ const addSuppressedErrors = (result: SpecResult) => {
 };
 
 const addAssertionErrors = (result: SpecResult) => {
-  const assertionErrors = extractExpectedAssertionsErrors();
+  const assertionErrors = expect.extractExpectedAssertionsErrors();
   if (assertionErrors.length) {
     const jasmineErrors = assertionErrors.map(({actual, error, expected}) => ({
       actual,
@@ -78,7 +78,7 @@ const patchJasmine = () => {
         };
         const onStart = attr.onStart;
         attr.onStart = (context: JasmineSpec) => {
-          setState({currentTestName: context.getFullName()});
+          expect.setState({currentTestName: context.getFullName()});
           onStart && onStart.call(attr, context);
         };
         super(attr);
@@ -115,7 +115,7 @@ export default async ({
     updateSnapshot,
   });
   // @ts-expect-error: snapshotState is a jest extension of `expect`
-  setState({snapshotState, testPath});
+  expect.setState({snapshotState, testPath});
   // Return it back to the outer scope (test runner outside the VM).
   return snapshotState;
 };
