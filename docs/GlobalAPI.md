@@ -398,7 +398,7 @@ test('will not be ran', () => {
 
 Also under the alias: `xdescribe(name, fn)`
 
-You can use `describe.skip` if you do not want to run a particular describe block:
+You can use `describe.skip` if you do not want to run the tests of a particular describe block:
 
 ```js
 describe('my beverage', () => {
@@ -417,6 +417,8 @@ describe.skip('my other beverage', () => {
 ```
 
 Using `describe.skip` is often a cleaner alternative to temporarily commenting out a chunk of tests.
+
+Beware that the `describe` block will still be run. If you have some setup that should be skipped, do it in a `beforeAll` or `beforeEach` block.
 
 ### `describe.skip.each(table)(name, fn)`
 
