@@ -152,7 +152,7 @@ export default class CoverageReporter extends BaseReporter {
     if (this._globalConfig.maxWorkers <= 1) {
       worker = require('./CoverageWorker');
     } else {
-      worker = new Worker(require.resolve('./CoverageWorker'), {
+      worker = await Worker.create(require.resolve('./CoverageWorker'), {
         exposedMethods: ['worker'],
         maxRetries: 2,
         numWorkers: this._globalConfig.maxWorkers,

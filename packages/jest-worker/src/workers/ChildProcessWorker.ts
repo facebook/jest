@@ -12,11 +12,13 @@ import {stdout as stdoutSupportsColor} from 'supports-color';
 import {
   CHILD_MESSAGE_INITIALIZE,
   ChildMessage,
+  HEARTBEAT_ERROR,
   OnCustomMessage,
   OnEnd,
   OnStart,
   PARENT_MESSAGE_CLIENT_ERROR,
   PARENT_MESSAGE_CUSTOM,
+  PARENT_MESSAGE_HEARTBEAT,
   PARENT_MESSAGE_OK,
   PARENT_MESSAGE_SETUP_ERROR,
   ParentMessage,
@@ -24,12 +26,21 @@ import {
   WorkerOptions,
 } from '../types';
 
+interface ErrorFrame {
+  columnNumber: number;
+  lineNumber: number;
+  name: string;
+  url: string;
+}
+
 const SIGNAL_BASE_EXIT_CODE = 128;
 const SIGKILL_EXIT_CODE = SIGNAL_BASE_EXIT_CODE + 9;
 const SIGTERM_EXIT_CODE = SIGNAL_BASE_EXIT_CODE + 15;
 
 // How long to wait after SIGTERM before sending SIGKILL
 const SIGKILL_DELAY = 500;
+
+const CHILD_HEARTBEAT_INTERVAL = 1_000;
 
 /**
  * This class wraps the child process and provides a nice interface to
@@ -64,6 +75,8 @@ export default class ChildProcessWorker implements WorkerInterface {
 
   private _exitPromise: Promise<void>;
   private _resolveExitPromise!: () => void;
+
+  private _heartbeatTimeout!: NodeJS.Timeout;
 
   constructor(options: WorkerOptions) {
     this._options = options;
@@ -124,6 +137,7 @@ export default class ChildProcessWorker implements WorkerInterface {
       false,
       this._options.workerPath,
       this._options.setupArgs,
+      CHILD_HEARTBEAT_INTERVAL,
     ]);
 
     this._child = child;
@@ -148,6 +162,13 @@ export default class ChildProcessWorker implements WorkerInterface {
     }
   }
 
+  monitorHeartbeat(onExceeded: () => any): void {
+    clearTimeout(this._heartbeatTimeout);
+    this._heartbeatTimeout = setTimeout(() => {
+      onExceeded();
+    }, this._options.workerHeartbeatTimeout).unref();
+  }
+
   private _shutdown() {
     // End the temporary streams so the merged streams end too
     if (this._fakeStream) {
@@ -156,6 +177,62 @@ export default class ChildProcessWorker implements WorkerInterface {
     }
 
     this._resolveExitPromise();
+  }
+
+  private async monitorHeartbeatError() {
+    if (this._heartbeatTimeout) {
+      clearTimeout(this._heartbeatTimeout);
+    }
+
+    if (this._options.inspector) {
+      const error = new Error(
+        `Test worker was unresponsive for ${this._options.workerHeartbeatTimeout} milliseconds. There was an inspector connected so we were able to capture stack frames before it was terminated.`,
+      );
+      this._options.inspector.on('Debugger.paused', (message: any) => {
+        const frames: Array<ErrorFrame> = [];
+        const callFrames = message.params.callFrames.slice(0, 20);
+        for (const callFrame of callFrames) {
+          const loc = callFrame.location;
+
+          const columnNumber = loc.columnNumber;
+          const lineNumber = loc.lineNumber;
+          const url = callFrame.url;
+
+          const name = callFrame.scopeChain[0].name;
+
+          frames.push({
+            columnNumber,
+            lineNumber,
+            name,
+            url,
+          });
+        }
+
+        // @ts-expect-error: no index
+        error.type = HEARTBEAT_ERROR;
+        error.stack = JSON.stringify(frames);
+
+        this._onProcessEnd(error, null);
+      });
+
+      await new Promise<void>((resolve, reject) => {
+        this._options.inspector?.post('Debugger.pause', (err: Error) => {
+          if (err === null) {
+            resolve();
+          } else {
+            reject(err);
+          }
+        });
+      });
+    } else {
+      const error = new Error(
+        `Test worker was unresponsive for ${this._options.workerHeartbeatTimeout} milliseconds. There was no inspector connected so we were unable to capture stack frames before it was terminated.`,
+      );
+      // @ts-expect-error: no index
+      error.type = HEARTBEAT_ERROR;
+
+      this._onProcessEnd(error, null);
+    }
   }
 
   private _onMessage(response: ParentMessage) {
@@ -184,7 +261,6 @@ export default class ChildProcessWorker implements WorkerInterface {
             error[key] = extra[key];
           }
         }
-
         this._onProcessEnd(error, null);
         break;
 
@@ -196,10 +272,15 @@ export default class ChildProcessWorker implements WorkerInterface {
 
         this._onProcessEnd(error, null);
         break;
+
+      case PARENT_MESSAGE_HEARTBEAT:
+        this.monitorHeartbeat(() => this.monitorHeartbeatError());
+        break;
       case PARENT_MESSAGE_CUSTOM:
         this._onCustomMessage(response[1]);
         break;
       default:
+        clearTimeout(this._heartbeatTimeout);
         throw new TypeError('Unexpected response from worker: ' + response[0]);
     }
   }
@@ -218,6 +299,7 @@ export default class ChildProcessWorker implements WorkerInterface {
       }
     } else {
       this._shutdown();
+      clearTimeout(this._heartbeatTimeout);
     }
   }
 
@@ -252,7 +334,10 @@ export default class ChildProcessWorker implements WorkerInterface {
       () => this._child.kill('SIGKILL'),
       SIGKILL_DELAY,
     );
-    this._exitPromise.then(() => clearTimeout(sigkillTimeout));
+    this._exitPromise.then(() => {
+      clearTimeout(sigkillTimeout);
+      clearTimeout(this._heartbeatTimeout);
+    });
   }
 
   getWorkerId(): number {

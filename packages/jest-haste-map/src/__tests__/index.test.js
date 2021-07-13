@@ -20,7 +20,7 @@ jest.mock('child_process', () => ({
 }));
 
 jest.mock('jest-worker', () => ({
-  Worker: jest.fn(worker => {
+  create: jest.fn(worker => {
     mockWorker = jest.fn((...args) => require(worker).worker(...args));
     mockEnd = jest.fn();
 

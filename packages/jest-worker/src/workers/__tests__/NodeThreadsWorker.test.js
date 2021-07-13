@@ -16,6 +16,9 @@ import {
   PARENT_MESSAGE_OK,
 } from '../../types';
 
+const CHILD_HEARTBEAT_INTERVAL = 1_000;
+const WORKER_HEARTBEAT_TIMEOUT = 5_000;
+
 let Worker;
 let workerThreads;
 let originalExecArgv;
@@ -101,6 +104,7 @@ it('initializes the thread with the given workerPath', () => {
     forkOptions: {},
     maxRetries: 3,
     setupArgs: ['foo', 'bar'],
+    workerHeartbeatTimeout: WORKER_HEARTBEAT_TIMEOUT,
     workerPath: '/tmp/foo/bar/baz.js',
   });
 
@@ -109,6 +113,7 @@ it('initializes the thread with the given workerPath', () => {
     false,
     '/tmp/foo/bar/baz.js',
     ['foo', 'bar'],
+    CHILD_HEARTBEAT_INTERVAL,
   ]);
 });
 

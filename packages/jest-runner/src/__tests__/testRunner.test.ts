@@ -12,7 +12,7 @@ import TestRunner from '../index';
 let mockWorkerFarm;
 
 jest.mock('jest-worker', () => ({
-  Worker: jest.fn(
+  create: jest.fn(
     worker =>
       (mockWorkerFarm = {
         end: jest.fn().mockResolvedValue({forceExited: false}),

@@ -7,6 +7,8 @@
 
 'use strict';
 
+import {Session} from 'inspector';
+
 let Farm;
 let WorkerPool;
 let Queue;
@@ -169,4 +171,10 @@ it('calls getStderr and getStdout from worker', async () => {
 
   expect(farm.getStderr()('err')).toEqual('err');
   expect(farm.getStdout()('out')).toEqual('out');
+});
+
+it('should create a worker with an inspector attached to it', async () => {
+  const farm = await Farm.create('/fake-worker.js');
+
+  expect(farm._inspectorSession instanceof Session).toBe(true);
 });

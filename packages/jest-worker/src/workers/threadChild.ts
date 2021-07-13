@@ -14,13 +14,18 @@ import {
   ChildMessageInitialize,
   PARENT_MESSAGE_CLIENT_ERROR,
   PARENT_MESSAGE_ERROR,
+  PARENT_MESSAGE_HEARTBEAT,
   PARENT_MESSAGE_OK,
   PARENT_MESSAGE_SETUP_ERROR,
 } from '../types';
 
+const DEFAULT_HEARTBEAT_INTERVAL_VALUE = 1_000;
+
 let file: string | null = null;
 let setupArgs: Array<unknown> = [];
 let initialized = false;
+let monitorHeartbeat: NodeJS.Timeout;
+let heartbeatIntervalValue: number;
 
 /**
  * This file is a small bootstrapper for workers. It sets up the communication
@@ -41,6 +46,10 @@ const messageListener = (request: any) => {
       const init: ChildMessageInitialize = request;
       file = init[2];
       setupArgs = request[3];
+      heartbeatIntervalValue = request[4] || DEFAULT_HEARTBEAT_INTERVAL_VALUE;
+      monitorHeartbeat = setInterval(() => {
+        sendParentMessageHeartbeat();
+      }, heartbeatIntervalValue).unref();
       break;
 
     case CHILD_MESSAGE_CALL:
@@ -66,6 +75,12 @@ function reportSuccess(result: unknown) {
   }
 
   parentPort!.postMessage([PARENT_MESSAGE_OK, result]);
+}
+
+function sendParentMessageHeartbeat() {
+  if (process?.send) {
+    process.send([PARENT_MESSAGE_HEARTBEAT]);
+  }
 }
 
 function reportClientError(error: Error) {
@@ -109,6 +124,7 @@ function end(): void {
 function exitProcess(): void {
   // Clean up open handles so the worker ideally exits gracefully
   parentPort!.removeListener('message', messageListener);
+  clearInterval(monitorHeartbeat);
 }
 
 function execMethod(method: string, args: Array<unknown>): void {

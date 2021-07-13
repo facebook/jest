@@ -7,6 +7,7 @@
 
 import type {ForkOptions} from 'child_process';
 import type {EventEmitter} from 'events';
+import type {Session} from 'inspector';
 
 // import type {ResourceLimits} from 'worker_threads';
 // This is not present in the Node 12 typings
@@ -28,6 +29,9 @@ export const PARENT_MESSAGE_OK: 0 = 0;
 export const PARENT_MESSAGE_CLIENT_ERROR: 1 = 1;
 export const PARENT_MESSAGE_SETUP_ERROR: 2 = 2;
 export const PARENT_MESSAGE_CUSTOM: 3 = 3;
+export const PARENT_MESSAGE_HEARTBEAT: 4 = 4;
+
+export const HEARTBEAT_ERROR: 0 = 0;
 
 export type PARENT_MESSAGE_ERROR =
   | typeof PARENT_MESSAGE_CLIENT_ERROR
@@ -102,6 +106,7 @@ export type FarmOptions = {
   maxRetries?: number;
   numWorkers?: number;
   taskQueue?: TaskQueue;
+  workerHeartbeatTimeout?: number;
   WorkerPool?: (
     workerPath: string,
     options?: WorkerPoolOptions,
@@ -115,6 +120,8 @@ export type WorkerPoolOptions = {
   resourceLimits: ResourceLimits;
   maxRetries: number;
   numWorkers: number;
+  inspector: Session | undefined;
+  workerHeartbeatTimeout: number;
   enableWorkerThreads: boolean;
 };
 
@@ -122,6 +129,8 @@ export type WorkerOptions = {
   forkOptions: ForkOptions;
   resourceLimits: ResourceLimits;
   setupArgs: Array<unknown>;
+  inspector: Session | undefined;
+  workerHeartbeatTimeout: number;
   maxRetries: number;
   workerId: number;
   workerPath: string;
@@ -175,6 +184,10 @@ export type ParentMessageOk = [
   unknown, // result
 ];
 
+export type ParentMessageHeartbeat = [
+  typeof PARENT_MESSAGE_HEARTBEAT, // type
+];
+
 export type ParentMessageError = [
   PARENT_MESSAGE_ERROR, // type
   string, // constructor
@@ -186,7 +199,8 @@ export type ParentMessageError = [
 export type ParentMessage =
   | ParentMessageOk
   | ParentMessageError
-  | ParentMessageCustom;
+  | ParentMessageCustom
+  | ParentMessageHeartbeat;
 
 // Queue types.
 

@@ -95,11 +95,14 @@ function testJestWorker() {
       }
     }
 
-    const farm = new JestWorker(require.resolve('./workers/jest_worker'), {
-      exposedMethods: [method],
-      forkOptions: {execArgv: []},
-      numWorkers: threads,
-    });
+    const farm = await JestWorker.create(
+      require.resolve('./workers/jest_worker'),
+      {
+        exposedMethods: [method],
+        forkOptions: {execArgv: []},
+        workers: threads,
+      },
+    );
 
     farm.getStdout().pipe(process.stdout);
     farm.getStderr().pipe(process.stderr);

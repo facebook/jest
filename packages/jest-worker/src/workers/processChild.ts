@@ -13,13 +13,18 @@ import {
   ChildMessageInitialize,
   PARENT_MESSAGE_CLIENT_ERROR,
   PARENT_MESSAGE_ERROR,
+  PARENT_MESSAGE_HEARTBEAT,
   PARENT_MESSAGE_OK,
   PARENT_MESSAGE_SETUP_ERROR,
 } from '../types';
 
+const DEFAULT_HEARTBEAT_INTERVAL_VALUE = 1_000;
+
 let file: string | null = null;
 let setupArgs: Array<unknown> = [];
 let initialized = false;
+let monitorHeartbeat: NodeJS.Timeout;
+let heartbeatIntervalValue: number;
 
 /**
  * This file is a small bootstrapper for workers. It sets up the communication
@@ -40,6 +45,10 @@ const messageListener: NodeJS.MessageListener = request => {
       const init: ChildMessageInitialize = request;
       file = init[2];
       setupArgs = request[3];
+      heartbeatIntervalValue = request[4] || DEFAULT_HEARTBEAT_INTERVAL_VALUE;
+      monitorHeartbeat = setInterval(() => {
+        sendParentMessageHeartbeat();
+      }, heartbeatIntervalValue).unref();
       break;
 
     case CHILD_MESSAGE_CALL:
@@ -59,6 +68,12 @@ const messageListener: NodeJS.MessageListener = request => {
 };
 process.on('message', messageListener);
 
+function sendParentMessageHeartbeat() {
+  if (process?.send) {
+    process.send([PARENT_MESSAGE_HEARTBEAT]);
+  }
+}
+
 function reportSuccess(result: unknown) {
   if (!process || !process.send) {
     throw new Error('Child can only be used on a forked process');
@@ -76,6 +91,7 @@ function reportInitializeError(error: Error) {
 }
 
 function reportError(error: Error, type: PARENT_MESSAGE_ERROR) {
+  clearInterval(monitorHeartbeat);
   if (!process || !process.send) {
     throw new Error('Child can only be used on a forked process');
   }
@@ -108,6 +124,7 @@ function end(): void {
 function exitProcess(): void {
   // Clean up open handles so the process ideally exits gracefully
   process.removeListener('message', messageListener);
+  clearInterval(monitorHeartbeat);
 }
 
 function execMethod(method: string, args: Array<unknown>): void {

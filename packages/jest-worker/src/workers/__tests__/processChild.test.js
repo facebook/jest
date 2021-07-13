@@ -19,8 +19,11 @@ import {
   CHILD_MESSAGE_END,
   CHILD_MESSAGE_INITIALIZE,
   PARENT_MESSAGE_CLIENT_ERROR,
+  PARENT_MESSAGE_HEARTBEAT,
   PARENT_MESSAGE_OK,
 } from '../../types';
+
+const CHILD_HEARTBEAT_INTERVAL = 1_000;
 
 let ended;
 let mockCount;
@@ -375,4 +378,26 @@ it('throws if child is not forked', () => {
       [],
     ]);
   }).toThrow();
+});
+
+it('should emit an heartbeat message every time interval', () => {
+  jest.useFakeTimers();
+
+  const HEARTBEATS_NUM = 3;
+
+  process.emit('message', [
+    CHILD_MESSAGE_INITIALIZE,
+    false, // Not really used here, but for flow type purity.
+    './my-fancy-worker',
+    ['foo'], // Pass empty initialize params so the initialize method is called.
+    CHILD_HEARTBEAT_INTERVAL,
+  ]);
+
+  jest.advanceTimersByTime(CHILD_HEARTBEAT_INTERVAL * HEARTBEATS_NUM);
+
+  expect(process.send).toHaveBeenCalledTimes(HEARTBEATS_NUM);
+
+  for (let i = 0; i < HEARTBEATS_NUM; i++) {
+    expect(process.send.mock.calls[i][0]).toEqual([PARENT_MESSAGE_HEARTBEAT]);
+  }
 });

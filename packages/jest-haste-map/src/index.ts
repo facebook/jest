@@ -221,7 +221,7 @@ export default class HasteMap extends EventEmitter {
   private _console: Console;
   private _options: InternalOptions;
   private _watchers: Array<Watcher>;
-  private _worker: WorkerInterface | null;
+  private _worker: Promise<WorkerInterface> | null;
 
   static getStatic(config: Config.ProjectConfig): HasteMapStatic {
     if (config.haste.hasteMapModulePath) {
@@ -566,14 +566,16 @@ export default class HasteMap extends EventEmitter {
     if (this._options.retainAllFiles && filePath.includes(NODE_MODULES)) {
       if (computeSha1) {
         return this._getWorker(workerOptions)
-          .getSha1({
-            computeDependencies: this._options.computeDependencies,
-            computeSha1,
-            dependencyExtractor: this._options.dependencyExtractor,
-            filePath,
-            hasteImplModulePath: this._options.hasteImplModulePath,
-            rootDir,
-          })
+          .then(workerInstance =>
+            workerInstance.getSha1({
+              computeDependencies: this._options.computeDependencies,
+              computeSha1,
+              dependencyExtractor: this._options.dependencyExtractor,
+              filePath,
+              hasteImplModulePath: this._options.hasteImplModulePath,
+              rootDir,
+            }),
+          )
           .then(workerReply, workerError);
       }
 
@@ -642,14 +644,16 @@ export default class HasteMap extends EventEmitter {
     }
 
     return this._getWorker(workerOptions)
-      .worker({
-        computeDependencies: this._options.computeDependencies,
-        computeSha1,
-        dependencyExtractor: this._options.dependencyExtractor,
-        filePath,
-        hasteImplModulePath: this._options.hasteImplModulePath,
-        rootDir,
-      })
+      .then(workerInstance =>
+        workerInstance.worker({
+          computeDependencies: this._options.computeDependencies,
+          computeSha1,
+          dependencyExtractor: this._options.dependencyExtractor,
+          filePath,
+          hasteImplModulePath: this._options.hasteImplModulePath,
+          rootDir,
+        }),
+      )
       .then(workerReply, workerError);
   }
 
@@ -734,21 +738,23 @@ export default class HasteMap extends EventEmitter {
   /**
    * Creates workers or parses files and extracts metadata in-process.
    */
-  private _getWorker(options?: {forceInBand: boolean}): WorkerInterface {
+  private async _getWorker(options?: {
+    forceInBand: boolean;
+  }): Promise<WorkerInterface> {
     if (!this._worker) {
       if ((options && options.forceInBand) || this._options.maxWorkers <= 1) {
-        this._worker = {getSha1, worker};
+        this._worker = Promise.resolve({getSha1, worker});
       } else {
         // @ts-expect-error: assignment of a worker with custom properties.
-        this._worker = new Worker(require.resolve('./worker'), {
+        this._worker = await Worker.create(require.resolve('./worker'), {
           exposedMethods: ['getSha1', 'worker'],
           maxRetries: 3,
           numWorkers: this._options.maxWorkers,
-        }) as WorkerInterface;
+        });
       }
     }
 
-    return this._worker;
+    return this._worker!;
   }
 
   private _crawl(hasteMap: InternalHasteMap) {

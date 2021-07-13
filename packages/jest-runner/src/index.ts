@@ -168,7 +168,7 @@ export default class TestRunner {
       }
     }
 
-    const worker = new Worker(TEST_WORKER_PATH, {
+    const worker = (await Worker.create(TEST_WORKER_PATH, {
       exposedMethods: ['worker'],
       forkOptions: {stdio: 'pipe'},
       maxRetries: 3,
@@ -178,7 +178,7 @@ export default class TestRunner {
           serializableResolvers: Array.from(resolvers.values()),
         },
       ],
-    }) as WorkerInterface;
+    })) as WorkerInterface;
 
     if (worker.getStdout()) worker.getStdout().pipe(process.stdout);
     if (worker.getStderr()) worker.getStderr().pipe(process.stderr);

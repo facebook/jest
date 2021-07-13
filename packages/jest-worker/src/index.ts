@@ -7,6 +7,7 @@
 
 /* eslint-disable local/ban-types-eventually */
 
+import * as inspector from 'inspector';
 import {cpus} from 'os';
 import Farm from './Farm';
 import WorkerPool from './WorkerPool';
@@ -75,18 +76,25 @@ export class Worker {
   private _farm: Farm;
   private _options: FarmOptions;
   private _workerPool: WorkerPoolInterface;
+  private _inspectorSession: inspector.Session | undefined;
 
-  constructor(workerPath: string, options?: FarmOptions) {
+  constructor(
+    workerPath: string,
+    inspectorSession?: inspector.Session,
+    options?: FarmOptions,
+  ) {
     this._options = {...options};
     this._ending = false;
 
     const workerPoolOptions: WorkerPoolOptions = {
       enableWorkerThreads: this._options.enableWorkerThreads ?? false,
       forkOptions: this._options.forkOptions ?? {},
+      inspector: inspectorSession,
       maxRetries: this._options.maxRetries ?? 3,
       numWorkers: this._options.numWorkers ?? Math.max(cpus().length - 1, 1),
       resourceLimits: this._options.resourceLimits ?? {},
       setupArgs: this._options.setupArgs ?? [],
+      workerHeartbeatTimeout: this._options.workerHeartbeatTimeout ?? 10000,
     };
 
     if (this._options.WorkerPool) {
@@ -111,6 +119,38 @@ export class Worker {
 
     this._bindExposedWorkerMethods(workerPath, this._options);
   }
+
+  public static create = async (
+    workerPath: string,
+    options?: FarmOptions,
+  ): Promise<Worker> => {
+    const setUpInspector = async () => {
+      // Open V8 Inspector
+      inspector.open();
+
+      const inspectorUrl = inspector.url();
+      if (inspectorUrl) {
+        const session = new inspector.Session();
+        session.connect();
+        await new Promise<void>((resolve, reject) => {
+          session.post('Debugger.enable', (err: Error) => {
+            if (err === null) {
+              resolve();
+            } else {
+              reject(err);
+            }
+          });
+        });
+        return session;
+      }
+      return undefined;
+    };
+
+    const inspectorSession = await setUpInspector();
+    const jestWorker = new Worker(workerPath, inspectorSession, options);
+
+    return jestWorker;
+  };
 
   private _bindExposedWorkerMethods(
     workerPath: string,
@@ -154,6 +194,8 @@ export class Worker {
       throw new Error('Farm is ended, no more calls can be done to it');
     }
     this._ending = true;
+    this._inspectorSession?.disconnect();
+    inspector.close();
 
     return this._workerPool.end();
   }
