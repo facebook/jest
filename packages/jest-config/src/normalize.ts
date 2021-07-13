@@ -637,6 +637,10 @@ export default async function normalize(
     options.coverageDirectory = path.resolve(options.rootDir, 'coverage');
   }
 
+  if (!options.prettierPath) {
+    options.prettierPath = DEFAULT_CONFIG.prettierPath;
+  }
+
   setupBabelJest(options);
   // TODO: Type this properly
   const newOptions = {
