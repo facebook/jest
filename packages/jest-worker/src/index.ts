@@ -45,6 +45,13 @@ function getExposedMethods(
   return exposedMethods;
 }
 
+export function serializeBigInt(data: unknown): unknown {
+  if (typeof data === 'bigint') {
+    return data.toString();
+  }
+  return data;
+}
+
 /**
  * The Jest farm (publicly called "Worker") is a class that allows you to queue
  * methods across multiple child processes, in order to parallelize work. This

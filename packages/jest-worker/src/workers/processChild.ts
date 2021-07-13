@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {serializeBigInt} from '../index';
 import {
   CHILD_MESSAGE_CALL,
   CHILD_MESSAGE_END,
@@ -64,7 +65,7 @@ function reportSuccess(result: unknown) {
     throw new Error('Child can only be used on a forked process');
   }
 
-  process.send([PARENT_MESSAGE_OK, result]);
+  process.send([PARENT_MESSAGE_OK, serializeBigInt(result)]);
 }
 
 function reportClientError(error: Error) {

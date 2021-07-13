@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import {serializeBigInt} from '../index';
 import {PARENT_MESSAGE_CUSTOM} from '../types';
 
 const isWorkerThread: boolean = (() => {
@@ -29,7 +30,7 @@ export default function messageParent(
     // ! is safe due to `null` check in `isWorkerThread`
     parentPort!.postMessage([PARENT_MESSAGE_CUSTOM, message]);
   } else if (typeof parentProcess.send === 'function') {
-    parentProcess.send([PARENT_MESSAGE_CUSTOM, message]);
+    parentProcess.send([PARENT_MESSAGE_CUSTOM, serializeBigInt(message)]);
   } else {
     throw new Error('"messageParent" can only be used inside a worker');
   }
