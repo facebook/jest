@@ -137,8 +137,8 @@ const expect: any = (actual: any, ...rest: Array<any>) => {
   return expectation;
 };
 
-const getMessage = (message?: () => string) =>
-  (message && message()) ||
+const getMessage = (message?:  string) =>
+  (message) ||
   matcherUtils.RECEIVED_COLOR('No message was specified for this matcher.');
 
 const makeResolveMatcher =
