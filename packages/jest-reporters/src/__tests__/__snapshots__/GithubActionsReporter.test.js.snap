@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reporter returns empty string if GITHUB_ACTIONS isn't set 1`] = `""`;
+
+exports[`reporter extracts the correct filename, line, and column 1`] = `
+"::error file=/home/runner/work/jest/jest/some.test.js,line=4,col=17::%0A              Error: <dim>expect(</><red>received</><dim>).</>toBe<dim>(</><green>expected</><dim>) // Object.is equality</>%0A%0A              %0A%0A              Expected: <green>\\"b\\"</>%0A%0A              Received: <red>\\"a\\"</>%0A%0A                  at Object.<anonymous> (/home/runner/work/jest/jest/some.test.js:4:17)%0A%0A                  at Object.asyncJestTest (/home/runner/work/jest/jest/node_modules/jest-jasmine2/build/jasmineAsyncInstall.js:106:37)%0A%0A                  at /home/runner/work/jest/jest/node_modules/jest-jasmine2/build/queueRunner.js:45:12%0A%0A                  at new Promise (<anonymous>)%0A%0A                  at mapper (/home/runner/work/jest/jest/node_modules/jest-jasmine2/build/queueRunner.js:28:19)%0A%0A                  at /home/runner/work/jest/jest/node_modules/jest-jasmine2/build/queueRunner.js:75:41%0A%0A                  at processTicksAndRejections (internal/process/task_queues.js:93:5)%0A            
+"
+`;
