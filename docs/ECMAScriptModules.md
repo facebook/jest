@@ -13,8 +13,8 @@ With the warnings out of the way, this is how you activate ESM support in your t
 
 1. Ensure you either disable [code transforms](./configuration#transform-objectstring-pathtotransformer--pathtotransformer-object) by passing `transform: {}` or otherwise configure your transformer to emit ESM rather than the default CommonJS (CJS).
 1. Execute `node` with `--experimental-vm-modules`, e.g. `node --experimental-vm-modules node_modules/.bin/jest` or `NODE_OPTIONS=--experimental-vm-modules npx jest` etc.. On Windows, you can use [`cross-env`](https://github.com/kentcdodds/cross-env) to be able to set environment variables.
-1. Beyond that, we attempt to follow `node`'s logic for activating "ESM mode" (such as looking at `type` in `package.json` or `mjs` files), see [their docs](https://nodejs.org/api/esm.html#esm_enabling) for details.
-1. If you want to treat other file extensions (such as `ts`) as ESM, please use the [`extensionsToTreatAsEsm` option](Configuration.md#extensionstotreatasesm-arraystring).
+1. Beyond that, we attempt to follow `node`'s logic for activating "ESM mode" (such as looking at `type` in `package.json` or `.mjs` files), see [their docs](https://nodejs.org/api/esm.html#esm_enabling) for details.
+1. If you want to treat other file extensions (such as `.jsx` or `.ts`) as ESM, please use the [`extensionsToTreatAsEsm` option](Configuration.md#extensionstotreatasesm-arraystring).
 
 ## Differences between ESM and CommonJS
 
