@@ -13,10 +13,21 @@ const SLOW_TEST_TIME = 1000;
 export function shouldRunInBand(
   tests: Array<Test>,
   timings: Array<number>,
-  {detectOpenHandles, maxWorkers, watch, watchAll}: Config.GlobalConfig,
+  {
+    detectOpenHandles,
+    maxWorkers,
+    watch,
+    watchAll,
+    runInBand,
+  }: Config.GlobalConfig,
 ): boolean {
   // detectOpenHandles makes no sense without runInBand, because it cannot detect leaks in workers
   if (detectOpenHandles) {
+    return true;
+  }
+
+  // if global config run in band then the whole project should be run in band
+  if (runInBand) {
     return true;
   }
 
@@ -35,6 +46,7 @@ export function shouldRunInBand(
   const areFastTests = timings.every(timing => timing < SLOW_TEST_TIME);
   const oneWorkerOrLess = maxWorkers <= 1;
   const oneTestOrLess = tests.length <= 1;
+  const numProjects = new Set(tests.map(test => test.context.config.name)).size;
 
   if (isWatchMode) {
     return oneWorkerOrLess || (oneTestOrLess && areFastTests);
@@ -43,6 +55,7 @@ export function shouldRunInBand(
   return (
     oneWorkerOrLess ||
     oneTestOrLess ||
-    (tests.length <= 20 && timings.length > 0 && areFastTests)
+    (tests.length <= 20 && timings.length > 0 && areFastTests) ||
+    (numProjects === 1 && tests.some(test => test.context.config.runInBand))
   );
 }

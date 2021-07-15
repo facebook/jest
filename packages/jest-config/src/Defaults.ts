@@ -56,6 +56,7 @@ const defaultOptions: Config.DefaultOptions = {
   resetModules: false,
   restoreMocks: false,
   roots: ['<rootDir>'],
+  runInBand: false,
   runTestsByPath: false,
   runner: 'jest-runner',
   setupFiles: [],

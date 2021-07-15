@@ -97,6 +97,7 @@ export type DefaultOptions = {
   resetModules: boolean;
   restoreMocks: boolean;
   roots: Array<Path>;
+  runInBand: boolean;
   runTestsByPath: boolean;
   runner: string;
   setupFiles: Array<Path>;
@@ -204,6 +205,7 @@ export type InitialOptions = Partial<{
   restoreMocks: boolean;
   rootDir: Path;
   roots: Array<Path>;
+  runInBand: boolean;
   runner: string;
   runTestsByPath: boolean;
   scriptPreprocessor: string;
@@ -309,6 +311,7 @@ export type GlobalConfig = {
   projects: Array<Glob>;
   replname?: string;
   reporters?: Array<string | ReporterConfig>;
+  runInBand: boolean;
   runTestsByPath: boolean;
   rootDir: Path;
   silent?: boolean;
@@ -367,6 +370,7 @@ export type ProjectConfig = {
   restoreMocks: boolean;
   rootDir: Path;
   roots: Array<Path>;
+  runInBand: boolean;
   runner: string;
   setupFiles: Array<Path>;
   setupFilesAfterEnv: Array<Path>;
