@@ -382,3 +382,20 @@ test('indentation is correct in the presences of existing snapshots', () => {
   expect(exitCode).toBe(0);
   expect(wrap(fileAfter)).toMatchSnapshot('existing snapshot');
 });
+
+test('indentation is correct in the presences of existing snapshots, when the file is correctly formatted by prettier', () => {
+  const filename = 'existing-snapshot.test.js';
+  const test = `
+    it('is true', () => {
+      expect(true).toMatchInlineSnapshot(\`true\`);
+      expect([1, 2, 3]).toMatchInlineSnapshot();
+    });\\n
+  `;
+
+  writeFiles(TESTS_DIR, {[filename]: test});
+  const {stderr, exitCode} = runJest(DIR, ['-w=1', '--ci=false', filename]);
+  const fileAfter = readFile(filename);
+  expect(stderr).toMatch('1 snapshot written from 1 test suite.');
+  expect(exitCode).toBe(0);
+  expect(wrap(fileAfter)).toMatchSnapshot('existing snapshot');
+});

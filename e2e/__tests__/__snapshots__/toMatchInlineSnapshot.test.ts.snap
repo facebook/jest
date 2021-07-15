@@ -118,6 +118,20 @@ test('handles property matchers', () => {
 
 `;
 
+exports[`indentation is correct in the presences of existing snapshots, when the file is correctly formatted by prettier: existing snapshot 1`] = `
+it('is true', () => {
+  expect(true).toMatchInlineSnapshot(\`true\`);
+  expect([1, 2, 3]).toMatchInlineSnapshot(\`
+    Array [
+      1,
+      2,
+      3,
+    ]
+  \`);
+});
+
+`;
+
 exports[`indentation is correct in the presences of existing snapshots: existing snapshot 1`] = `
 test('existing snapshot', () => {
   expect({hello: 'world'}).toMatchInlineSnapshot(\`
