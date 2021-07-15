@@ -16,7 +16,7 @@ Get the list of files and repos that have changed since the last commit.
 
 #### Parameters
 
-roots: Array of string paths gathered from [jest roots](https://jestjs.io/docs/configuration#roots-array-string).
+roots: Array of string paths gathered from [jest roots](https://jestjs.io/docs/configuration#roots-arraystring).
 
 options: Object literal with keys
 
@@ -29,7 +29,7 @@ Get a set of git and hg repositories.
 
 #### Parameters
 
-roots: Array of string paths gathered from [jest roots](https://jestjs.io/docs/configuration#roots-array-string).
+roots: Array of string paths gathered from [jest roots](https://jestjs.io/docs/configuration#roots-arraystring).
 
 ## Usage
 
