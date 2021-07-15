@@ -1,6 +1,6 @@
 # Jest website
 
-The Jest website is based on [Docusaurus 2](http://v2.docusaurus.io/).
+The Jest website is based on [Docusaurus 2](https://docusaurus.io).
 
 ## Run the dev server
 
@@ -12,21 +12,17 @@ The first time, get all the dependencies loaded via
 yarn
 ```
 
-in the root directory.
-
 Fetch `backers.json` file by running
 
 ```bash
-node fetchSupporters.js
+yarn workspace jest-website fetchSupporters
 ```
 
 Then, run the server via
 
 ```bash
-yarn start
+yarn workspace jest-website start
 ```
-
-Note, you can also use `yarn workspace jest-website start` from the root of the Jest monorepo.
 
 ## Publish the website
 
