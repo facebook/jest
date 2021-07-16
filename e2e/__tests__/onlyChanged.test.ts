@@ -118,51 +118,6 @@ test('run only changed files', () => {
   expect(stderr).toMatch(/PASS __tests__(\/|\\)file3.test.js/);
 });
 
-test('report test coverage for only changed files', () => {
-  writeFiles(DIR, {
-    '__tests__/a.test.js': `
-    require('../a');
-    require('../b');
-    test('a', () => expect(1).toBe(1));
-  `,
-    '__tests__/b.test.js': `
-    require('../b');
-    test('b', () => expect(1).toBe(1));
-  `,
-    'a.js': 'module.exports = {}',
-    'b.js': 'module.exports = {}',
-    'package.json': JSON.stringify({
-      jest: {
-        collectCoverage: true,
-        coverageReporters: ['text'],
-        testEnvironment: 'node',
-      },
-    }),
-  });
-
-  gitInit(DIR);
-  run(`${GIT} add .`, DIR);
-  run(`${GIT} commit --no-gpg-sign -m "first"`, DIR);
-
-  writeFiles(DIR, {
-    'a.js': 'module.exports = {modified: true}',
-  });
-
-  let stdout;
-
-  ({stdout} = runJest(DIR));
-
-  // both a.js and b.js should be in the coverage
-  expect(stdout).toMatch('a.js');
-  expect(stdout).toMatch('b.js');
-
-  ({stdout} = runJest(DIR, ['-o']));
-
-  // coverage should be collected only for a.js
-  expect(stdout).toMatch('a.js');
-  expect(stdout).not.toMatch('b.js');
-});
-
 test('report test coverage of source on test file change under only changed files', () => {
   writeFiles(DIR, {
     '__tests__/a.test.js': `
@@ -307,56 +262,6 @@ test('onlyChanged in config is overwritten by --all or testPathPattern', () => {
 
   ({stderr} = runJest(DIR, ['--all']));
   expect(stderr).toMatch(/PASS __tests__(\/|\\)file1.test.js/);
-  expect(stderr).toMatch(/PASS __tests__(\/|\\)file2.test.js/);
-  expect(stderr).toMatch(/PASS __tests__(\/|\\)file3.test.js/);
-});
-
-testIfHg('gets changed files for hg', async () => {
-  if (process.env.CI) {
-    // Circle and Travis have very old version of hg (v2, and current
-    // version is v4.2) and its API changed since then and not compatible
-    // any more. Changing the SCM version on CIs is not trivial, so we'll just
-    // skip this test and run it only locally.
-    return;
-  }
-  writeFiles(DIR, {
-    '.watchmanconfig': '',
-    '__tests__/file1.test.js': `require('../file1'); test('file1', () => {});`,
-    'file1.js': 'module.exports = {}',
-    'package.json': JSON.stringify({jest: {testEnvironment: 'node'}}),
-  });
-
-  run(`${HG} init`, DIR);
-  run(`${HG} add .`, DIR);
-  run(`${HG} commit -m "test"`, DIR);
-
-  let stdout;
-  let stderr;
-
-  ({stdout, stderr} = runJest(DIR, ['-o']));
-  expect(stdout).toMatch('No tests found related to files changed');
-
-  writeFiles(DIR, {
-    '__tests__/file2.test.js': `require('../file2'); test('file2', () => {});`,
-    'file2.js': 'module.exports = {}',
-    'file3.js': `require('./file2')`,
-  });
-
-  ({stdout, stderr} = runJest(DIR, ['-o']));
-  expect(stderr).toMatch(/PASS __tests__(\/|\\)file2.test.js/);
-
-  run(`${HG} add .`, DIR);
-  run(`${HG} commit -m "test2"`, DIR);
-
-  writeFiles(DIR, {
-    '__tests__/file3.test.js': `require('../file3'); test('file3', () => {});`,
-  });
-
-  ({stdout, stderr} = runJest(DIR, ['-o']));
-  expect(stderr).toMatch(/PASS __tests__(\/|\\)file3.test.js/);
-  expect(stderr).not.toMatch(/PASS __tests__(\/|\\)file2.test.js/);
-
-  ({stdout, stderr} = runJest(DIR, ['-o', '--changedFilesWithAncestor']));
   expect(stderr).toMatch(/PASS __tests__(\/|\\)file2.test.js/);
   expect(stderr).toMatch(/PASS __tests__(\/|\\)file3.test.js/);
 });
