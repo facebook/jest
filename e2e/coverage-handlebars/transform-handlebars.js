@@ -6,15 +6,17 @@
  */
 
 const Handlebars = require('handlebars/dist/cjs/handlebars.js');
-const {SourceMapConsumer, SourceNode} = require('source-map');
+const {SourceMapConsumer, SourceNode} = require('source-map-sync');
 
 exports.process = (code, filename) => {
   const pc = Handlebars.precompile(code, {srcName: filename});
+  const consumer = new SourceMapConsumer(pc.map);
   const out = new SourceNode(null, null, null, [
     'const Handlebars = require("handlebars/dist/cjs/handlebars.runtime.js");\n',
     'module.exports = Handlebars.template(',
-    SourceNode.fromStringWithSourceMap(pc.code, new SourceMapConsumer(pc.map)),
+    SourceNode.fromStringWithSourceMap(pc.code, consumer),
     ');\n',
   ]).toStringWithSourceMap();
+  consumer.destroy();
   return {code: out.code, map: out.map.toString()};
 };

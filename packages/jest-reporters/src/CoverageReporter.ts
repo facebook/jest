@@ -14,7 +14,7 @@ import istanbulCoverage = require('istanbul-lib-coverage');
 import istanbulReport = require('istanbul-lib-report');
 import libSourceMaps = require('istanbul-lib-source-maps');
 import istanbulReports = require('istanbul-reports');
-import type {RawSourceMap} from 'source-map';
+import type {RawSourceMap} from 'source-map-sync';
 import v8toIstanbul = require('v8-to-istanbul');
 import type {
   AggregatedResult,
@@ -35,7 +35,7 @@ import type {
 } from './types';
 
 // This is fixed in a newer versions of source-map, but our dependencies are still stuck on old versions
-interface FixedRawSourceMap extends Omit<RawSourceMap, 'version'> {
+interface FixedRawSourceMap extends Omit<RawSourceMap, 'version' | 'file'> {
   version: number;
   file?: string;
 }

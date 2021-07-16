@@ -27,7 +27,7 @@
     "micromatch": "^4.0.4",
     "pirates": "^4.0.1",
     "slash": "^3.0.0",
-    "source-map": "^0.6.1",
+    "source-map-sync": "^0.8.0-beta.1",
     "write-file-atomic": "^3.0.0"
   },
   "devDependencies": {

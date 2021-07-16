@@ -7,7 +7,7 @@
 
 import callsites = require('callsites');
 import {readFileSync} from 'graceful-fs';
-import {SourceMapConsumer} from 'source-map';
+import {SourceMapConsumer} from 'source-map-sync';
 import type {SourceMapRegistry} from './types';
 
 // Copied from https://github.com/rexxars/sourcemap-decorate-callsites/blob/5b9735a156964973a75dc62fd2c7f0c1975458e8/lib/index.js#L113-L158
@@ -26,11 +26,16 @@ const addSourceMapConsumer = (
         line: getLineNumber.call(callsite) || -1,
       });
     }
-
     return position;
   }
 
   Object.defineProperties(callsite, {
+    destroy: {
+      value() {
+        consumer.destroy();
+      },
+      writable: false,
+    },
     getColumnNumber: {
       value() {
         return getPosition().column || getColumnNumber.call(callsite);
@@ -57,7 +62,6 @@ export default (
   if (sourceMapFileName) {
     try {
       const sourceMap = readFileSync(sourceMapFileName, 'utf8');
-      // @ts-expect-error: Not allowed to pass string
       addSourceMapConsumer(stack, new SourceMapConsumer(sourceMap));
     } catch {
       // ignore

@@ -69,6 +69,7 @@ export type SpecResult = {
   pendingReason: string;
   status: Status;
   __callsite?: {
+    destroy: () => void;
     getColumnNumber: () => number;
     getLineNumber: () => number;
   };

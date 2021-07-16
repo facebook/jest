@@ -138,6 +138,7 @@ export default class Jasmine2Reporter implements Reporter {
           line: specResult.__callsite.getLineNumber(),
         }
       : null;
+    if (specResult.__callsite) specResult.__callsite.destroy();
     const results: AssertionResult = {
       ancestorTitles,
       duration,

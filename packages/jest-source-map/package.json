@@ -16,7 +16,7 @@
   "dependencies": {
     "callsites": "^3.0.0",
     "graceful-fs": "^4.2.4",
-    "source-map": "^0.6.0"
+    "source-map-sync": "^0.8.0-beta.1"
   },
   "devDependencies": {
     "@types/graceful-fs": "^4.1.2"
