@@ -12,6 +12,8 @@ import {
   anything,
   arrayContaining,
   arrayNotContaining,
+  closeTo,
+  notCloseTo,
   objectContaining,
   objectNotContaining,
   stringContaining,
@@ -360,4 +362,106 @@ test('StringNotMatching throws if expected value is neither string nor regexp', 
 
 test('StringNotMatching returns true if received value is not string', () => {
   jestExpect(stringNotMatching('en').asymmetricMatch(1)).toBe(true);
+});
+
+describe('closeTo', () => {
+  [
+    [0, 0],
+    [0, 0.001],
+    [1.23, 1.229],
+    [1.23, 1.226],
+    [1.23, 1.225],
+    [1.23, 1.234],
+    [Infinity, Infinity],
+    [-Infinity, -Infinity],
+  ].forEach(([expected, received]) => {
+    test(`${expected} closeTo ${received} return true`, () => {
+      jestExpect(closeTo(expected).asymmetricMatch(received)).toBe(true);
+    });
+    test(`${expected} notCloseTo ${received} return false`, () => {
+      jestExpect(notCloseTo(expected).asymmetricMatch(received)).toBe(false);
+    });
+  });
+
+  [
+    [0, 0.01],
+    [1, 1.23],
+    [1.23, 1.2249999],
+    [Infinity, -Infinity],
+    [Infinity, 1.23],
+    [-Infinity, -1.23],
+  ].forEach(([expected, received]) => {
+    test(`${expected} closeTo ${received} return false`, () => {
+      jestExpect(closeTo(expected).asymmetricMatch(received)).toBe(false);
+    });
+    test(`${expected} notCloseTo ${received} return true`, () => {
+      jestExpect(notCloseTo(expected).asymmetricMatch(received)).toBe(true);
+    });
+  });
+
+  [
+    [0, 0.1, 0],
+    [0, 0.0001, 3],
+    [0, 0.000004, 5],
+    [2.0000002, 2, 5],
+  ].forEach(([expected, received, precision]) => {
+    test(`${expected} closeTo ${received} with precision ${precision} return true`, () => {
+      jestExpect(closeTo(expected, precision).asymmetricMatch(received)).toBe(
+        true,
+      );
+    });
+    test(`${expected} notCloseTo ${received} with precision ${precision} return false`, () => {
+      jestExpect(
+        notCloseTo(expected, precision).asymmetricMatch(received),
+      ).toBe(false);
+    });
+  });
+
+  [
+    [3.141592e-7, 3e-7, 8],
+    [56789, 51234, -4],
+  ].forEach(([expected, received, precision]) => {
+    test(`${expected} closeTo ${received} with precision ${precision} return false`, () => {
+      jestExpect(closeTo(expected, precision).asymmetricMatch(received)).toBe(
+        false,
+      );
+    });
+    test(`${expected} notCloseTo ${received} with precision ${precision} return true`, () => {
+      jestExpect(
+        notCloseTo(expected, precision).asymmetricMatch(received),
+      ).toBe(true);
+    });
+  });
+
+  test('closeTo throw if expected is not number', () => {
+    jestExpect(() => {
+      closeTo('a');
+    }).toThrow();
+  });
+
+  test('notCloseTo throw if expected is not number', () => {
+    jestExpect(() => {
+      notCloseTo('a');
+    }).toThrow();
+  });
+
+  test('closeTo throw if precision is not number', () => {
+    jestExpect(() => {
+      closeTo(1, 'a');
+    }).toThrow();
+  });
+
+  test('notCloseTo throw if precision is not number', () => {
+    jestExpect(() => {
+      notCloseTo(1, 'a');
+    }).toThrow();
+  });
+
+  test('closeTo return false if received is not number', () => {
+    jestExpect(closeTo(1).asymmetricMatch('a')).toBe(false);
+  });
+
+  test('notCloseTo return false if received is not number', () => {
+    jestExpect(notCloseTo(1).asymmetricMatch('a')).toBe(false);
+  });
 });

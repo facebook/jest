@@ -421,6 +421,26 @@ test('doAsync calls both callbacks', () => {
 
 The `expect.assertions(2)` call ensures that both callbacks actually get called.
 
+### `expect.closeTo(number, numDigits?)`
+
+`expect.closeTo(number, numDigits?)` is useful when comparing floating point numbers in object properties or array item. If you need to compare a number, please use `.toBeCloseTo` instead.
+
+The optional `numDigits` argument limits the number of digits to check **after** the decimal point. For the default value `2`, the test criterion is `Math.abs(expected - received) < 0.005 (that is, 10 ** -2 / 2)`.
+
+For example, this test passes with a precision of 5 digits:
+
+```js
+test('compare float in object properties', () => {
+  expect({
+    title: '0.1 + 0.2',
+    sum: 0.1 + 0.2,
+  }).toEqual({
+    title: '0.1 + 0.2',
+    sum: expect.closeTo(0.3, 5),
+  });
+});
+```
+
 ### `expect.hasAssertions()`
 
 `expect.hasAssertions()` verifies that at least one assertion is called during a test. This is often useful when testing asynchronous code, in order to make sure that assertions in a callback actually got called.

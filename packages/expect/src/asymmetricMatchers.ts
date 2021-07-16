@@ -234,6 +234,47 @@ class StringMatching extends AsymmetricMatcher<RegExp> {
   }
 }
 
+class CloseTo extends AsymmetricMatcher<number> {
+  private precision: number;
+  constructor(sample: number, precision: number = 2, inverse: boolean = false) {
+    if (!isA('Number', sample)) {
+      throw new Error('Expected is not a Number');
+    }
+
+    if (!isA('Number', precision)) {
+      throw new Error('Precision is not a Number');
+    }
+
+    super(sample);
+    this.inverse = inverse;
+    this.precision = precision;
+  }
+
+  asymmetricMatch(other: number) {
+    if (!isA('Number', other)) {
+      return false;
+    }
+    let result: boolean = false;
+    if (other === Infinity && this.sample === Infinity) {
+      result = true; // Infinity - Infinity is NaN
+    } else if (other === -Infinity && this.sample === -Infinity) {
+      result = true; // -Infinity - -Infinity is NaN
+    } else {
+      result =
+        Math.abs(this.sample - other) < Math.pow(10, -this.precision) / 2;
+    }
+    return this.inverse ? !result : result;
+  }
+
+  toString() {
+    return `Number${this.inverse ? 'Not' : ''}CloseTo`;
+  }
+
+  getExpectedType() {
+    return 'number';
+  }
+}
+
 export const any = (expectedObject: unknown): Any => new Any(expectedObject);
 export const anything = (): Anything => new Anything();
 export const arrayContaining = (sample: Array<unknown>): ArrayContaining =>
@@ -254,3 +295,7 @@ export const stringMatching = (expected: string | RegExp): StringMatching =>
   new StringMatching(expected);
 export const stringNotMatching = (expected: string | RegExp): StringMatching =>
   new StringMatching(expected, true);
+export const closeTo = (expected: number, precision?: number): CloseTo =>
+  new CloseTo(expected, precision);
+export const notCloseTo = (expected: number, precision?: number): CloseTo =>
+  new CloseTo(expected, precision, true);
