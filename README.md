@@ -209,6 +209,7 @@ Learn more about using [Jest on the official site!](https://jestjs.io)
 - [Getting Started](https://jestjs.io/docs/getting-started)
 - [Guides](https://jestjs.io/docs/snapshot-testing)
 - [API Reference](https://jestjs.io/docs/api)
+- [npm package](https://www.npmjs.com/package/jest)
 - [Configuring Jest](https://jestjs.io/docs/configuration)
 
 ## Badge
