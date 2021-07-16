@@ -720,7 +720,7 @@ test('drinkEach drinks each drink', () => {
 
 Also under the alias: `.toBeCalledWith()`
 
-Use `.toHaveBeenCalledWith` to ensure that a mock function was called with specific arguments.
+Use `.toHaveBeenCalledWith` to ensure that a mock function was called with specific arguments. The specific arguments are checked with a `.toEqual` call.
 
 For example, let's say that you can register a beverage with a `register` function, and `applyToAll(f)` should apply the function `f` to all registered beverages. To make sure this works, you could write:
 
