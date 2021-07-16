@@ -215,6 +215,56 @@ test('ObjectContaining throws for non-objects', () => {
   jestExpect(() => objectContaining(1337).asymmetricMatch()).toThrow();
 });
 
+test('ObjectContaining matches primitives', () => {
+  jestExpect(objectContaining({}).asymmetricMatch(null)).toBe(true);
+  jestExpect(objectContaining({}).asymmetricMatch(undefined)).toBe(true);
+});
+
+test('ObjectContaining boxes truthy autoboxable primitives', () => {
+  jestExpect(objectContaining({0: 'f'}).asymmetricMatch('foo')).toBe(true);
+  jestExpect(
+    objectContaining({length: any(Number)}).asymmetricMatch('foo'),
+  ).toBe(true);
+  jestExpect(
+    objectContaining({toExponential: any(Function)}).asymmetricMatch(1),
+  ).toBe(true);
+  // Symbol.prototype.description isn't present on Node 10
+  if (Symbol('foo').description) {
+    jestExpect(
+      objectContaining({description: any(String)}).asymmetricMatch(
+        Symbol('foo'),
+      ),
+    ).toBe(true);
+  }
+});
+
+test('ObjectContaining does not box falsy autoboxable primitives', () => {
+  jestExpect(
+    objectContaining({toExponential: any(Function)}).asymmetricMatch(0),
+  ).toBe(false);
+  jestExpect(objectContaining({length: any(Number)}).asymmetricMatch('')).toBe(
+    false,
+  );
+});
+
+test('ObjectNotContaining boxes truthy autoboxable primitives', () => {
+  jestExpect(
+    objectNotContaining({toExponential: any(Function)}).asymmetricMatch(1),
+  ).toBe(false);
+  jestExpect(
+    objectNotContaining({length: any(Number)}).asymmetricMatch('foo'),
+  ).toBe(false);
+});
+
+test('ObjectNotContaining does not box falsy autoboxable primitives', () => {
+  jestExpect(
+    objectNotContaining({toExponential: any(Function)}).asymmetricMatch(0),
+  ).toBe(true);
+  jestExpect(
+    objectNotContaining({length: any(Number)}).asymmetricMatch(''),
+  ).toBe(true);
+});
+
 test('ObjectContaining does not mutate the sample', () => {
   const sample = {foo: {bar: {}}};
   const sample_json = JSON.stringify(sample);

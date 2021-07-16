@@ -364,12 +364,14 @@ test('randocall calls its callback with a number', () => {
 
 ### `expect.arrayContaining(array)`
 
-`expect.arrayContaining(array)` matches a received array which contains all of the elements in the expected array. That is, the expected array is a **subset** of the received array. Therefore, it matches a received array which contains elements that are **not** in the expected array.
+`expect.arrayContaining(array)` matches the received value if it is an array which contains all of the elements in the expected array. That is, the expected array is a **subset** of the received array.
 
 You can use it instead of a literal value:
 
 - in `toEqual` or `toBeCalledWith`
 - to match a property in `objectContaining` or `toMatchObject`
+
+As a special case, `expect.arrayContaining([])` matches any value, including non-arrays.
 
 ```js
 describe('arrayContaining', () => {
@@ -441,7 +443,9 @@ The `expect.hasAssertions()` call ensures that the `prepareState` callback actua
 
 ### `expect.not.arrayContaining(array)`
 
-`expect.not.arrayContaining(array)` matches a received array which does not contain all of the elements in the expected array. That is, the expected array **is not a subset** of the received array.
+`expect.not.arrayContaining(array)` matches the received value if it is not an array or if it is an array that does not contain all of the elements in the expected array. That is, the expected array **is not a subset** of the received value.
+
+As a special case, `expect.not.arrayContaining([])` matches nothing.
 
 It is the inverse of `expect.arrayContaining`.
 
@@ -459,16 +463,32 @@ describe('not.arrayContaining', () => {
 
 ### `expect.not.objectContaining(object)`
 
-`expect.not.objectContaining(object)` matches any received object that does not recursively match the expected properties. That is, the expected object **is not a subset** of the received object. Therefore, it matches a received object which contains properties that are **not** in the expected object.
+`expect.not.objectContaining(object)` matches any received value (object or primitive) which **does not** have (own or inherited) properties matching each of the enumerable (own or inherited) properties of the expected object.
+
+That is, it matches any value which lacks one or more of the enumerable properties of the expected object, as well as any value which has a property not matching the corresponding property of the expected object.
+
+Primitive received values will be coerced to objects iff they are truthy.
 
 It is the inverse of `expect.objectContaining`.
 
 ```js
 describe('not.objectContaining', () => {
-  const expected = {foo: 'bar'};
-
   it('matches if the actual object does not contain expected key: value pairs', () => {
+    const expected = {foo: 'bar'};
+
     expect({bar: 'baz'}).toEqual(expect.not.objectContaining(expected));
+  });
+
+  it('boxes truthy primitive values', () => {
+    const expected = {toExponential: expect.any(Function)};
+
+    expect(1).not.toEqual(expect.not.objectContaining(expected));
+  });
+
+  it('does not box falsy primitive values', () => {
+    const expected = {toExponential: expect.any(Function)};
+
+    expect(0).toEqual(expect.not.objectContaining(expected));
   });
 });
 ```
@@ -507,9 +527,11 @@ describe('not.stringMatching', () => {
 
 ### `expect.objectContaining(object)`
 
-`expect.objectContaining(object)` matches any received object that recursively matches the expected properties. That is, the expected object is a **subset** of the received object. Therefore, it matches a received object which contains properties that **are present** in the expected object.
+`expect.objectContaining(object)` matches any received value (object or primitive) that has (own or inherited) properties matching all enumerable (own or inherited) properties of the expected object.
 
 Instead of literal property values in the expected object, you can use matchers, `expect.anything()`, and so on.
+
+Primitive received values will be coerced to objects iff they are truthy; for example, `expect.objectContaining({toExponential: expect.any(Function)})` matches `1` and does not match `0`.
 
 For example, let's say that we expect an `onPress` function to be called with an `Event` object, and all we need to verify is that the event has `event.x` and `event.y` properties. We can do that with:
 
