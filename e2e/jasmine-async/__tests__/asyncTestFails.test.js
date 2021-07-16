@@ -11,7 +11,7 @@
 
 it('async test fails', done => {
   setTimeout(() => {
-    expect(false).toBeTruthy();
     done();
-  }, 1 * 1000);
+    expect(false).toBeTruthy();
+  }, 500);
 });

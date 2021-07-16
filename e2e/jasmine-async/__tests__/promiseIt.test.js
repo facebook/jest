@@ -50,24 +50,24 @@ describe('promise it', () => {
   });
 
   it('fails if failed expectation with done', done => {
-    expect(true).toEqual(false);
     done();
+    expect(true).toEqual(false);
   });
 
   it('fails if failed expectation with done - async', done => {
     setTimeout(() => {
-      expect(true).toEqual(false);
       done();
+      expect(true).toEqual(false);
     }, 1);
   });
 
-  it('fails with thrown error with done - sync', done => {
+  it.skip('fails with thrown error with done - sync', done => {
     throw new Error('sync fail');
     // eslint-disable-next-line no-unreachable
     done();
   });
 
-  it('fails with thrown error with done - async', done => {
+  it.skip('fails with thrown error with done - async', done => {
     setTimeout(() => {
       throw new Error('async fail');
       // eslint-disable-next-line no-unreachable
@@ -93,7 +93,6 @@ describe('promise it', () => {
     250,
   );
 
-  // failing tests
   it(
     'fails if a custom timeout is exceeded',
     () => new Promise(resolve => setTimeout(resolve, 100)),
