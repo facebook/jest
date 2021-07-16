@@ -1064,6 +1064,32 @@ describe('moduleMocker', () => {
     expect(fn.getMockName()).toBe('myMockFn');
   });
 
+  test('jest.fn should provide the correct lastCall', () => {
+    const mock = jest.fn();
+
+    expect(mock.mock.lastCall).toBeUndefined();
+
+    mock('first');
+    mock('second');
+    mock('last', 'call');
+
+    expect(mock).toHaveBeenLastCalledWith('last', 'call');
+    expect(mock.mock.lastCall).toEqual(['last', 'call']);
+  });
+
+  test('lastCall gets reset by mockReset', () => {
+    const mock = jest.fn();
+
+    mock('first');
+    mock('last', 'call');
+
+    expect(mock.mock.lastCall).toEqual(['last', 'call']);
+
+    mock.mockReset();
+
+    expect(mock.mock.lastCall).toBeUndefined();
+  });
+
   test('mockName gets reset by mockReset', () => {
     const fn = jest.fn();
     expect(fn.getMockName()).toBe('jest.fn()');
