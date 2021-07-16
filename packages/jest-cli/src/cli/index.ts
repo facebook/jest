@@ -53,8 +53,13 @@ export const buildArgv = (maybeArgv?: Array<string>): Config.Argv => {
     getVersion() +
     (__dirname.includes(`packages${path.sep}jest-cli`) ? '-dev' : '');
 
-  const rawArgv: Config.Argv | Array<string> =
-    maybeArgv || process.argv.slice(2);
+  const rawArgv: Array<string> = maybeArgv || process.argv.slice(2);
+  const envArgv = (process.env.JEST_OPTIONS || '').split(' ');
+
+  if (envArgv.length > 0) {
+    rawArgv.push(...envArgv);
+  }
+
   const argv: Config.Argv = yargs(rawArgv)
     .usage(args.usage)
     .version(version)
