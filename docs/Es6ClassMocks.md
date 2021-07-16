@@ -46,8 +46,6 @@ export default class SoundPlayerConsumer {
 
 Calling `jest.mock('./sound-player')` returns a useful "automatic mock" you can use to spy on calls to the class constructor and all of its methods. It replaces the ES6 class with a mock constructor, and replaces all of its methods with [mock functions](MockFunctions.md) that always return `undefined`. Method calls are saved in `theAutomaticMock.mock.instances[index].methodName.mock.calls`.
 
-Please note that if you use arrow functions in your classes, they will _not_ be part of the mock. The reason for that is that arrow functions are not present on the object's prototype, they are merely properties holding a reference to a function.
-
 If you don't need to replace the implementation of the class, this is the easiest option to set up. For example:
 
 ```javascript
@@ -83,6 +81,71 @@ it('We can check if the consumer called a method on the class instance', () => {
   // Equivalent to above check:
   expect(mockPlaySoundFile).toHaveBeenCalledWith(coolSoundFileName);
   expect(mockPlaySoundFile).toHaveBeenCalledTimes(1);
+});
+```
+
+Please note that if you use arrow functions in your classes, they will _not_ be part of the mock. The reason for that is that arrow functions are not present on the object's prototype, they are merely properties holding a reference to a function.
+
+But if you still use arrow functions in your classes and you want to mock it, you also can use `jest.fn()` make a mock for your unit tests, like below code:
+
+```javascript
+// sound-player.js
+export default class SoundPlayer {
+  constructor() {
+    this.foo = 'bar';
+  }
+
+  playSoundFile(fileName) {
+    console.log('Playing sound file ' + fileName);
+  }
+
+  // Only for this example
+  arrowPlaySoundFile = (fileName) => {
+    console.log('Playing sound file ' + fileName + 'by arrow functions');
+  }
+}
+```
+
+```javascript
+// sound-player-consumer.js
+import SoundPlayer from './sound-player';
+
+export default class SoundPlayerConsumer {
+  constructor() {
+    this.soundPlayer = new SoundPlayer();
+  }
+
+  playSomethingCool() {
+    const coolSoundFileName = 'song.mp3';
+
+    // Only for this example
+    // this.soundPlayer.playSoundFile(coolSoundFileName);
+    this.soundPlayer.arrowPlaySoundFile(coolSoundFileName);
+  }
+}
+```
+
+```javascript
+import SoundPlayer from './sound-player';
+import SoundPlayerConsumer from './sound-player-consumer';
+jest.mock('./sound-player');
+
+beforeEach(() => {
+  SoundPlayer.mockClear();
+});
+
+it('We can check if the consumer called a arrow functions on the class instance', () => {
+  const soundPlayerConsumer = new SoundPlayerConsumer();
+
+  // Use `jest.fn()` to set up mock of arrow functions.
+  const mockArrowPlaySoundFile = jest.fn();
+  soundPlayerConsumer.soundPlayer.arrowPlaySoundFile = mockArrowPlaySoundFile;
+  
+  const coolSoundFileName = 'song.mp3';
+  soundPlayerConsumer.playSomethingCool();
+
+  // The mock work well.
+  expect(mockArrowPlaySoundFile.mock.calls[0][0]).toEqual(coolSoundFileName);
 });
 ```
 
