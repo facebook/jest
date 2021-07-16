@@ -401,25 +401,25 @@ describe('Beware of a misunderstanding! A sequence of dice rolls', () => {
 
 ### `expect.assertions(number)`
 
-`expect.assertions(number)` verifies that a certain number of assertions are called during a test. This is often useful when testing asynchronous code, in order to make sure that assertions in a callback actually got called.
+`expect.assertions(number)` verifies that a certain number of assertions are called during a test. This is often useful when testing code that might throw, in order to ensure that an expect is not skipped over if the code does not throw.
 
-For example, let's say that we have a function `doAsync` that receives two callbacks `callback1` and `callback2`, it will asynchronously call both of them in an unknown order. We can test this with:
+For example, let's say that we have a function `doVolatileThing` that we expect to throw an error, and also want to ensure calls a previously mocked function before throwing:
 
 ```js
-test('doAsync calls both callbacks', () => {
+test('doVolatileThing throws an error', () => {
   expect.assertions(2);
-  function callback1(data) {
-    expect(data).toBeTruthy();
-  }
-  function callback2(data) {
-    expect(data).toBeTruthy();
-  }
 
-  doAsync(callback1, callback2);
+  try {
+    doVolatileThing();
+  } catch (e) {
+    expect(e.message).toBe('uh oh!');
+  }
+  
+  expect(mockCallback.mock.calls.length).toBe(1);
 });
 ```
 
-The `expect.assertions(2)` call ensures that both callbacks actually get called.
+The `expect.assertions(2)` ensures that if no error is thrown, the expect in the catch isn't ignored, which would make the test erroneously pass.
 
 ### `expect.hasAssertions()`
 
