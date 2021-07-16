@@ -688,6 +688,7 @@
 - `[jest-transform]` Allow instrumentation of transformed files with weird file extensions ([#9589](https://github.com/facebook/jest/pull/9589))
 - `[@jest/types]` Make `ConfigGlobals` an interface to allow for declaration merging. ([#9570](https://github.com/facebook/jest/pull/9570))
 - `[pretty-format]` Export `OldPlugin` type ([#9491](https://github.com/facebook/jest/pull/9491))
+- `[jest-mock]` Adding type definition files to the jest-mock package ([#9682](https://github.com/facebook/jest/pull/9682))
 
 ### Chore & Maintenance
 
