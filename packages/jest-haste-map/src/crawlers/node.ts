@@ -174,6 +174,9 @@ function findNative(
   child.stdout.setEncoding('utf-8');
   child.stdout.on('data', data => (stdout += data));
 
+  // just throw away stderr to make sure it won't get overflown
+  child.stderr.on('data', () => {});
+
   child.stdout.on('close', () => {
     const lines = stdout
       .trim()
