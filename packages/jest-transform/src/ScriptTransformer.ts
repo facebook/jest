@@ -934,6 +934,12 @@ const readCacheFile = (cachePath: Config.Path): string | null => {
   try {
     fileData = fs.readFileSync(cachePath, 'utf8');
   } catch (e) {
+    // on windows write-file-atomic is not atomic which can
+    // result in this error
+    if (e.code === 'ENOENT' && process.platform === 'win32') {
+      return null;
+    }
+
     e.message =
       'jest: failed to read cache file: ' +
       cachePath +
